@@ -1,4 +1,24 @@
 :root {
-    --page-min-width: 1200px;
-    --main-color: bold;
+    --page-width: 1200px;
+    --color-down: #e93535;
+    --color-up: #26c48b;
+    --main-color: #2a64fb;
+    --hover-color: #448bf4;
+    --text-color-1: #111;
+    --text-color-3: #333;
+    --text-color-6: #666;
+    --text-color-9: #999;
+
+    .el-table {
+        --el-table-border-color: rgba(0, 0, 0, 0.05);
+        --el-table-header-text-color: var(--text-color-1);
+        --el-table-text-color: var(--text-color-1);
+    }
+
+    .el-pagination {
+        --el-color-primary: var(--main-color);
+        --el-text-color-regular: var(--text-color-6);
+        --el-pagination-button-height: 22px;
+        --el-pagination-font-size: 14px;
+    }
 }

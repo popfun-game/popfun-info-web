@@ -143,3 +143,35 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+.wrapper {
+    width: 100%;
+    max-width: var(--page-width);
+    margin: 0 auto;
+}
+
+.scroller {
+    overflow: auto hidden;
+    white-space: nowrap;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.ts {
+    transition: 0.3s all ease-in-out;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.color-up {
+    color: var(--color-up);
+}
+
+.color-down {
+    color: var(--color-down);
+}

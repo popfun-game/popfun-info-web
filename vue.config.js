@@ -11,16 +11,15 @@ module.exports = {
             errors: false,
         },
     },
-    // css: {
-    //     loaderOptions: {
-    //         scss: {
-    //             prependData: '@import "~@/assets/styles/mixins.scss";',
-    //         },
-    //     },
-    // },
     chainWebpack: (config) => {
         // 移除 prefetch 插件
         config.plugins.delete('prefetch');
+        config.plugins.delete('preload');
+
+        config.plugin('define').tap((definitions) => {
+            definitions[0]['process.env'].PROXY_ENV = JSON.stringify(process.env.PROXY_ENV);
+            return definitions;
+        });
     },
     configureWebpack: {
         plugins: [

@@ -4,6 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body,
@@ -11,7 +12,7 @@ button,
 input,
 select,
 textarea {
-    font: 14px/1 'Microsoft YaHei', Arial, sans-serif;
+    font: 14px/1 IBM, 'Microsoft YaHei', Arial, sans-serif;
     color: #333;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -44,6 +45,12 @@ li { list-style: none outside none; }
 a {
     text-decoration: none;
     cursor: pointer;
+    color: var(--main-color);
+    transition: 0.3s all ease-in-out;
+
+    &:hover {
+        color: var(--hover-color);
+    }
 }
 
 img {
@@ -59,4 +66,24 @@ table {
     border-spacing: 0;
     word-wrap: break-word;
     word-break: break-all;
+}
+
+// 修改滚动条样式
+
+::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: #0003;
+}
+// 修改火狐滚动条样式
+@-moz-document url-prefix() {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #0003 transparent;
+    }
 }

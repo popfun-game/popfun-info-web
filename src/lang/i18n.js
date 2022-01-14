@@ -48,6 +48,8 @@ const supportLang = (lang = '') => !!lang && langs.includes(lang);
  *      replace('//zh-cn///login') => /zh-cn/login
  */
 const replacePath = (path = '', lang = i18n.global.locale.value) => {
+    if (langs.length === 1) return path;
+
     // 过滤开头的 / ，用来做路径分隔。过滤转义符，防止外链接钓鱼
     // 以 / 分隔来取 lang
     const paths = path.replace(/^[\\/]+/, '').split(/\/+/);
@@ -107,7 +109,7 @@ const setAsyncLang = async (lang = '') => {
 
     if (!i18n.global.availableLocales.includes(lang)) {
         const message = await import(/* webpackChunkName: "lang-[request]" */ `@/lang/${lang}/index.js`);
-        i18n.global.setLocaleMessage(lang, message.default);
+        i18n.global.setLocaleMessage(lang, message.default.common);
     }
 
     if (i18n.mode === 'legacy') {

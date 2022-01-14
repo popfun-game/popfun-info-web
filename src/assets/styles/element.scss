@@ -1,0 +1,128 @@
+// 弹出层
+.el-popper {
+    // 提示窗样式覆盖
+    &.reset-tooltip.is-light {
+        border: none;
+        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+
+        .el-popper__arrow {
+            &::before {
+                border-color: transparent;
+            }
+        }
+    }
+
+    // 下拉选择框
+    .el-select-dropdown {
+        .el-select-dropdown__item {
+            color: var(--text-color-6);
+
+            &.selected {
+                color: var(--main-color);
+            }
+        }
+    }
+}
+
+// 表格样式覆盖
+.el-table {
+    &.reset-style {
+        th {
+            border-top: 1px solid var(--el-table-border-color);
+            font-size: 12px;
+            padding: 13px 0;
+        }
+
+        td {
+            padding: 21px 0;
+        }
+
+        .cell {
+            padding: 0 8px;
+            white-space: nowrap;
+            line-height: 22px;
+            font-weight: bold;
+
+            .color-middle {
+                color: var(--text-color-6);
+                font-weight: normal;
+            }
+
+            .color-light {
+                color: var(--text-color-9);
+                font-weight: normal;
+            }
+        }
+    }
+}
+
+// 分页样式覆盖
+
+.el-pagination.is-background {
+    padding-right: 0;
+
+    button {
+        &.btn-prev,
+        &.btn-next {
+            font-weight: bold;
+            background-color: transparent;
+            padding: 0 3px;
+            min-width: 22px;
+
+            i {
+                font-size: 14px;
+            }
+        }
+    }
+
+    ul.el-pager {
+        li {
+            padding: 0 7px;
+            min-width: 22px;
+            border-radius: 4px;
+            margin: 0 3px;
+            transition: 0.3s all ease-in-out;
+
+            &:not(:hover) {
+                background-color: transparent;
+            }
+
+            &:not(.disabled):not(.active):hover {
+                background-color: #eff2f5;
+            }
+        }
+    }
+
+    .el-pagination__sizes {
+        margin-right: 0;
+
+        .el-input__inner {
+            font-weight: bold;
+            color: var(--text-color-6);
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        .el-input__suffix {
+            right: 10px;
+
+            .el-icon {
+                color: var(--text-color-6);
+            }
+        }
+    }
+
+    .el-pagination__jump {
+        font-weight: bold;
+
+        .el-input__inner {
+            font-weight: bold;
+            color: var(--text-color-6);
+
+            &:focus {
+                border-color: var(--main-color);
+            }
+        }
+    }
+}
