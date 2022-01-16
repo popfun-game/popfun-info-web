@@ -16,7 +16,7 @@
                 </span>
                 <span class="coin font-bold"> / btc </span>
             </h3>
-            <div class="flex-row">
+            <div class="flex-row flex-wrap">
                 <div class="market font-bold">
                     <div class="flex-row flex-items-center mb14">
                         <span class="convert-u mr6">$29.1732</span>
@@ -65,7 +65,7 @@
                     <div class="color-0 font-bold lh22 mb10">
                         {{ t('tags') }}
                     </div>
-                    <div class="tag-list flex-row wrap">
+                    <div class="tag-list flex-row flex-items-center flex-wrap">
                         <a
                             v-for="item in 4"
                             :key="item"
@@ -216,6 +216,7 @@ const state = reactive({
         .el-progress {
             width: 124px;
             margin: 0 10px;
+            flex-shrink: 0;
 
             :deep(.el-progress-bar__outer) {
                 background-color: #eaeaea;
@@ -253,6 +254,7 @@ const state = reactive({
                 padding: 4px 12px;
                 color: #666;
                 margin: 5px;
+                white-space: nowrap;
 
                 &.highlight {
                     background-color: rgba(42, 100, 251, 0.08);
