@@ -1,5 +1,8 @@
 {
   "title": "Test Title",
+  "btn_text_more": "More",
+  "text_btn_read_more": "Read More",
+  "text_btn_read_less": "Read Less",
   "game_fi_crptos": "GameFi Cryptos",
   "exchanges": "Exchanges",
   "market_cap": "Market Cap",
@@ -44,7 +47,13 @@
   "learn_desc7": "How to understand the correct posture of the market",
   "learn_t8": "What is GameFi？",
   "learn_desc8": "How to understand the correct posture of the market",
-  "btn_text_more": "More",
-  "text_btn_read_more": "Read More",
-  "text_btn_read_less": "Read Less"
+  "low": "Low",
+  "high": "High",
+  "24h": "24h",
+  "low_high": "Low/High",
+  "1m": "1m",
+  "1y": "1y",
+  "tags": "Tags",
+  "info": "Info",
+  "view_all": "View all"
 }

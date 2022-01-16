@@ -1,0 +1,51 @@
+@font-face {
+    font-family: 'aamc';
+    src:
+        url('~@/assets/fonts/aamc/fonts/aamc.ttf?lt1a1f') format('truetype'),
+        url('~@/assets/fonts/aamc/fonts/aamc.woff?lt1a1f') format('woff'),
+        url('~@/assets/fonts/aamc/fonts/aamc.svg?lt1a1f#aamc') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    font-family: 'aamc' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-search::before {
+    content: "\e906";
+}
+
+.icon-code::before {
+    content: "\e905";
+}
+
+.icon-link::before {
+    content: "\e904";
+}
+
+.icon-book::before {
+    content: "\e903";
+}
+
+.icon-people::before {
+    content: "\e902";
+}
+
+.icon-up::before {
+    content: "\e901";
+}
+
+.icon-down::before {
+    content: "\e900";
+}

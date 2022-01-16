@@ -23,6 +23,28 @@
             }
         }
     }
+
+    // 下拉菜单
+    &.el-dropdown__popper[role=tooltip] {
+        border: none !important;
+        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 4px !important;
+
+        .el-dropdown-menu__item {
+            color: var(--text-color-6);
+            font-weight: bold;
+
+            &:not(.is-disabled):hover {
+                color: var(--main-color);
+            }
+        }
+
+        .el-popper__arrow {
+            &::before {
+                border-color: transparent !important;
+            }
+        }
+    }
 }
 
 // 表格样式覆盖

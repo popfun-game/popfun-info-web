@@ -24,6 +24,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "about-us" */ '@/views/about-us/index'),
     },
     {
+        path: '/currency/:coin',
+        component: () => import(/* webpackChunkName: "currency" */ '@/views/detail/currency'),
+    },
+    {
         path: '/:404*',
         redirect: '/',
     },

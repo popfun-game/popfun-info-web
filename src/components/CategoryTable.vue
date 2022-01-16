@@ -37,6 +37,7 @@
 <script setup>
 import { reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { replacePath } from '@/lang/i18n';
 import cTable from './Table';
 
 defineProps({
@@ -68,16 +69,16 @@ const state = reactive({
             'min-width': '140px',
             render(h, { row }) {
                 return (
-                    <div class="flex-row flex-items-center">
+                    <router-link class="flex-row flex-items-center" to={replacePath(`/currency/${row.currency}/`)}>
                         <img
                             src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
                             alt={row.currency}
                             width="24"
                             height="24"
                         />
-                        <span class="mr8 ml4">{ row.coin }</span>
+                        <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.coin }</span>
                         <span class="text-uppercase color-light">{ row.currency }</span>
-                    </div>
+                    </router-link>
                 );
             },
         },

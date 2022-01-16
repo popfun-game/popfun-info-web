@@ -56,7 +56,7 @@
 // flex 布局 end
 
 // 常用间距
-@each $key in 4, 6, 8, 10, 12, 14, 16 {
+@each $key in 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24 {
     .mt#{$key} {
         margin-top: #{$key}px;
     }
@@ -120,7 +120,7 @@
 }
 
 // 鼠标样式
-@each $key in default, pointer, not-allowed, progress {
+@each $key in default, pointer, not-allowed, progress, auto {
     .cursor-#{$key} {
         cursor: #{$key};
     }
