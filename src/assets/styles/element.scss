@@ -168,3 +168,13 @@
         width: 90% !important;
     }
 }
+
+.el-checkbox {
+    .el-checkbox__inner::after {
+        width: 4px;
+        height: 8px;
+        left: 6px;
+        top: 2px;
+        border-width: 2px;
+    }
+}

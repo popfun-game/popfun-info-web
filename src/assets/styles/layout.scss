@@ -175,3 +175,11 @@
 .color-down {
     color: var(--color-down);
 }
+
+// 标题标志
+.title-mark {
+    width: 4px;
+    height: 16px;
+    background-color: var(--main-color);
+    border-radius: 4px;
+}

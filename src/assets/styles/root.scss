@@ -26,4 +26,14 @@
     .el-dialog {
         --el-border-radius-small: 12px;
     }
+
+    .el-checkbox {
+        --el-checkbox-checked-text-color: var(--main-color);
+        --el-checkbox-checked-bg-color: var(--main-color);
+        --el-checkbox-checked-input-border-color: var(--main-color);
+        --el-checkbox-input-border-color-hover: var(--main-color);
+        --el-checkbox-text-color: var(--text-color-3);
+        --el-checkbox-input-width: 20px;
+        --el-checkbox-input-height: 20px;
+    }
 }

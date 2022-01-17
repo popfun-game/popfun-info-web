@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'aamc';
   src:
-    url('fonts/aamc.ttf?hh6ket') format('truetype'),
-    url('fonts/aamc.woff?hh6ket') format('woff'),
-    url('fonts/aamc.svg?hh6ket#aamc') format('svg');
+    url('fonts/aamc.ttf?w6idng') format('truetype'),
+    url('fonts/aamc.woff?w6idng') format('woff'),
+    url('fonts/aamc.svg?w6idng#aamc') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-flame:before {
+  content: "\e907";
+}
 .icon-people:before {
   content: "\e902";
 }

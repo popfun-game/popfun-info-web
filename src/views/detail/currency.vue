@@ -1,14 +1,47 @@
 <template>
-    <layout-default>
-        <div class="flex-1">
-            <div class="chain-head pb24 pt16">
+    <layout-default :show-footer="false">
+        <div class="currency-body flex-1">
+            <div class="coin-head pb24 pt16">
                 <div class="wrapper">
                     <breadcrumb :list="state.breadcrumb" />
 
-                    <div class="flex-row flex-wrap">
+                    <div class="coin-info-wrap flex-row flex-wrap">
                         <coin-info />
                         <coin-tags />
                     </div>
+
+                    <market-cap />
+                </div>
+            </div>
+
+            <div class="coin-types wrapper flex-row flex-wrap flex-items-center">
+                <router-link
+                    :to="replacePath(`/currency/${route.params.coin}/`)"
+                    :class="{'is-active': !route.params.type}"
+                >
+                    {{ t('overview') }}
+                </router-link>
+                <router-link
+                    :to="replacePath(`/currency/${route.params.coin}/market`)"
+                    :class="{'is-active': !route.params.type === 'market'}"
+                >
+                    {{ t('market') }}
+                </router-link>
+            </div>
+
+            <div class="wrapper flex-row flex-wrap">
+                <div class="col-l mr16 flex-1">
+                    <chart />
+
+                    <!-- 折合 -->
+                    <converter />
+                </div>
+                <div class="col-r flex-1">
+                    <!-- 价格列表 -->
+                    <price-statistics class="mb16" />
+
+                    <!-- 销售币种列表 -->
+                    <trend-list />
                 </div>
             </div>
         </div>
@@ -23,6 +56,11 @@ import layoutDefault from '@/components/layouts/Default';
 import breadcrumb from '@/components/Breadcrumb';
 import coinInfo from './components/CoinInfo';
 import coinTags from './components/CoinTags';
+import marketCap from './components/MarketCap';
+import chart from './components/Chart';
+import priceStatistics from './components/PriceStatistics';
+import trendList from './components/TrendList';
+import converter from './components/Converter';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -34,7 +72,54 @@ const state = reactive({
 });
 </script>
 <style lang="scss" scoped>
-.chain-head {
-    background: linear-gradient(180deg, #f9fbff 0%, #fff 100%);
+.currency-body {
+    padding-bottom: 92px;
+
+    .coin-head {
+        background: linear-gradient(180deg, #f9fbff 0%, #fff 100%);
+
+        .coin-info-wrap {
+            margin-bottom: 40px;
+        }
+    }
+
+    .coin-types {
+        padding: 20px 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+        a {
+            padding: 5px 10px;
+            line-height: 22px;
+            font-weight: bold;
+            font-size: 12px;
+            border-radius: 4px;
+            margin-right: 12px;
+            color: var(--text-color-1);
+
+            &:hover,
+            &.is-active {
+                color: #fff;
+                background-color: var(--main-color);
+            }
+        }
+    }
+
+    .col-r {
+        max-width: 360px;
+        padding-top: 20px;
+    }
+
+    .coin-chart {
+        margin-bottom: 52px;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .col-r,
+        .col-l {
+            min-width: 100%;
+            max-width: max-content;
+        }
+    }
 }
 </style>

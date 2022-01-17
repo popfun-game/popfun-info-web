@@ -76,7 +76,7 @@ const state = reactive({
 </script>
 <style lang="scss" scoped>
 .coin-info {
-    max-width: 546px;
+    max-width: 536px;
     margin-right: 10px;
 
     h3 {

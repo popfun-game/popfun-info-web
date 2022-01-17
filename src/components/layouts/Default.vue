@@ -5,7 +5,10 @@
             <header-nav />
         </header>
         <slot />
-        <footer class="flex-row flex-items-center">
+        <footer
+            v-if="showFooter"
+            class="flex-row flex-items-center"
+        >
             <div class="wrapper">
                 <div class="scroller flex-row-space-between flex-items-center">
                     <svg-icon
@@ -35,10 +38,18 @@
     </main>
 </template>
 <script setup>
+import { defineProps } from 'vue';
 import headerMarket from '@/components/headers/Market';
 import headerNav from '@/components/headers/Nav';
 import svgIcon from '@/components/SvgIcon';
 import { Promotion } from '@element-plus/icons-vue';
+
+defineProps({
+    showFooter: {
+        type: Boolean,
+        default: true,
+    },
+});
 </script>
 <style lang="scss" scoped>
 main {
