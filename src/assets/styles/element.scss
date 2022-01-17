@@ -23,28 +23,6 @@
             }
         }
     }
-
-    // 下拉菜单
-    &.el-dropdown__popper[role=tooltip] {
-        border: none !important;
-        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.1) !important;
-        border-radius: 4px !important;
-
-        .el-dropdown-menu__item {
-            color: var(--text-color-6);
-            font-weight: bold;
-
-            &:not(.is-disabled):hover {
-                color: var(--main-color);
-            }
-        }
-
-        .el-popper__arrow {
-            &::before {
-                border-color: transparent !important;
-            }
-        }
-    }
 }
 
 // 表格样式覆盖
@@ -80,7 +58,6 @@
 }
 
 // 分页样式覆盖
-
 .el-pagination.is-background {
     padding-right: 0;
 
@@ -146,5 +123,48 @@
                 border-color: var(--main-color);
             }
         }
+    }
+}
+
+// 弹窗样式覆盖
+.el-dialog {
+    .el-dialog__header {
+        padding: 50px 70px 50px 40px;
+
+        .el-dialog__title {
+            display: block;
+            line-height: 1;
+            font-weight: bold;
+            font-size: 28px;
+            color: var(--text-color-1);
+            word-break: break-word;
+        }
+
+        .el-dialog__headerbtn {
+            background-color: var(--text-color-9);
+            width: 28px;
+            height: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            top: 47px;
+            right: 34px;
+
+            // stylelint-disable-next-line
+            i {
+                font-size: 20px;
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+    }
+
+    .el-dialog__body {
+        padding: 0;
+    }
+
+    @media screen and (max-width: 500px) {
+        width: 90% !important;
     }
 }

@@ -26,7 +26,12 @@
         </template>
         <span class="button flex-row flex-items-center cursor-pointer color-1 lh22 font-bold">
             <slot />
-            <el-icon class="ml4"> <caret-bottom /> </el-icon>
+            <el-icon
+                size="12"
+                class="ml4"
+            >
+                <caret-bottom />
+            </el-icon>
         </span>
     </el-tooltip>
 </template>
