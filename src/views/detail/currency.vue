@@ -35,6 +35,9 @@
 
                     <!-- 折合 -->
                     <converter />
+
+                    <!-- coin 介绍 -->
+                    <coin-introduce />
                 </div>
                 <div class="col-r flex-1">
                     <!-- 价格列表 -->
@@ -43,6 +46,17 @@
                     <!-- 销售币种列表 -->
                     <trend-list />
                 </div>
+            </div>
+
+            <div class="wrapper market-table">
+                <market-table />
+            </div>
+
+            <div
+                class="wrapper"
+                style="margin-top: 56px;"
+            >
+                <news />
             </div>
         </div>
     </layout-default>
@@ -61,6 +75,9 @@ import chart from './components/Chart';
 import priceStatistics from './components/PriceStatistics';
 import trendList from './components/TrendList';
 import converter from './components/Converter';
+import coinIntroduce from './components/CoinIntroduce';
+import marketTable from './components/MarketTable';
+import news from './components/News';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -120,6 +137,10 @@ const state = reactive({
             min-width: 100%;
             max-width: max-content;
         }
+    }
+
+    .market-table {
+        margin-top: 56px;
     }
 }
 </style>

@@ -1,44 +1,44 @@
 <!-- 分类table -->
 <template>
-    <section>
-        <ul class="menu flex-row scroller">
-            <li
-                v-for="item in state.menu_list"
-                :key="item.id"
-                class="menu-item font-bold fz12 ts mr12 cursor-pointer"
-                :class="{'is-active': item.id === active}"
-            >
-                {{ item.label }}
-            </li>
-        </ul>
+    <div class="title flex-row-space-between flex-items-center">
+        <h3 class="flex-row flex-items-center font-bold fz22 lh22">
+            <i class="title-mark mr6" />
+            {{ t('market_title', { fullname: '币种全称' }) }}
+        </h3>
 
-        <c-table
-            :columns="state.columns"
-            :data="state.data"
-        />
+        <router-link
+            :to="replacePath(`/currency/${coin}/markets/`)"
+            class="flex-row flex-items-center font-bold lh22"
+        >
+            {{ t('see_all_markets') }}
+            <el-icon class="ml4">
+                <arrow-right />
+            </el-icon>
+        </router-link>
+    </div>
 
-        <div class="pagination flex-row-space-between flex-items-center scroller">
-            {{ t('page_info', { size: state.pages.size, total: state.pages.total }) }}
+    <c-table
+        :columns="state.columns"
+        :data="state.data"
+    />
 
-            <el-pagination
-                :current-page="state.page"
-                background
-                hide-on-single-page
-                :page-size="state.pages.size"
-                :page-sizes="[100, 50, 20]"
-                :total="state.pages.total"
-                layout="prev, pager, next, sizes, jumper"
-                @size-change="methods.sizeChange"
-                @current-change="methods.pageChange"
-            />
-        </div>
-    </section>
+    <div class="flex-row-center">
+        <router-link
+            to=""
+            class="button flex-row-center flex-items-center font-bold"
+        >
+            {{ t('see_all_markets') }}
+        </router-link>
+    </div>
 </template>
 <script setup>
 import { reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
-import cTable from './Table';
+import cTable from '@/components/Table';
+import { ArrowRight } from '@element-plus/icons-vue';
+import confidenceTipDom from './ConfidenceTipDom';
+import liquidityTipDom from './LiquidityTipDom';
 
 defineProps({
     active: {
@@ -65,7 +65,7 @@ const state = reactive({
         },
         {
             prop: 'coin',
-            label: t('th_coin'),
+            label: t('th_source'),
             'min-width': '140px',
             render(h, { row }) {
                 return (
@@ -85,70 +85,66 @@ const state = reactive({
         {
             prop: 'price',
             align: 'right',
+            label: t('th_pairs'),
+        },
+        {
+            prop: 'price',
+            align: 'right',
             label: t('th_price'),
         },
         {
             prop: '1h',
             align: 'right',
-            label: t('th_1h'),
-            render(h, { row }) {
-                return (
-                    <span class={row['1h'] > 0 ? 'color-up' : 'color-down'}>
-                        { row['1h'] > 0 ? `+${row['1h']}` : row['1h'] }%
-                    </span>
-                );
-            },
+            label: t('th_depth'),
         },
         {
             prop: '24h',
             align: 'right',
-            label: t('th_24h'),
-            render(h, { row }) {
-                return (
-                    <span class={row['24h'] > 0 ? 'color-up' : 'color-down'}>
-                        { row['24h'] > 0 ? `+${row['24h']}` : row['24h'] }%
-                    </span>
-                );
-            },
+            label: t('th_depth'),
         },
         {
             prop: '7d',
             align: 'right',
-            label: t('th_7d'),
-            render(h, { row }) {
-                return (
-                    <span class={row['1h'] > 0 ? 'color-up' : 'color-down'}>
-                        { row['1h'] > 0 ? `+${row['1h']}` : row['1h'] }%
-                    </span>
-                );
-            },
+            label: t('th_vol'),
         },
         {
             prop: 'vol',
             align: 'right',
             width: 170,
-            label: t('th_vol24'),
+            label: `${t('th_vol')}%`,
         },
         {
             prop: 'market',
             align: 'right',
             width: 170,
-            label: t('th_mkt_cap'),
-            render(h, { row }) {
+            renderHeader() {
+                return (<confidenceTipDom />);
+            },
+            render() {
                 return (
-                    <div>
-                        <p class="text-ellipsis">{ row.market }</p>
-                        <p class="color-middle text-ellipsis fz12">
-                            { row.market } {row.currency}
-                        </p>
-                    </div>
+                    <span
+                        class="tag"
+                        {...{
+                            class: 'tag-low',
+                        }}
+                    >
+                        { t('tag_low') }
+                    </span>
                 );
             },
         },
         {
             prop: 'last7d',
             align: 'right',
-            label: t('th_last_7d'),
+            label: t('th_liquidity'),
+            renderHeader() {
+                return (<liquidityTipDom />);
+            },
+        },
+        {
+            prop: 'last7d',
+            align: 'right',
+            label: t('th_updated'),
         },
     ],
     data: [
@@ -192,25 +188,44 @@ const methods = {
 };
 </script>
 <style lang="scss" scoped>
-.menu {
-    margin-bottom: 34px;
+.title {
+    min-height: 30px;
+    margin-bottom: 38px;
+}
 
-    &-item {
-        line-height: 22px;
-        padding: 5px 10px;
-        color: var(--text-color-1);
-        border-radius: 4px;
-
-        &:hover,
-        &.is-active {
-            background-color: var(--main-color);
+.el-table {
+    :deep(.cell) {
+        .tag {
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 22px;
             color: #fff;
+            padding: 0 8px;
+            display: inline-block;
+
+            &-high {
+                background-color: #60c389;
+            }
+
+            &-middle {
+                background-color: var(--main-color);
+            }
+
+            &-low {
+                background-color: #e44c32;
+            }
         }
     }
 }
 
-.pagination {
-    padding-top: 28px;
+.button {
+    min-width: 320px;
+    height: 48px;
+    padding: 15px;
+    border-radius: 4px;
+    background-color: rgba(102, 102, 102, 0.08);
+    margin-top: 40px;
+    color: var(--text-color-0);
 }
-
 </style>

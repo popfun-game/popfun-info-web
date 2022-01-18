@@ -131,6 +131,7 @@ const visible = ref(false);
 
 .coin-tag {
     padding-top: 96px;
+    overflow: hidden;
 
     .color-0 {
         color: var(--text-color-0);
@@ -171,8 +172,9 @@ const visible = ref(false);
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 700px) {
     .coin-tag {
+        min-width: 100%;
         padding-top: 20px;
     }
 }
