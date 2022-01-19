@@ -68,7 +68,6 @@ const state = reactive({
 </script>
 <style lang="scss" scoped>
 .left {
-    margin-right: 120px;
     width: 50%;
 }
 
