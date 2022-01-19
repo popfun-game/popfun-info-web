@@ -1120,6 +1120,11 @@
   resolved "https://registry.yarnpkg.com/@soda/get-current-script/-/get-current-script-1.0.2.tgz#a53515db25d8038374381b73af20bb4f2e508d87"
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
+"@splidejs/splide-extension-auto-scroll@^0.3.6":
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@splidejs/splide-extension-auto-scroll/-/splide-extension-auto-scroll-0.3.6.tgz#0063e775536d3c701a3adf6424bb93a3e3ba1c95"
+  integrity sha512-kPgAcLOSJgJXDgz0Fi6uK/ucsMFjCD6ngK7jOuOPdqhL/y87uIOAkrLKIPuq/rbKKqBfg7r3bB5S2H2i+WgQ6Q==
+
 "@splidejs/splide@^3.6.9":
   version "3.6.9"
   resolved "https://registry.yarnpkg.com/@splidejs/splide/-/splide-3.6.9.tgz#ee9041fb9f9bdc6a8fd06fa47536f76769b252a0"

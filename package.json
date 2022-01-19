@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^0.2.4",
+    "@splidejs/splide-extension-auto-scroll": "^0.3.6",
     "@splidejs/vue-splide": "^0.5.15",
     "axios": "^0.24.0",
     "bignumber.js": "^9.0.2",

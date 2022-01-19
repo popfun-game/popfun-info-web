@@ -111,7 +111,7 @@ const handleChange = (splide, newIndex) => {
 <style lang="scss" scoped>
 :deep(.splide-arrow) {
     background-color: rgba(0, 0, 0, 0.4);
-    margin-top: -26px;
+    margin-top: -2%;
 
     &[disabled] {
         display: none;

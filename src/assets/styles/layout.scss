@@ -127,7 +127,7 @@
 }
 
 // 超出多少行隐藏显示...
-@each $key in 1, 2, 3 {
+@each $key in 2, 3, 4 {
     .text-ellipsis-#{$key} {
         display: -webkit-box;
         overflow: hidden;
@@ -148,6 +148,7 @@
     width: 100%;
     max-width: var(--page-width);
     margin: 0 auto;
+    overflow: hidden;
 }
 
 .scroller {
@@ -182,4 +183,27 @@
     height: 16px;
     background-color: var(--main-color);
     border-radius: 4px;
+}
+
+// 按钮样式
+.btn-primary,
+.btn-info {
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary {
+    height: 46px;
+    color: #fff;
+    background: var(--main-color);
+    padding: 12px 18px;
+    font-size: 16px;
+}
+
+.btn-info {
+    height: 48px;
+    color: var(--text-color-0);
+    background: rgba(102, 102, 102, 0.08);
+    padding: 15px;
 }

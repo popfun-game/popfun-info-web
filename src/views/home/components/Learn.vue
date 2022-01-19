@@ -4,7 +4,7 @@
         <li
             v-for="(item, index) in state.list"
             :key="index"
-            class="flex-row-space-between"
+            class="flex-row-space-between flex-wrap"
         >
             <div class="left">
                 <h3
@@ -104,5 +104,16 @@ li {
 
 li + li {
     margin-top: 40px;
+}
+
+@media screen and (max-width: 700px) {
+    .left,
+    .right {
+        min-width: 100%;
+    }
+
+    .left {
+        margin-bottom: 40px;
+    }
 }
 </style>
