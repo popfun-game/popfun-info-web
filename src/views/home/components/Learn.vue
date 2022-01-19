@@ -6,7 +6,7 @@
             :key="index"
             class="flex-row-space-between flex-wrap"
         >
-            <div class="left">
+            <div class="left flex-1 mr20">
                 <h3
                     class="fz16 mb4 font-bold pl14"
                     v-html="item.title1"
@@ -16,7 +16,7 @@
                     v-html="item.desc1"
                 />
             </div>
-            <div class="right">
+            <div class="right flex-1">
                 <h3
                     class="fz16 mb4 font-bold pl14"
                     v-html="item.title2"
@@ -67,14 +67,6 @@ const state = reactive({
 });
 </script>
 <style lang="scss" scoped>
-.left {
-    width: 50%;
-}
-
-.right {
-    width: 50%;
-}
-
 li {
     word-break: break-word;
 
@@ -113,6 +105,7 @@ li + li {
 
     .left {
         margin-bottom: 40px;
+        margin-left: 0;
     }
 }
 </style>
