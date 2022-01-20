@@ -1,165 +1,105 @@
 <template>
-    <Splide
-        :options="state.options"
-        @splide:move="handleChange"
-    >
-        <SplideSlide
+    <ul class="flex-row flex-wrap">
+        <li
             v-for="(item, index) in state.list"
             :key="index"
+            class="card"
         >
             <a
-                :href="item.href"
+
+                :href="item.link ? item.link : 'javascript:;'"
                 rel="noreferrer nofollow noopener"
-                target="_blank"
-                class="card"
+                :target="item.link ? '_blank' : ''"
             >
-                <div class="card-con flex-col-space-between">
-                    <img
-                        src="@/assets/images/index/banner.jpg"
-                        alt="Sample 1"
-                    >
-                    <p class="title fz12 text-ellipsis">{{ item.title }}</p>
-                    <p class="info fz14 font-bold text-ellipsis">{{ item.sub }}</p>
-                </div>
+                <auto-img
+                    :src="item.img"
+                    width="100%"
+                    height="61.51%"
+                    radius="8px"
+                />
+                <p class="title fz12 lh22 text-ellipsis">{{ item.title }}</p>
+                <p class="info fz14 lh22 font-bold text-ellipsis">{{ item.summary }}</p>
             </a>
-        </SplideSlide>
-    </Splide>
+        </li>
+    </ul>
 </template>
 <script setup>
 import { reactive } from 'vue';
-import { Splide, SplideSlide } from '@splidejs/vue-splide';
-// eslint-disable-next-line
-import '@splidejs/splide/dist/css/splide.min.css';
+import { api } from '@/config/api';
+import autoImg from '@/components/AutoImg';
+import { ElMessage } from 'element-plus';
 
 const state = reactive({
-    options: {
-        perPage: 4,
-        gap: 20,
-        pagination: false,
-        padding: {
-            right: '15%',
-        },
-        classes: {
-            arrow: 'splide__arrow splide-arrow',
-        },
-    },
     list: [
         {
-            href: 'http://www.baidu.com',
+            link: '',
             img: '',
-            title: '1111sldfjsdlfjsdalfjsdalfjsd',
-            sub: '111sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
+            title: '--',
+            summary: '--',
         },
         {
-            href: 'http://www.baidu.com',
+            link: '',
             img: '',
-            title: '2sldfjsdlfjsdalfjsdalfjsd',
-            sub: '2sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
+            title: '--',
+            summary: '--',
         },
         {
-            href: 'http://www.baidu.com',
+            link: '',
             img: '',
-            title: '3sldfjsdlfjsdalfjsdalfjsd',
-            sub: '4sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
+            title: '--',
+            summary: '--',
         },
         {
-            href: 'http://www.baidu.com',
+            link: '',
             img: '',
-            title: '4sldfjsdlfjsdalfjsdalfjsd',
-            sub: '4sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
-        },
-        {
-            href: 'http://www.baidu.com',
-            img: '',
-            title: '5sldfjsdlfjsdalfjsdalfjsd',
-            sub: '5sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
-        },
-        {
-            href: 'http://www.baidu.com',
-            img: '',
-            title: '6sldfjsdlfjsdalfjsdalfjsd',
-            sub: '6sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
-        },
-        {
-            href: 'http://www.baidu.com',
-            img: '',
-            title: '6sldfjsdlfjsdalfjsdalfjsd',
-            sub: '6sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
-        },
-        {
-            href: 'http://www.baidu.com',
-            img: '',
-            title: '6sldfjsdlfjsdalfjsdalfjsd',
-            sub: '6sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
-        },
-        {
-            href: 'http://www.baidu.com',
-            img: '',
-            title: '6sldfjsdlfjsdalfjsdalfjsd',
-            sub: '6sadlfjsalkdfjsadlfjsdalfjsadlfjsdalfj',
+            title: '--',
+            summary: '--',
         },
     ],
 });
 
-// 监听切换卡片
-const handleChange = (splide, newIndex) => {
-    state.options.padding.right = newIndex ? '' : '15%';
-    state.options.padding.left = newIndex ? '15%' : '';
+const methods = {
+    // 获取资讯列表
+    getNewList() {
+        api.getNewsList({ coin: 'bitcoin', limit: 4 }).then((res) => {
+            if (res.success) {
+                state.list = res.result.slice(0, 4);
+            } else {
+                ElMessage.error(res.message);
+            }
+        });
+    },
 };
 
+methods.getNewList();
 </script>
 <style lang="scss" scoped>
-:deep(.splide-arrow) {
-    background-color: rgba(0, 0, 0, 0.4);
-    margin-top: -2%;
+ul {
+    margin: -10px -15px;
+    min-height: 244px;
 
-    &[disabled] {
-        display: none;
-    }
+    .card {
+        padding: 10px 15px;
+        overflow: hidden;
+        width: 25%;
 
-    svg {
-        fill: #fff;
-        width: 1em;
-        height: 1em;
-    }
-}
-
-.card {
-    width: 100%;
-    display: block;
-    padding-bottom: 84.17%;
-    position: relative;
-
-    .card-con {
-        position: absolute;
-        width: 100%;
-        top: 0;
-        bottom: 0;
-
-        img {
-            border-radius: 8px;
-            width: 100%;
-            height: 73.3%;
-            max-height: 148px;
-            object-fit: cover;
+        a {
+            display: block;
         }
 
         .title {
-            padding-top: 4%;
+            padding-top: 10px;
             color: var(--text-color-9);
-            min-height: 12px;
         }
 
         .info {
             color: var(--text-color-3);
-            min-height: 14px;
         }
+    }
 
-        @media screen and (max-width: 400px) {
-            .title,
-            .info {
-                transform: scale(0.8);
-            }
+    @media screen and (max-width: 700px) {
+        .card {
+            width: 50%;
         }
     }
 }

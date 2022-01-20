@@ -10,9 +10,10 @@
 
 import axios from '@/utils/axios';
 
-export const $api = {
-    test(params) {
-        return axios.get('@api2/spot/api/v1/auth/check', { params });
+export const api = {
+    // 获取资讯列表
+    getNewsList(params) {
+        return axios.get('@api/article/news-list', { params });
     },
 };
 

@@ -1,17 +1,20 @@
 <template>
     <layout-default>
         <div class="index flex-1">
-            <div class="wrapper banner flex-row">
+            <a
+                href="javascript:;"
+                class="wrapper banner flex-row cursor-default"
+            >
                 <img
                     src="@/assets/images/index/banner.jpg"
                     alt="banner"
                 >
-            </div>
+            </a>
             <div class="wrapper">
                 <!-- 滑动模块 -->
                 <i-splide class="splide" />
                 <!-- 类型table -->
-                <category-table active="token" />
+                <i-table active="token" />
                 <!-- 工作内容介绍 -->
                 <work-info />
                 <!-- 学习 -->
@@ -22,7 +25,7 @@
 </template>
 <script setup>
 import layoutDefault from '@/components/layouts/Default';
-import categoryTable from '@/components/CategoryTable';
+import iTable from './components/Table';
 import iSplide from './components/Splide';
 import workInfo from './components/WorkInfo';
 import iLearn from './components/Learn';
@@ -32,7 +35,7 @@ import iLearn from './components/Learn';
     margin-bottom: 40px;
 
     .banner {
-        margin-bottom: 20px;
+        margin-bottom: 30px;
 
         img {
             width: 100%;
@@ -40,7 +43,7 @@ import iLearn from './components/Learn';
     }
 
     .splide {
-        margin-bottom: 45px;
+        margin-bottom: 40px;
     }
 }
 </style>

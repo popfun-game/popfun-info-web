@@ -38,7 +38,7 @@
 import { reactive, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
-import cTable from './Table';
+import cTable from '@/components/Table';
 
 defineProps({
     active: {

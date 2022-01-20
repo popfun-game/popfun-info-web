@@ -23,6 +23,24 @@
             }
         }
     }
+
+    // 菜单下拉样式
+    .el-menu {
+        padding: 18px;
+        border-radius: 4px;
+
+        .el-menu-item {
+            border-radius: 4px;
+            height: 44px;
+            font-weight: bold;
+            line-height: 22px;
+            color: var(--text-color-1);
+
+            &.is-active {
+                background-color: rgba(102, 102, 102, 0.08);
+            }
+        }
+    }
 }
 
 // 表格样式覆盖
@@ -169,6 +187,7 @@
     }
 }
 
+// 复选框
 .el-checkbox {
     .el-checkbox__inner::after {
         width: 4px;
@@ -176,5 +195,13 @@
         left: 6px;
         top: 2px;
         border-width: 2px;
+    }
+}
+
+.el-message {
+    padding: 8px 12px !important;
+
+    .el-message__icon {
+        font-size: 21px;
     }
 }

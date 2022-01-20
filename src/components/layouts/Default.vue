@@ -1,7 +1,7 @@
 <template>
     <main class="flex-col-space-between">
         <header>
-            <header-market />
+            <header-market v-if="false" />
             <header-nav />
         </header>
         <slot />
@@ -54,6 +54,10 @@ defineProps({
 <style lang="scss" scoped>
 main {
     height: 100vh;
+
+    header {
+        padding: 24px 0;
+    }
 
     footer {
         background-color: #12141c;

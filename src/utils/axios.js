@@ -1,6 +1,6 @@
 import axios from 'axios';
 import proxy from '@/config/proxy';
-import { i18n } from '@/lang/i18n';
+import { getI18nLang } from '@/lang/i18n';
 
 const Axios = axios.create({
     timeout: 30000, // 30秒
@@ -61,7 +61,7 @@ const requestHandle = (config) => {
 
     // 添加国际化
     config.headers = {
-        'Accept-Language': i18n.getLang(),
+        'Accept-Language': getI18nLang(),
         ...config.headers,
     };
 
@@ -94,7 +94,7 @@ const requestHandle = (config) => {
 const responseHandle = (response) => {
     const data = { ...response.data };
 
-    data.success = data.success || data.code === 200 || data.status === 'ok';
+    data.success = data.success || (data.code >= 200 && data.code <= 300) || data.status === 'ok';
     data.code = data.code || 200;
     data.message = data.message || '200';
 

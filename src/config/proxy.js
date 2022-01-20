@@ -4,15 +4,8 @@
  * @type {Object}
  */
 
-const { NODE_ENV } = process.env;
-
 export default {
-    '@api2/': {
-        url: NODE_ENV === 'development' ? '/-/api2/' : 'http://jinnan.dev',
-        headers() {
-            return {
-
-            };
-        },
+    '@api/': {
+        url: 'http://cmc2.mop.fan/api/',
     },
 };

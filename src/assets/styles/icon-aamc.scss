@@ -22,6 +22,14 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-arrow-bottom::before {
+    content: "\e909";
+}
+
+.icon-arrow-top::before {
+    content: "\e90a";
+}
+
 .icon-time::before {
     content: "\e908";
 }

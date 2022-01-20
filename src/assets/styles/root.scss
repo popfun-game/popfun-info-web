@@ -36,4 +36,19 @@
         --el-checkbox-input-width: 20px;
         --el-checkbox-input-height: 20px;
     }
+
+    .el-menu {
+        --el-menu-active-color: var(--text-color-1);
+        --el-menu-hover-text-color: var(--text-color-1);
+        --el-menu-hover-bg-color: rgba(102, 102, 102, 0.08);
+    }
+
+    .el-message {
+        --el-message-min-width: 200px;
+    }
+
+    .el-input {
+        --el-input-focus-border: var(--main-color);
+        --el-input-text-color: var(--text-color-0);
+    }
 }

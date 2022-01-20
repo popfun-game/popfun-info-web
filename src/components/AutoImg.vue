@@ -12,11 +12,38 @@
             :src="src"
             lazy
             fit="cover"
-        />
+        >
+            <template
+                v-if="src === ''"
+                #error
+            >
+                <span class="el-image__error flex-col">
+                    <el-icon
+                        class="is-loading"
+                        size="20"
+                    >
+                        <loading />
+                    </el-icon>
+                    <p class="mt10">Loading...</p>
+                </span>
+            </template>
+            <template #placeholder>
+                <span class="el-image__error flex-col">
+                    <el-icon
+                        class="is-loading"
+                        size="20"
+                    >
+                        <loading />
+                    </el-icon>
+                    <p class="mt10">Loading...</p>
+                </span>
+            </template>
+        </el-image>
     </div>
 </template>
 <script setup>
 import { defineProps } from 'vue';
+import { Loading } from '@element-plus/icons-vue';
 
 defineProps({
     src: {
