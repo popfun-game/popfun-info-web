@@ -1,5 +1,5 @@
 const StylelintPlugin = require('stylelint-webpack-plugin');
-const { proxy, LogMessage } = require('./config/proxy');
+const { LogMessage } = require('./config/proxy');
 
 module.exports = {
     lintOnSave: 'warning',
@@ -7,7 +7,7 @@ module.exports = {
     assetsDir: 'static',
     devServer: {
         disableHostCheck: true,
-        proxy,
+        // proxy,
         overlay: {
             errors: false,
         },
