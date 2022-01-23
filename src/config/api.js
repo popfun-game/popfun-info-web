@@ -15,6 +15,10 @@ export const api = {
     getNewsList(params) {
         return axios.get('@api/article/news-list', { params });
     },
+    // 获取币种排行
+    getCoinRank(params) {
+        return axios.get('@api/coin/rank', { params });
+    },
 };
 
 export default {};

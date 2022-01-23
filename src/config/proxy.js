@@ -6,6 +6,7 @@
 
 export default {
     '@api/': {
-        url: 'http://cmc2.mop.fan/api/',
+        // url: 'http://cmc2.mop.fan/api/',
+        url: 'https://api.pop.fun/api/',
     },
 };

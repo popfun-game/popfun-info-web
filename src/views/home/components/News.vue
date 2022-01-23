@@ -61,11 +61,16 @@ const state = reactive({
 const methods = {
     // 获取资讯列表
     getNewList() {
-        api.getNewsList({ coin: 'bitcoin', limit: 4 }).then((res) => {
+        api.getNewsList({ limit: 4 }).then((res) => {
             if (res.success) {
                 state.list = res.result.slice(0, 4);
             } else {
                 ElMessage.error(res.message);
+
+                state.list = state.list.map((item) => {
+                    item.img = '--';
+                    return item;
+                });
             }
         });
     },
@@ -77,6 +82,7 @@ methods.getNewList();
 ul {
     margin: -10px -15px;
     min-height: 244px;
+    margin-bottom: 30px;
 
     .card {
         padding: 10px 15px;

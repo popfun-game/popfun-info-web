@@ -96,7 +96,7 @@ const responseHandle = (response) => {
 
     data.success = data.success || (data.code >= 200 && data.code <= 300) || data.status === 'ok';
     data.code = data.code || 200;
-    data.message = data.message || '200';
+    data.message = data.message || data.error || 'Error in request';
 
     // 如果代理有处理相应函数优先使用
     if (response.config.responseHandle) {
@@ -115,7 +115,7 @@ const errorHandle = () => ({
     success: false,
     code: 500,
     data: null,
-    message: '访问出错，请稍后重试',
+    message: 'Access error, please try again later',
 });
 
 // 请求参数处理

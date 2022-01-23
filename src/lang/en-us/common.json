@@ -12,6 +12,8 @@
   "btn_see_all": "See All",
   "btn_contact_us": "Contact Us",
   "btn_link_wallet": "Link wallet",
+  "btn_retry": "Retry",
+  "list_loading": "Loading...",
   "tag_low": "Low",
   "tag_moderate": "Moderate",
   "tag_high": "High",

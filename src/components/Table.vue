@@ -4,6 +4,16 @@
         v-bind="$attrs"
         :class="customClass"
     >
+        <template #empty>
+            <el-empty :image-size="100">
+                <button
+                    class="btn-primary small"
+                    @click="emit('onRetry')"
+                >
+                    {{ t('btn_retry') }}
+                </button>
+            </el-empty>
+        </template>
         <slot v-if="!columns.length" />
         <el-table-column
             v-for="item in columns"
@@ -25,6 +35,7 @@
 </template>
 <script>
 import { h } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 export default {
     components: {
@@ -51,6 +62,12 @@ export default {
             type: String,
             default: 'reset-style',
         },
+    },
+    emits: ['onRery'],
+    setup(props, { emit }) {
+        const { t } = useI18n();
+
+        return { t, emit };
     },
 };
 </script>

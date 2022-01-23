@@ -72,6 +72,33 @@
                 font-weight: normal;
             }
         }
+
+        .el-empty__description {
+            line-height: 22px;
+        }
+
+        .el-empty__bottom {
+            line-height: 1;
+        }
+
+        .el-loading-spinner {
+            circle {
+                stroke: var(--main-color);
+                stroke-width: 6;
+            }
+
+            .el-loading-text {
+                margin-top: 20px;
+                color: var(--main-color);
+                font-weight: bold;
+            }
+        }
+
+        &.el-loading-parent--relative {
+            .el-table__empty-text {
+                opacity: 0;
+            }
+        }
     }
 }
 

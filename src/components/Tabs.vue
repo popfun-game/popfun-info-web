@@ -1,5 +1,5 @@
 <template>
-    <ul class="flex-row flex-items-center flex-wrap">
+    <ul class="flex-row flex-items-center scroller">
         <li
             v-for="item in list"
             :key="item.id"
@@ -24,12 +24,12 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['update:modelValue', 'onClick']);
+const emits = defineEmits(['update:modelValue', 'onChange']);
 
 const onClick = (id) => {
     if (props.active === id) return;
     emits('update:modelValue', id);
-    emits('onClick', id);
+    emits('onChange', id);
 };
 </script>
 <style lang="scss" scoped>
@@ -48,6 +48,10 @@ ul {
         transition: all 0.3s ease-in-out;
         margin: 4px 6px;
         cursor: pointer;
+
+        &:hover {
+            background-color: rgba(102, 102, 102, 0.08);
+        }
 
         &.is-active {
             background-color: var(--main-color);
