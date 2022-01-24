@@ -32,3 +32,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### styleling
 See [文档](http://stylelint.cn/)
+
+## 问题记录
+
+- 首页联系我们 链接地址
+- footer 里的多媒体链接还没有

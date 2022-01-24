@@ -12,8 +12,8 @@ import axios from '@/utils/axios';
 
 export const api = {
     // 获取资讯列表
-    getNewsList(params) {
-        return axios.get('@api/article/news-list', { params });
+    getArticleList(params) {
+        return axios.get('@api/article/list', { params });
     },
     // 获取币种排行
     getCoinRank(params) {

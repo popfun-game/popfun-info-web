@@ -1,111 +1,104 @@
 <template>
     <card-title :url="replacePath('/learn/')" />
-    <ul>
+    <ul class="flex-row">
         <li
             v-for="(item, index) in state.list"
             :key="index"
-            class="flex-row-space-between flex-wrap"
+            class="flex-1"
         >
-            <div class="left flex-1 mr20">
-                <h3
-                    class="fz16 mb4 font-bold pl14"
-                    v-html="item.title1"
+            <a
+
+                :href="item.link ? item.link : 'javascript:;'"
+                rel="noreferrer nofollow noopener"
+                :target="item.link ? '_blank' : ''"
+            >
+                <auto-img
+                    :src="item.img"
+                    width="100%"
+                    height="61.4754%"
+                    radius="8px"
                 />
-                <p
-                    class="fz12 pl14"
-                    v-html="item.desc1"
-                />
-            </div>
-            <div class="right flex-1">
-                <h3
-                    class="fz16 mb4 font-bold pl14"
-                    v-html="item.title2"
-                />
-                <p
-                    class="fz12 pl14"
-                    v-html="item.desc2"
-                />
-            </div>
+                <p class="title fz16 lh22 mt10 text-ellipsis-2">{{ item.title }}</p>
+                <p class="info fz12 lh18 mt6 text-ellipsis">{{ item.summary }}</p>
+            </a>
         </li>
     </ul>
 </template>
 <script setup>
 import { reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
+import { api } from '@/config/api';
+import autoImg from '@/components/AutoImg';
+import { ElMessage } from 'element-plus';
 import cardTitle from './CardTitle';
-
-const { t } = useI18n();
 
 const state = reactive({
     list: [
         {
-            title1: t('learn_t1'),
-            desc1: t('learn_desc1'),
-            title2: t('learn_t2'),
-            desc2: t('learn_desc2'),
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
         },
         {
-            title1: t('learn_t3'),
-            desc1: t('learn_desc3'),
-            title2: t('learn_t4'),
-            desc2: t('learn_desc5'),
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
         },
         {
-            title1: t('learn_t5'),
-            desc1: t('learn_desc5'),
-            title2: t('learn_t6'),
-            desc2: t('learn_desc6'),
-        },
-        {
-            title1: t('learn_t7'),
-            desc1: t('learn_desc7'),
-            title2: t('learn_t8'),
-            desc2: t('learn_desc8'),
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
         },
     ],
 });
+
+const methods = {
+    // 获取资讯列表
+    getNewList() {
+        api.getArticleList({ limit: 3, type: 'learn' }).then((res) => {
+            if (res.success) {
+                if (res.result.length) {
+                    state.list = res.result.slice(0, 3);
+                } else {
+                    methods.setEmptyList();
+                }
+            } else {
+                ElMessage.error(res.message);
+
+                methods.setEmptyList();
+            }
+        });
+    },
+    // 设置空列表
+    setEmptyList() {
+        state.list = state.list.map((item) => {
+            item.img = '--';
+            return item;
+        });
+    },
+};
+
+methods.getNewList();
 </script>
 <style lang="scss" scoped>
-li {
-    word-break: break-word;
+ul {
+    margin: 0 -25px 40px;
 
-    h3 {
-        position: relative;
-        line-height: 22px;
-        color: var(--text-color-3);
+    li {
+        margin: 0 25px;
+        width: 366px;
 
-        &::before {
-            content: "";
-            position: absolute;
-            width: 4px;
-            height: 16px;
-            left: 0;
-            top: 4px;
-            background-color: var(--main-color);
-            border-radius: 4px;
+        .title {
+            height: 44px;
+            color: var(--text-color-3);
         }
-    }
 
-    p {
-        line-height: 18px;
-        color: var(--text-color-6);
-    }
-}
-
-li + li {
-    margin-top: 40px;
-}
-
-@media screen and (max-width: 700px) {
-    .left,
-    .right {
-        min-width: 100%;
-    }
-
-    .left {
-        margin-bottom: 40px;
-        margin-left: 0;
+        .info {
+            color: #5d6c80;
+        }
     }
 }
 </style>

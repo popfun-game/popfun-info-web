@@ -1,16 +1,13 @@
 <!-- 工作内容介绍 -->
 <template>
     <article>
-        <div
-            class="title flex-row font-bold"
-            :style="{'margin-bottom': show ? '32px' : ''}"
-        >
+        <div class="title flex-row font-bold">
             {{ t('work_info') }}
             <span
                 class="btn-more cursor-pointer ml4"
                 @click="show = !show"
             >
-                {{ t('text_btn_read_more') }}
+                {{ show ? t('text_btn_read_less') : t('text_btn_read_more') }}
             </span>
         </div>
         <el-collapse-transition>
@@ -54,6 +51,8 @@ article {
     }
 
     :deep(.text) {
+        padding-top: 32px;
+
         h3 {
             color: var(--text-color-1);
             font-weight: bold;

@@ -21,11 +21,13 @@
                 <!-- 新闻 -->
                 <i-news />
                 <!-- 类型table -->
-                <i-table active="Gaming" />
+                <i-table active="gaming" />
                 <!-- 工作内容介绍 -->
                 <work-info />
                 <!-- 学习 -->
                 <i-learn />
+                <!-- 联系我们 -->
+                <contact-us />
             </div>
         </div>
     </layout-default>
@@ -39,4 +41,5 @@ import iTable from './components/Table';
 import iNews from './components/News';
 import workInfo from './components/WorkInfo';
 import iLearn from './components/Learn';
+import ContactUs from './components/ContactUs';
 </script>

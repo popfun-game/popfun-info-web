@@ -75,10 +75,12 @@ const path = computed(() => {
     const list = [`M-1,${props.height}`];
     const gap = props.width / (props.list.length - 1);
     const max = Math.max.apply(null, props.list);
+    const min = Math.min.apply(null, props.list);
+    const diff = max - min || 1;
 
     props.list.forEach((item, index) => {
         const i = index * gap;
-        const scale = props.height - (item * props.height * 0.95) / max;
+        const scale = ((max - item) * props.height) / diff;
 
         list.push(`${i.toFixed(2)},${scale.toFixed(2)}`);
     });

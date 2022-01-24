@@ -5,6 +5,7 @@
             <header-nav />
         </header>
         <slot />
+        <el-backtop />
         <footer
             v-if="showFooter"
             class="flex-row flex-items-center"
@@ -16,21 +17,33 @@
                         class="flex-shrink-0"
                     />
                     <div class="links flex-row">
-                        <a href="javascript:;">
-                            <el-icon><promotion /></el-icon>
+                        <a
+                            href="javascript:;"
+                            rel="noreferrer nofollow noopener"
+                        >
+                            <i class="icon-twitter" />
                         </a>
-                        <a href="javascript:;">
-                            <el-icon><promotion /></el-icon>
+                        <a
+                            href="javascript:;"
+                            rel="noreferrer nofollow noopener"
+                        >
+                            <i class="icon-instagram" />
                         </a>
-                        <a href="javascript:;">
-                            <el-icon><promotion /></el-icon>
+                        <a
+                            href="javascript:;"
+                            rel="noreferrer nofollow noopener"
+                        >
+                            <i class="icon-facebook" />
                         </a>
-                        <a href="javascript:;">
-                            <el-icon><promotion /></el-icon>
+                        <a
+                            href="javascript:;"
+                            rel="noreferrer nofollow noopener"
+                        >
+                            <i class="icon-linkedin" />
                         </a>
                     </div>
                     <div class="copyright fz16 font-bold">
-                        ©{{ new Date().getFullYear() }} AAMC
+                        ©{{ new Date().getFullYear() }} Popfun
                     </div>
                 </div>
             </div>
@@ -42,7 +55,6 @@ import { defineProps } from 'vue';
 import headerMarket from '@/components/headers/Market';
 import headerNav from '@/components/headers/Nav';
 import svgIcon from '@/components/SvgIcon';
-import { Promotion } from '@element-plus/icons-vue';
 
 defineProps({
     showFooter: {
@@ -67,7 +79,7 @@ main {
         .links {
             a {
                 color: #fff;
-                font-size: 20px;
+                font-size: 28px;
                 margin: 10px;
             }
         }

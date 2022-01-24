@@ -61,17 +61,25 @@ const state = reactive({
 const methods = {
     // 获取资讯列表
     getNewList() {
-        api.getNewsList({ limit: 4 }).then((res) => {
+        api.getArticleList({ limit: 4, type: 'news' }).then((res) => {
             if (res.success) {
-                state.list = res.result.slice(0, 4);
+                if (res.result.length) {
+                    state.list = res.result.slice(0, 4);
+                } else {
+                    methods.setEmptyList();
+                }
             } else {
                 ElMessage.error(res.message);
 
-                state.list = state.list.map((item) => {
-                    item.img = '--';
-                    return item;
-                });
+                methods.setEmptyList();
             }
+        });
+    },
+    // 设置空列表
+    setEmptyList() {
+        state.list = state.list.map((item) => {
+            item.img = '--';
+            return item;
         });
     },
 };
