@@ -1,7 +1,7 @@
 <template>
     <layout-default>
         <div
-            class="flex-1"
+            class="flex-1 body-bg pt20"
             style="margin-bottom: 40px;"
         >
             <a

@@ -68,7 +68,7 @@ main {
     height: 100vh;
 
     header {
-        padding: 24px 0;
+        padding-top: 24px;
     }
 
     footer {

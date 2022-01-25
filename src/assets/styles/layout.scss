@@ -227,3 +227,18 @@
         cursor: not-allowed;
     }
 }
+
+.body-bg {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 100%;
+        height: 462px;
+        left: 0;
+        top: 0;
+        background: linear-gradient(180deg, #f9fbff 0%, #fff 100%);
+    }
+}

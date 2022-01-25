@@ -67,6 +67,11 @@ const onClick = (val) => {
     background: rgba(102, 102, 102, 0.08);
     padding: 2px 8px;
     border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        color: var(--main-color);
+    }
 }
 
 .list {

@@ -1,6 +1,6 @@
 <template>
     <layout-default :show-footer="false">
-        <div class="currency-body flex-1">
+        <div class="currency-body flex-1 body-bg">
             <div class="coin-head pb24 pt16">
                 <div class="wrapper">
                     <breadcrumb :list="state.breadcrumb" />
