@@ -13,6 +13,7 @@
             :src="src"
             lazy
             fit="cover"
+            v-bind="$attrs"
         >
             <template
                 v-if="src === ''"

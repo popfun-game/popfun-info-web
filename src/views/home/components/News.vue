@@ -63,8 +63,8 @@ const methods = {
     getNewList() {
         api.getArticleList({ limit: 4, type: 'news' }).then((res) => {
             if (res.success) {
-                if (res.result.length) {
-                    state.list = res.result.slice(0, 4).map((item) => {
+                if (res.data && res.data.result.length) {
+                    state.list = res.data.result.slice(0, 4).map((item) => {
                         item.img = item.img ? item.img : '--';
 
                         return item;

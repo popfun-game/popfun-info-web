@@ -28,10 +28,6 @@ const routes = [
         component: () => import('@/views/detail/currency'),
     },
     {
-        path: '/currency/:coin/:type',
-        component: () => import('@/views/detail/currency'),
-    },
-    {
         path: '/:404*',
         redirect: '/',
     },

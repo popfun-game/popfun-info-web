@@ -1,75 +1,84 @@
 <!-- 币种标签 -->
 <template>
     <div class="coin-tag flex-1">
-        <div class="color-0 font-bold lh22 mb10">
-            {{ t('tags') }}
-        </div>
-        <div class="tag-list flex-row flex-items-center flex-wrap">
-            <a
-                v-for="item in 4"
-                :key="item"
-                href="javascript:;"
-                class="tag font-bold lh22"
-            >
-                tag{{ item }}
-            </a>
-            <a
-                href="javascript:;"
-                class="tag font-bold lh22 highlight flex-row flex-items-center"
-                @click="visible = true"
-            >
-                {{ t('view_all') }}
-                <el-icon
-                    size="12"
-                    class="ml6"
+        <!-- 不展示tag -->
+        <template v-if="false">
+            <div class="color-0 font-bold lh22 mb10">
+                {{ t('tags') }}
+            </div>
+            <div class="tag-list flex-row flex-items-center flex-wrap">
+                <a
+                    v-for="item in 4"
+                    :key="item"
+                    href="javascript:;"
+                    class="tag font-bold lh22"
                 >
-                    <arrow-right />
-                </el-icon>
-            </a>
-        </div>
-        <div class="color-0 font-bold lh22 mb10 mt24">
+                    tag{{ item }}
+                </a>
+                <a
+                    href="javascript:;"
+                    class="tag font-bold lh22 highlight flex-row flex-items-center"
+                    @click="visible = true"
+                >
+                    {{ t('view_all') }}
+                    <el-icon
+                        size="12"
+                        class="ml6"
+                    >
+                        <arrow-right />
+                    </el-icon>
+                </a>
+            </div>
+        </template>
+
+        <div class="color-0 font-bold lh22 mb10">
             {{ t('info') }}
         </div>
         <div class="tag-list tag-info flex-row flex-items-center flex-wrap">
             <a
-                href=""
+                v-for="link in data.homepage"
+                :key="link"
+                :href="link"
+                rel="noreferrer nofollow noopener"
                 target="_blank"
                 class="tag font-bold lh22 flex-row flex-items-center"
             >
-                <i class="icon-link fz16 mr4" />bitcoin.org
+                <i class="icon-link fz16 mr4" />
+                {{ matchHostname(link) }}
             </a>
 
             <tag-tooltip
-                :list="[
-                    {value: 2, label: 'baidu', href: 'https://www.baidu.com'}
-                ]"
+                v-if="data.explorers?.length"
+                :list="data.explorers"
             >
                 <i class="icon-search fz16 mr4" />Explorers
             </tag-tooltip>
 
             <tag-tooltip
-                :list="[
-                    {value: 2, label: 'baidu', href: 'https://www.baidu.com'}
-                ]"
+                v-if="data.community?.length"
+                :list="data.community"
             >
                 <i class="icon-people fz16 mr4" />Community
             </tag-tooltip>
 
             <a
-                href=""
+                v-if="data.source_code"
+                :href="data.source_code"
                 target="_blank"
+                rel="noreferrer nofollow noopener"
                 class="tag font-bold lh22 flex-row flex-items-center"
             >
                 <i class="icon-code fz16 mr4" />Source code
             </a>
 
-            <a
+            <!-- <a
                 href=""
                 target="_blank"
+                rel="noreferrer nofollow noopener"
                 class="tag font-bold lh22 flex-row flex-items-center"
             >
                 <i class="icon-book fz16 mr4" />Whitepaper
-            </a>
+            </a> -->
         </div>
     </div>
 
@@ -104,14 +113,53 @@
     </el-dialog>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { defineProps, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import tagTooltip from '@/components/TagTooltip';
 import { ArrowRight } from '@element-plus/icons-vue';
 import { replacePath } from '@/lang/i18n';
 
+const props = defineProps({
+    links: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+});
+
 const { t } = useI18n();
 const visible = ref(false);
+
+const matchHostname = (href = '') => {
+    if (/https:\/\/(wwww\.)?([\w.]+)\//.test(href)) {
+        return RegExp.$2;
+    }
+
+    return href;
+};
+
+const data = computed(() => {
+    const { links } = props;
+    if (!Object.keys(links).length) return {};
+
+    return {
+        homepage: [...links.homepage, ...links.announcement_url].filter((item) => item),
+        explorers: links.blockchain_site.filter((item) => item).map((item) => ({
+            label: matchHostname(item),
+            href: item,
+        })),
+        community: [
+            { label: 'Reddit', href: links.subreddit_url },
+            { label: 'Twitter', href: links.twitter_screen_name ? `https://twitter.com/${links.twitter_screen_name}` : '' },
+            { label: 'Telegram', href: links.telegram_channel_identifier ? `https://t.me/${links.telegram_channel_identifier}` : '' },
+            { label: 'Discord', href: links.chat_url[0] },
+            { label: 'Facebook', href: links.facebook_username ? `https://www.facebook.com/${links.facebook_username}` : '' },
+        ].filter((item) => item.href),
+        source_code: links.repos_url.github[0],
+    };
+});
+
 </script>
 <style lang="scss" scoped>
 
@@ -130,8 +178,9 @@ const visible = ref(false);
 }
 
 .coin-tag {
-    padding-top: 96px;
+    padding-top: 40px;
     overflow: hidden;
+    max-width: 384px;
 
     .color-0 {
         color: var(--text-color-0);
@@ -149,6 +198,10 @@ const visible = ref(false);
         .tag {
             white-space: nowrap;
             color: var(--text-color-1);
+
+            &:hover {
+                color: var(--main-color);
+            }
         }
 
         :deep(.button) {

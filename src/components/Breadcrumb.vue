@@ -9,7 +9,7 @@
             <a
 
                 class="font-bold fz14"
-                :class="{'cursor-default': !item.path}"
+                :class="[{'cursor-default': !item.path}, item.class]"
                 :href="item.path ? item.path : 'javascript:;'"
             >
                 {{ item.label }}

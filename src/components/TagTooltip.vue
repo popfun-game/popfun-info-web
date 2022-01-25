@@ -17,9 +17,11 @@
                     :key="index"
                     :href="item.href ? item.href : 'javascript:;'"
                     :target="item.href ? '_black' : ''"
+                    rel="noreferrer nofollow noopener"
                     class="flex-row flex-items-center font-bold lh22 ts fz14"
                     @click="onClick(item)"
                 >
+                    <i class="icon-link fz16 mr4" />
                     {{ item.label }}
                 </a>
             </div>

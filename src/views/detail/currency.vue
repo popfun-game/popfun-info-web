@@ -6,11 +6,12 @@
                     <breadcrumb :list="state.breadcrumb" />
 
                     <div class="coin-info-wrap flex-row flex-wrap">
-                        <coin-info />
-                        <coin-tags />
+                        <coin-info
+                            :detail="state.detail"
+                            :loading="state.loading"
+                        />
+                        <coin-tags :links="state.detail.links ?? {}" />
                     </div>
-
-                    <market-cap />
                 </div>
             </div>
 
@@ -62,15 +63,16 @@
     </layout-default>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import layoutDefault from '@/components/layouts/Default';
 import breadcrumb from '@/components/Breadcrumb';
+import { api } from '@/config/api';
+import { ElMessage } from 'element-plus';
 import coinInfo from './components/CoinInfo';
 import coinTags from './components/CoinTags';
-import marketCap from './components/MarketCap';
 import chart from './components/Chart';
 import priceStatistics from './components/PriceStatistics';
 import trendList from './components/TrendList';
@@ -82,11 +84,36 @@ import news from './components/News';
 const route = useRoute();
 const { t } = useI18n();
 const state = reactive({
+    loading: true,
+    detail: {},
     breadcrumb: [
         { path: replacePath('/'), label: t('nav_home') },
-        { path: '', label: route.params.coin },
+        { path: '', label: route.params.coin, class: 'text-capitalize' },
     ],
 });
+
+const id = computed(() => route.params.coin);
+
+const methods = {
+    // 获取详情
+    getDetail(init) {
+        if (!id.value) return;
+        if (init) state.loading = true;
+
+        api.getCoinDetail({ coin: id.value }).then((res) => {
+            state.loading = false;
+
+            if (res.success) {
+                state.detail = res.data;
+            } else {
+                ElMessage.error(res.message);
+            }
+        });
+    },
+};
+
+methods.getDetail(true);
+
 </script>
 <style lang="scss" scoped>
 .currency-body {
@@ -96,7 +123,7 @@ const state = reactive({
         background: linear-gradient(180deg, #f9fbff 0%, #fff 100%);
 
         .coin-info-wrap {
-            margin-bottom: 40px;
+            margin-bottom: 54px;
         }
     }
 

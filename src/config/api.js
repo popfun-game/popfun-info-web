@@ -19,6 +19,10 @@ export const api = {
     getCoinRank(params) {
         return axios.get('@api/coin/rank', { params });
     },
+    // 获取币种详情列表
+    getCoinDetail(params) {
+        return axios.get('@api/coin/info', { params });
+    },
 };
 
 export default {};

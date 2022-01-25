@@ -217,10 +217,10 @@ const methods = {
 
                 if (res.success) {
                     state.pages.current = state.page;
-                    state.data = res.result;
-                    state.pages.total = res?.extra?.stats?.fullCount ?? res.result.length;
+                    state.data = res.data?.result;
+                    state.pages.total = res.data?.extra?.stats?.fullCount ?? res.data?.result.length;
 
-                    if (res.result.length) methods.loop();
+                    if (res.data?.result.length) methods.loop();
                 } else {
                     if (state.pages.current === 1 && !state.data.length) {
                         state.data = [];
