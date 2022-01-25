@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "yarn eslint  && yarn stylelint",
-    "stylelint": "stylelint src/**/*.{css,scss,vue} --fix",
+    "stylelint": "stylelint src/**/*.\"{css,scss,vue}\"",
     "eslint": "vue-cli-service lint --fix"
   },
   "dependencies": {

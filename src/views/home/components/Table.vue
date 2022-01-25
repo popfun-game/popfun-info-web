@@ -1,6 +1,6 @@
 <!-- 分类table -->
 <template>
-    <section>
+    <section class="wrapper">
         <div class="menu flex-row flex-items-center">
             <tabs
                 v-model="state.tab"
@@ -52,6 +52,7 @@ import {
     lt,
 } from '@/utils/number';
 import ChartLine from '@/components/ChartLine';
+import autoImg from '@/components/AutoImg';
 
 const props = defineProps({
     active: {
@@ -84,11 +85,12 @@ const state = reactive({
             render(h, { row }) {
                 return (
                     <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
-                        <img
+                        <autoImg
                             src={row.image}
                             alt={`${row.name} (${row.symbol.toUpperCase()})`}
-                            width="24"
-                            height="24"
+                            small
+                            width="24px"
+                            height="24px"
                         />
                         <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.name }</span>
                         <span class="text-uppercase color-light">{ row.symbol }</span>
@@ -147,6 +149,15 @@ const state = reactive({
             },
         },
         {
+            prop: 'market_cap',
+            align: 'right',
+            width: 150,
+            label: t('th_mkt_cap'),
+            formatter(row) {
+                return `$${toFormat(row.market_cap)}`;
+            },
+        },
+        {
             prop: 'total_volume',
             align: 'right',
             width: 190,
@@ -160,15 +171,6 @@ const state = reactive({
                         </p>
                     </div>
                 );
-            },
-        },
-        {
-            prop: 'market_cap',
-            align: 'right',
-            width: 150,
-            label: t('th_mkt_cap'),
-            formatter(row) {
-                return `$${toFormat(row.market_cap)}`;
             },
         },
         {
@@ -262,6 +264,21 @@ onBeforeUnmount(() => {
 });
 </script>
 <style lang="scss" scoped>
+
+.wrapper {
+    overflow: initial;
+
+    :deep(.el-table) {
+        overflow: initial;
+
+        .el-table__header-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+    }
+}
+
 .menu {
     margin-bottom: 34px;
 }

@@ -1,28 +1,30 @@
 <template>
     <card-title :url="replacePath('/learn/')" />
-    <ul class="flex-row">
-        <li
-            v-for="(item, index) in state.list"
-            :key="index"
-            class="flex-1"
-        >
-            <a
-
-                :href="item.link ? item.link : 'javascript:;'"
-                rel="noreferrer nofollow noopener"
-                :target="item.link ? '_blank' : ''"
+    <div class="list-wrap">
+        <ul class="flex-row">
+            <li
+                v-for="(item, index) in state.list"
+                :key="index"
+                class="flex-1"
             >
-                <auto-img
-                    :src="item.img"
-                    width="100%"
-                    height="61.4754%"
-                    radius="8px"
-                />
-                <p class="title fz16 lh22 mt10 text-ellipsis-2">{{ item.title }}</p>
-                <p class="info fz12 lh18 mt6 text-ellipsis">{{ item.summary }}</p>
-            </a>
-        </li>
-    </ul>
+                <a
+
+                    :href="item.link ? item.link : 'javascript:;'"
+                    rel="noreferrer nofollow noopener"
+                    :target="item.link ? '_blank' : ''"
+                >
+                    <auto-img
+                        :src="item.img"
+                        width="100%"
+                        height="61.4754%"
+                        radius="8px"
+                    />
+                    <p class="title fz16 lh22 mt10 text-ellipsis-2">{{ item.title }}</p>
+                    <p class="info fz12 lh18 mt6 text-ellipsis">{{ item.summary }}</p>
+                </a>
+            </li>
+        </ul>
+    </div>
 </template>
 <script setup>
 import { reactive } from 'vue';
@@ -61,7 +63,11 @@ const methods = {
         api.getArticleList({ limit: 3, type: 'learn' }).then((res) => {
             if (res.success) {
                 if (res.result.length) {
-                    state.list = res.result.slice(0, 3);
+                    state.list = res.result.slice(0, 3).map((item) => {
+                        item.img = item.img ? item.img : '--';
+
+                        return item;
+                    });
                 } else {
                     methods.setEmptyList();
                 }
@@ -84,20 +90,34 @@ const methods = {
 methods.getNewList();
 </script>
 <style lang="scss" scoped>
-ul {
-    margin: 0 -25px 40px;
+.list-wrap {
+    width: 100%;
+    overflow: hidden;
 
-    li {
-        margin: 0 25px;
-        width: 366px;
+    ul {
+        margin-bottom: 40px;
 
-        .title {
-            height: 44px;
-            color: var(--text-color-3);
+        li {
+            width: 20%;
+
+            .title {
+                height: 44px;
+                color: var(--text-color-3);
+            }
+
+            .info {
+                color: #5d6c80;
+            }
         }
 
-        .info {
-            color: #5d6c80;
+        li:nth-child(2) {
+            margin: 0 50px;
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+        ul li:nth-child(2) {
+            margin: 0 10px;
         }
     }
 }

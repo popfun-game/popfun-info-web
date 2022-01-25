@@ -2,6 +2,7 @@
 <template>
     <div
         class="img-wrap"
+        :class="{'is-small': small}"
         :style="{
             width: width,
             'padding-bottom': height,
@@ -17,25 +18,35 @@
                 v-if="src === ''"
                 #error
             >
-                <span class="el-image__error flex-col">
+                <span class="el-image__error flex-col loading">
                     <el-icon
                         class="is-loading"
                         size="20"
                     >
                         <loading />
                     </el-icon>
-                    <p class="mt10">Loading...</p>
+                    <p
+                        v-if="!small"
+                        class="mt10"
+                    >
+                        Loading...
+                    </p>
                 </span>
             </template>
             <template #placeholder>
-                <span class="el-image__error flex-col">
+                <span class="el-image__error flex-col loading">
                     <el-icon
                         class="is-loading"
                         size="20"
                     >
                         <loading />
                     </el-icon>
-                    <p class="mt10">Loading...</p>
+                    <p
+                        v-if="!small"
+                        class="mt10"
+                    >
+                        Loading...
+                    </p>
                 </span>
             </template>
         </el-image>
@@ -62,6 +73,10 @@ defineProps({
         type: String,
         default: '',
     },
+    small: {
+        type: Boolean,
+        default: false,
+    },
 });
 </script>
 <style lang="scss" scoped>
@@ -75,6 +90,12 @@ defineProps({
         height: 100%;
         left: 0;
         right: 0;
+    }
+
+    &.is-small {
+        :deep(.el-image__error:not(.loading)) {
+            color: transparent;
+        }
     }
 }
 </style>

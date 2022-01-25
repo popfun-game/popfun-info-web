@@ -20,8 +20,10 @@
                 <chart-line />
                 <!-- 新闻 -->
                 <i-news />
-                <!-- 类型table -->
-                <i-table active="gaming" />
+            </div>
+            <!-- 类型table -->
+            <i-table active="gaming" />
+            <div class="wrapper">
                 <!-- 工作内容介绍 -->
                 <work-info />
                 <!-- 学习 -->
