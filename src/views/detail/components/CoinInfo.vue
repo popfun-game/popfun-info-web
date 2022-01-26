@@ -133,7 +133,7 @@ const data = computed(() => {
         }
 
         if (map.low !== '--' && map.high !== '--' && map.price !== '--') {
-            map.percentage = toFixed(div(minus(map.price, map.low), minus(map.high, map.low)), 3) * 100;
+            map.percentage = toFixed(div(minus(map.price, map.low), minus(map.high, map.low)), 8) * 100;
         }
 
         map.price = map.price !== '--' ? `$${toFormat(map.price)}` : '--';

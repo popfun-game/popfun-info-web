@@ -1,9 +1,9 @@
 <!-- 图表 -->
 <template>
-    <div class="coin-chart flex-1">
+    <div class="coin-chart flex-1 pt20">
         <h3 class="font-bold fz22 lh22 flex-row flex-items-center">
             <i class="title-mark mr6" />
-            {{ t('chart_usd_title', { fullname: '币种全称' }) }}
+            {{ t('chart_usd_title', { fullname: detail.name }) }}
         </h3>
 
         <chart />
@@ -24,9 +24,18 @@
     </div>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { defineProps, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Chart from '@/components/Chart';
+
+defineProps({
+    detail: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+});
 
 const { t } = useI18n();
 const state = reactive({
@@ -36,8 +45,6 @@ const state = reactive({
 </script>
 <style lang="scss" scoped>
 .coin-chart {
-    padding-top: 52px;
-
     h3 {
         color: var(--text-color-1);
         padding-bottom: 32px;

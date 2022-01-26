@@ -4,7 +4,7 @@
     <div class="title flex-row-space-between flex-items-center">
         <h3 class="flex-row flex-items-center font-bold fz22 lh22">
             <i class="title-mark mr6" />
-            {{ t('news_title', { fullname: '币种全称' }) }}
+            {{ t('news_title', { fullname: name || '' }) }}
         </h3>
         <router-link
             :to="replacePath(`/information/`)"
@@ -17,14 +17,20 @@
         </router-link>
     </div>
     <div class="flex-row flex-wrap">
-        <div class="col-l flex-1">
-            <news-card />
-        </div>
+        <news-card
+            class="col-l flex-1"
+            :data="state.list[0]"
+            :name="name"
+            :icon="icon"
+        />
         <div class="flex-1">
             <news-card
-                v-for="(item, index) in 3"
+                v-for="(item, index) in state.list.slice(1)"
                 :key="item"
                 :vertical="false"
+                :data="item"
+                :name="name"
+                :icon="icon"
                 :style="{'margin-top': index !== 0 ? '44px' : ''}"
             />
         </div>
@@ -32,19 +38,99 @@
     <div class="flex-row-center">
         <router-link
             :to="replacePath(`/information/`)"
-            class="button flex-row-center flex-items-center font-bold"
+            class="btn-info flex-row-center flex-items-center"
         >
             {{ t('text_btn_read_more') }}
         </router-link>
     </div>
 </template>
 <script setup>
+import { defineProps, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import { ArrowRight } from '@element-plus/icons-vue';
+import { api } from '@/config/api';
+import { ElMessage } from 'element-plus';
 import newsCard from './NewsCard';
 
+const props = defineProps({
+    coin: {
+        type: String,
+        default: '',
+    },
+    name: {
+        type: String,
+        default: '',
+    },
+    icon: {
+        type: String,
+        default: '',
+    },
+});
+
 const { t } = useI18n();
+const state = reactive({
+    list: [
+        {
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
+        },
+        {
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
+        },
+        {
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
+        },
+        {
+            link: '',
+            img: '',
+            title: '--',
+            summary: '--',
+        },
+    ],
+});
+
+const methods = {
+    // 获取资讯列表
+    getNewList() {
+        if (!props.coin) return;
+
+        api.getArticleList({ limit: 4, type: 'news', coin: props.coin }).then((res) => {
+            if (res.success) {
+                if (res.data && res.data.result.length) {
+                    state.list = res.data.result.slice(0, 4).map((item) => {
+                        item.img = item.img ? item.img : '--';
+
+                        return item;
+                    });
+                } else {
+                    methods.setEmptyList();
+                }
+            } else {
+                ElMessage.error(res.message);
+
+                methods.setEmptyList();
+            }
+        });
+    },
+    // 设置空列表
+    setEmptyList() {
+        state.list = state.list.map((item) => {
+            item.img = '--';
+            return item;
+        });
+    },
+};
+
+methods.getNewList();
 </script>
 <style lang="scss" scoped>
 .title {
@@ -56,14 +142,9 @@ const { t } = useI18n();
     margin-right: 40px;
 }
 
-.button {
+.btn-info {
     min-width: 320px;
-    height: 48px;
-    padding: 15px;
-    border-radius: 4px;
-    background-color: rgba(102, 102, 102, 0.08);
     margin-top: 40px;
-    color: var(--text-color-0);
 }
 
 @media screen and (max-width: 700px) {

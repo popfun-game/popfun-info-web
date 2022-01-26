@@ -2,7 +2,7 @@
 <template>
     <div class="wrap">
         <h3 class="font-bold lh22 fz22">
-            {{ t('price_statistics') }}
+            {{ t('price_statistics', {coin: detail.symbol ? detail.symbol.toUpperCase() : '--'}) }}
         </h3>
 
         <div
@@ -10,7 +10,7 @@
             :class="{ 'is-open': state.show_more}"
         >
             <template
-                v-for="(item, index) in Object.values(state.list_map)"
+                v-for="(item, index) in Object.values(listMap)"
                 :key="index"
             >
                 <h4 class="font-bold lh22 fz14 flex-row flex-items-center mb6">
@@ -29,7 +29,7 @@
                         >
                             {{ child.label }}
                             <span
-                                v-if="child.tag !== undefined"
+                                v-if="child.tag"
                                 class="tag lh22 pl8 pr8 color-1 ml8"
                             >
                                 {{ t('24h') }}
@@ -74,68 +74,162 @@
     </div>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { defineProps, reactive, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {
+    toFormat, toFixed, div, times,
+} from '@/utils/number';
+
+const props = defineProps({
+    detail: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+});
 
 const { t } = useI18n();
 const state = reactive({
-    list_map: {
+    show_more: false,
+});
+
+const listMap = computed(() => {
+    const { detail } = props;
+    const { market_data: marketData = {}, yesterday_data: yesterdayData = {} } = detail;
+    const fullname = detail.name || '--';
+    const [yesterdayOpen, yesterdayHigh, yesterdayLow, yesterdayClose] = yesterdayData.prices || [];
+    const {
+        [`${detail.id}_-7d`]: history7d = {},
+        [`${detail.id}_-30d`]: history30d = {},
+        [`${detail.id}_-90d`]: history90d = {},
+        [`${detail.id}_-1y`]: history1y = {},
+    } = detail.ohlc || {};
+
+    return {
         today: {
-            label: t('price_today', { fullname: '币种全称' }),
+            label: t('price_today', { fullname }),
             children: [
-                { label: `币种全称 ${t('price')}`, value: '$47,857.88', label_cls: 'color-1' },
                 {
-                    label: t('price_change'), value: '$-1,297.87', change: -0.3, tag: true,
+                    label: `${fullname} ${t('price')}`,
+                    value: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
+                    label_cls: 'color-1',
                 },
                 {
-                    label: t('24h_low_high'), value: '$47,857.88', value2: '$77,857.88',
+                    label: t('price_change'),
+                    value: marketData.price_change_24h_in_currency?.usd ? `$${toFormat(marketData.price_change_24h_in_currency.usd)}` : '--',
+                    change: toFixed(detail.simple_price?.usd_24h_change, 2),
+                    tag: true,
                 },
                 {
-                    label: t('trading_volume'), value: '$47,857.88', change: 0.3, tag: true,
+                    label: t('24h_low_high'),
+                    value: marketData.low_24h?.usd ? `$${toFormat(marketData.low_24h.usd)}` : '--',
+                    value2: marketData.high_24h?.usd ? `$${toFormat(marketData.high_24h.usd)}` : '--',
                 },
-                { label: t('vol_market_cap'), value: '$47,857.88' },
-                { label: t('market_dominance'), value: '$47,857.88' },
-                { label: t('market_rank'), value: '10' },
+                {
+                    label: t('trading_volume'),
+                    value: detail.simple_price?.usd_24h_vol ? `$${toFormat(detail.simple_price.usd_24h_vol, 0)}` : '',
+                    tag: true,
+                },
+                {
+                    label: t('vol_market_cap'),
+                    value: marketData.total_volume?.usd && marketData.market_cap?.usd
+                        ? toFormat(div(marketData.total_volume.usd, marketData.market_cap.usd), 6)
+                        : '--',
+                },
+                {
+                    label: t('market_dominance'),
+                    value: marketData.market_cap?.usd && detail.global_market_cap?.usd
+                        ? `${toFixed(div(marketData.market_cap.usd, detail.global_market_cap.usd) * 100, 2) }%`
+                        : '--',
+                },
+                { label: t('market_rank'), value: detail.market_cap_rank ? `#${detail.market_cap_rank}` : '--' },
             ],
         },
         market_cap: {
-            label: `币种全称 ${t('market_cap')}`,
+            label: `${fullname} ${t('market_cap')}`,
             children: [
-                { label: t('market_cap'), value: '$906,192,986,593.91', change: -0.3 },
-                { label: t('fd_market_cap'), value: '$1,006,143,789,787.49', change: 10.3 },
+                {
+                    label: t('market_cap'),
+                    value: marketData.market_cap?.usd ? `$${toFormat(marketData.market_cap.usd)}` : '--',
+                    change: toFixed(marketData.market_cap_change_percentage_24h, 2),
+                },
+                {
+                    label: t('fd_market_cap'),
+                    value: marketData.max_supply
+                        ? `$${toFormat(times(detail.simple_price?.usd || 0, marketData.max_supply || 0), 0)}`
+                        : '--',
+                },
             ],
         },
         yesterday: {
-            label: t('price_yesterday', { fullname: '币种全称' }),
+            label: t('price_yesterday', { fullname }),
             children: [
-                { label: t('yesterday_lh'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('yesterday_oc'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('yesterday_change'), change: 10 },
-                { label: t('yesterday_vol'), value: '$1,006,143,789,787.49' },
+                {
+                    label: t('yesterday_lh'),
+                    value: yesterdayLow ? `$${toFormat(yesterdayLow)}` : '--',
+                    value2: yesterdayHigh ? `$${toFormat(yesterdayHigh)}` : '--',
+                },
+                {
+                    label: t('yesterday_oc'),
+                    value: yesterdayOpen ? `$${toFormat(yesterdayOpen)}` : '--',
+                    value2: yesterdayClose ? `$${toFormat(yesterdayClose)}` : '--',
+                },
+                {
+                    label: t('yesterday_mc'),
+                    value: yesterdayData.market_caps?.length ? `$${toFormat(yesterdayData.market_caps.slice(-1)[0], 2)}` : '--',
+                },
+                {
+                    label: t('yesterday_vol'),
+                    value: yesterdayData.total_volumes?.length ? `$${toFormat(yesterdayData.total_volumes.slice(-1)[0], 2)}` : '--',
+                },
             ],
         },
         history: {
-            label: t('price_history', { fullname: '币种全称' }),
+            label: t('price_history', { fullname }),
             children: [
-                { label: t('7d_lh'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('30d_lh'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('90d_lh'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('52w_lh'), value: '$47,857.88', value2: '$77,857.88' },
-                { label: t('all_time_high'), value: '$47,857.88', change: 10000 },
-                { label: t('all_time_low'), value: '$47,857.88', change: -10000 },
-                { label: t('coin_roi', { fullname: '币种全称' }), change: -10000 },
+                {
+                    label: t('7d_lh'),
+                    value: history7d.l?.length === 2 ? `$${toFormat(history7d.l[1])}` : '--',
+                    value2: history7d.h?.length === 2 ? `$${toFormat(history7d.l[1])}` : '--',
+                },
+                {
+                    label: t('30d_lh'),
+                    value: history30d.l?.length === 2 ? `$${toFormat(history30d.l[1])}` : '--',
+                    value2: history30d.h?.length === 2 ? `$${toFormat(history30d.l[1])}` : '--',
+                },
+                {
+                    label: t('90d_lh'),
+                    value: history90d.l?.length === 2 ? `$${toFormat(history90d.l[1])}` : '--',
+                    value2: history90d.h?.length === 2 ? `$${toFormat(history90d.l[1])}` : '--',
+                },
+                {
+                    label: t('52w_lh'),
+                    value: history1y.l?.length === 2 ? `$${toFormat(history1y.l[1])}` : '--',
+                    value2: history1y.h?.length === 2 ? `$${toFormat(history1y.l[1])}` : '--',
+                },
+                {
+                    label: t('all_time_high'),
+                    value: marketData.ath?.usd ? `$${toFormat(marketData.ath.usd)}` : '--',
+                    change: toFixed(marketData.ath_change_percentage?.usd, 2),
+                },
+                {
+                    label: t('all_time_low'),
+                    value: marketData.atl?.usd ? `$${toFormat(marketData.atl.usd)}` : '--',
+                    change: toFixed(marketData.atl_change_percentage?.usd, 2),
+                },
+                { label: t('coin_roi', { fullname }), change: toFixed(marketData.roi?.percentage, 2) },
             ],
         },
         supply: {
-            label: t('coin_supply', { fullname: '币种全称' }),
+            label: t('coin_supply', { fullname }),
             children: [
-                { label: t('circulating_supply'), value: '$1,006,143,789,787.49' },
-                { label: t('total_supply'), value: '$1,006,143,789,787.49' },
-                { label: t('max_supply'), value: '$1,006,143,789,787.49' },
+                { label: t('circulating_supply'), value: marketData.circulating_supply ? `$${toFormat(marketData.circulating_supply, 0)}` : '--' },
+                { label: t('total_supply'), value: marketData.total_supply ? `$${toFormat(marketData.total_supply, 0)}` : '--' },
+                { label: t('max_supply'), value: marketData.max_supply ? `$${toFormat(marketData.max_supply, 0)}` : '--' },
             ],
         },
-    },
-    show_more: false,
+    };
 });
 </script>
 <style lang="scss" scoped>

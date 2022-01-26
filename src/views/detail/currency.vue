@@ -15,62 +15,76 @@
                 </div>
             </div>
 
-            <div class="coin-types wrapper flex-row flex-wrap flex-items-center">
-                <router-link
-                    :to="replacePath(`/currency/${route.params.coin}/`)"
-                    :class="{'is-active': !route.params.type}"
-                >
-                    {{ t('overview') }}
-                </router-link>
-                <router-link
-                    :to="replacePath(`/currency/${route.params.coin}/market`)"
-                    :class="{'is-active': !route.params.type === 'market'}"
-                >
-                    {{ t('market') }}
-                </router-link>
+            <div class="wrapper pt20 pb20">
+                <tabs
+                    v-model="state.tab"
+                    :list="state.menu_list"
+                    @onChange="methods.changeTab"
+                />
             </div>
 
-            <div class="wrapper flex-row flex-wrap">
+            <div
+                v-if="state.tab !== 'market'"
+                class="wrapper flex-row flex-wrap pb24"
+            >
                 <div class="col-l mr16 flex-1">
-                    <chart />
+                    <chart :detail="state.detail" />
 
                     <!-- 折合 -->
-                    <converter />
+                    <converter :detail="state.detail" />
 
                     <!-- coin 介绍 -->
-                    <coin-introduce />
+                    <coin-introduce :detail="state.detail" />
                 </div>
                 <div class="col-r flex-1">
                     <!-- 价格列表 -->
-                    <price-statistics class="mb16" />
+                    <price-statistics
+                        class="mb16"
+                        :detail="state.detail"
+                    />
 
                     <!-- 销售币种列表 -->
-                    <trend-list />
+                    <trend-list v-if="false" />
                 </div>
             </div>
 
-            <div class="wrapper market-table">
-                <market-table />
+            <div
+                class="wrapper"
+                style="overflow: initial;"
+            >
+                <market-table
+                    :tab="state.tab"
+                    :detail="state.detail"
+                    :loading="state.loading"
+                    @onRetry="methods.getDetail(true)"
+                />
             </div>
 
             <div
                 class="wrapper"
                 style="margin-top: 56px;"
             >
-                <news />
+                <news
+                    :coin="id"
+                    :icon="state.detail.image?.small"
+                    :name="state.detail.name"
+                />
             </div>
         </div>
     </layout-default>
 </template>
 <script setup>
-import { reactive, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import {
+    reactive, computed, onBeforeUnmount, watch,
+} from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import layoutDefault from '@/components/layouts/Default';
 import breadcrumb from '@/components/Breadcrumb';
 import { api } from '@/config/api';
 import { ElMessage } from 'element-plus';
+import tabs from '@/components/Tabs';
 import coinInfo from './components/CoinInfo';
 import coinTags from './components/CoinTags';
 import chart from './components/Chart';
@@ -82,14 +96,21 @@ import marketTable from './components/MarketTable';
 import news from './components/News';
 
 const route = useRoute();
+const router = useRouter();
 const { t } = useI18n();
 const state = reactive({
+    tab: 'overview',
     loading: true,
     detail: {},
     breadcrumb: [
         { path: replacePath('/'), label: t('nav_home') },
         { path: '', label: route.params.coin, class: 'text-capitalize' },
     ],
+    menu_list: [
+        { id: 'overview', label: t('overview') },
+        { id: 'market', label: t('market') },
+    ],
+    timer: null,
 });
 
 const id = computed(() => route.params.coin);
@@ -110,48 +131,45 @@ const methods = {
             }
         });
     },
+    changeTab(val) {
+        router.replace(replacePath(`/currency/${route.params.coin}/?tab=${val}`));
+    },
+    // 轮训
+    loop() {
+        state.timer = setTimeout(() => {
+            methods.getDetail();
+        }, 30000);
+    },
 };
 
 methods.getDetail(true);
 
+watch(
+    () => route.query,
+    (val) => {
+        state.tab = val.tab ? val.tab : 'overview';
+    },
+    { deep: true, immediate: true },
+);
+
+onBeforeUnmount(() => {
+    clearTimeout(state.timer);
+});
 </script>
 <style lang="scss" scoped>
 .currency-body {
-    padding-bottom: 92px;
+    padding-bottom: 60px;
 
     .coin-head {
-        background: linear-gradient(180deg, #f9fbff 0%, #fff 100%);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
         .coin-info-wrap {
             margin-bottom: 54px;
         }
     }
 
-    .coin-types {
-        padding: 20px 0;
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-        a {
-            padding: 5px 10px;
-            line-height: 22px;
-            font-weight: bold;
-            font-size: 12px;
-            border-radius: 4px;
-            margin-right: 12px;
-            color: var(--text-color-1);
-
-            &:hover,
-            &.is-active {
-                color: #fff;
-                background-color: var(--main-color);
-            }
-        }
-    }
-
     .col-r {
         max-width: 360px;
-        padding-top: 20px;
     }
 
     .coin-chart {
@@ -164,10 +182,6 @@ methods.getDetail(true);
             min-width: 100%;
             max-width: max-content;
         }
-    }
-
-    .market-table {
-        margin-top: 56px;
     }
 }
 </style>

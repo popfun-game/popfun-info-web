@@ -3,11 +3,12 @@
     <div class="title flex-row-space-between flex-items-center">
         <h3 class="flex-row flex-items-center font-bold fz22 lh22">
             <i class="title-mark mr6" />
-            {{ t('market_title', { fullname: '币种全称' }) }}
+            {{ t('market_title', { fullname: detail.name || '--' }) }}
         </h3>
 
         <router-link
-            :to="replacePath(`/currency/${coin}/markets/`)"
+            v-if="showAll"
+            :to="replacePath(`/currency/${detail.id}/?tab=market`)"
             class="flex-row flex-items-center font-bold lh22"
         >
             {{ t('see_all_markets') }}
@@ -18,42 +19,61 @@
     </div>
 
     <c-table
+        v-loading="loading"
+        :element-loading-text="t('list_loading')"
         :columns="state.columns"
-        :data="state.data"
+        :data="list"
+        @onRetry="emits('retry')"
     />
 
-    <div class="flex-row-center">
+    <div
+        v-if="showAll"
+        class="flex-row-center"
+    >
         <router-link
-            to=""
-            class="button flex-row-center flex-items-center font-bold"
+            :to="replacePath(`/currency/${detail.id}/?tab=market`)"
+            class="btn-info flex-row-center flex-items-center font-bold"
         >
             {{ t('see_all_markets') }}
         </router-link>
     </div>
 </template>
 <script setup>
-import { reactive, defineProps } from 'vue';
+import {
+    defineProps, defineEmits, reactive, computed,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import cTable from '@/components/Table';
 import { ArrowRight } from '@element-plus/icons-vue';
+import {
+    toFormat, toFixed, div, times,
+} from '@/utils/number';
+import autoImg from '@/components/AutoImg';
 import confidenceTipDom from './ConfidenceTipDom';
-import liquidityTipDom from './LiquidityTipDom';
 
-defineProps({
-    active: {
+const props = defineProps({
+    detail: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+    loading: {
+        type: Boolean,
+        default: true,
+    },
+    tab: {
         type: String,
-        required: true,
+        default: '',
     },
 });
+
+const emits = defineEmits(['onRetry']);
 
 const { t } = useI18n();
 
 const state = reactive({
-    menu_list: [
-        { id: 'token', label: t('menu_token') },
-        { id: 'game', label: t('menu_game') },
-    ],
     columns: [
         {
             prop: '',
@@ -64,128 +84,135 @@ const state = reactive({
             },
         },
         {
-            prop: 'coin',
-            label: t('th_source'),
-            'min-width': '140px',
+            prop: 'trade_url',
+            label: t('th_exchange'),
+            'min-width': '200px',
             render(h, { row }) {
                 return (
-                    <router-link class="flex-row flex-items-center" to={replacePath(`/currency/${row.currency}/`)}>
-                        <img
-                            src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
-                            alt={row.currency}
-                            width="24"
-                            height="24"
+                    <a
+                        class="flex-row flex-items-center"
+                        href={row.trade_url}
+                        target="_blank"
+                        rel="noreferrer nofollow noopener"
+                        style="display: inline-flex;"
+                    >
+                        <autoImg
+                            src={row.image}
+                            alt={`${row.name}`}
+                            small
+                            width="24px"
+                            height="24px"
                         />
-                        <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.coin }</span>
-                        <span class="text-uppercase color-light">{ row.currency }</span>
-                    </router-link>
+                        <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.market?.name || '--' }</span>
+                    </a>
                 );
             },
         },
         {
-            prop: 'price',
-            align: 'right',
+            prop: 'base',
             label: t('th_pairs'),
+            'min-width': '100px',
+            render(h, { row }) {
+                return <a
+                    href={row.trade_url}
+                    target="_blank"
+                    rel="noreferrer nofollow noopener"
+                    class="text-ellipsis"
+                >
+                    { `${row.base}/${row.target}` }
+                </a>;
+            },
         },
         {
-            prop: 'price',
+            prop: 'converted_last',
             align: 'right',
             label: t('th_price'),
+            'min-width': '110px',
+            formatter(row) {
+                return `$${toFormat(row.converted_last?.usd, 8)}`;
+            },
+        },
+        {
+            prop: 'bid_ask_spread_percentage',
+            align: 'right',
+            label: t('th_spread'),
+            formatter(row) {
+                return `${toFixed(row.bid_ask_spread_percentage, 2)}%`;
+            },
         },
         {
             prop: '1h',
             align: 'right',
-            label: t('th_depth'),
+            label: `+2% ${t('th_depth')}`,
+            formatter() {
+                return '--';
+            },
         },
         {
             prop: '24h',
             align: 'right',
-            label: t('th_depth'),
+            label: `-2% ${t('th_depth')}`,
+            formatter() {
+                return '--';
+            },
         },
         {
-            prop: '7d',
+            prop: 'converted_volume',
             align: 'right',
+            width: 150,
             label: t('th_vol'),
+            formatter(row) {
+                return `$${toFormat(row.converted_volume?.usd, 0)}`;
+            },
         },
         {
             prop: 'vol',
             align: 'right',
-            width: 170,
             label: `${t('th_vol')}%`,
+            formatter(row) {
+                const scale = times(div(row.converted_volume?.usd, props.detail.simple_price?.usd_24h_vol || 1), 100);
+                return `${toFixed(scale, 2)}%`;
+            },
         },
         {
-            prop: 'market',
+            prop: 'trust_score',
             align: 'right',
-            width: 170,
             renderHeader() {
                 return (<confidenceTipDom />);
             },
-            render() {
+            render(h, { row }) {
+                const map = {
+                    green: {
+                        class: 'tag-high',
+                        text: t('tag_high'),
+                    },
+                    yellow: {
+                        class: 'tag-moderate',
+                        text: t('tag_moderate'),
+                    },
+                    red: {
+                        class: 'tag-low',
+                        text: t('tag_low'),
+                    },
+                };
+                const target = map[row.trust_score] || map.red;
                 return (
                     <span
                         class="tag"
                         {...{
-                            class: 'tag-low',
+                            class: target.class,
                         }}
                     >
-                        { t('tag_low') }
+                        { target.text }
                     </span>
                 );
             },
         },
-        {
-            prop: 'last7d',
-            align: 'right',
-            label: t('th_liquidity'),
-            renderHeader() {
-                return (<liquidityTipDom />);
-            },
-        },
-        {
-            prop: 'last7d',
-            align: 'right',
-            label: t('th_updated'),
-        },
     ],
-    data: [
-        {
-            coin: 'Bitcoin', label: 'bit', market: '$28,047,254,195', currency: 'BTC', '1h': '-0.4', '24h': '12', price: '21312312313', vol: '123123',
-        },
-        {
-            coin: 'Bitcoin', label: 'bit', market: '$28,047,254,195', currency: 'BTC', '1h': '-0.4', '24h': '12',
-        },
-        {
-            coin: 'Bitcoin', label: 'bit', market: '$28,047,254,195', currency: 'BTC', '1h': '-0.4', '24h': '12',
-        },
-        {
-            coin: 'Bitcoin', label: 'bit', market: '$28,047,254,195', currency: 'BTC', '1h': '-0.4', '24h': '12',
-        },
-    ],
-    page: 1,
-    pages: {
-        current: 1,
-        size: 100,
-        total: 10000,
-    },
 });
 
-const methods = {
-    // 获取列表
-    getList() {
-
-    },
-    // 每页显示条目个数修改
-    sizeChange(val) {
-        state.pages.size = val;
-    },
-    // 页码修改
-    pageChange(page) {
-        if (page === state.page) return;
-        state.page = page;
-
-        methods.getList();
-    },
-};
+const list = computed(() => (props.detail.tickers || []).slice(0, props.tab !== 'market' ? 5 : 100));
+const showAll = computed(() => props.detail.tickers?.length > 5 && props.tab !== 'market');
 </script>
 <style lang="scss" scoped>
 .title {
@@ -194,6 +221,8 @@ const methods = {
 }
 
 .el-table {
+    overflow: initial;
+
     :deep(.cell) {
         .tag {
             border-radius: 4px;
@@ -208,7 +237,7 @@ const methods = {
                 background-color: #60c389;
             }
 
-            &-middle {
+            &-moderate {
                 background-color: var(--main-color);
             }
 
@@ -217,15 +246,16 @@ const methods = {
             }
         }
     }
+
+    :deep(.el-table__header-wrapper) {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
 }
 
-.button {
+.btn-info {
     min-width: 320px;
-    height: 48px;
-    padding: 15px;
-    border-radius: 4px;
-    background-color: rgba(102, 102, 102, 0.08);
     margin-top: 40px;
-    color: var(--text-color-0);
 }
 </style>

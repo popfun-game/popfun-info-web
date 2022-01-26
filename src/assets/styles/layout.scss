@@ -199,7 +199,7 @@
 
 .btn-info {
     height: 48px;
-    color: var(--text-color-0);
+    color: var(--text-color-0) !important;
     background: rgba(102, 102, 102, 0.08);
     padding: 15px;
 }

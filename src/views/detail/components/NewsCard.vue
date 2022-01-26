@@ -1,57 +1,60 @@
 <!-- 新闻卡片 -->
 <template>
     <a
-        href=""
+        :href="data.link"
+        rel="noreferrer nofollow noopener"
+        target="_blank"
         class="card"
         :class="{'is-vertical': vertical}"
     >
-        <div
+        <auto-img
             v-if="vertical"
-            class="img"
-        >
-            <img
-                src="https://s2.coinmarketcap.com/static/cloud/img/news/placeholder1.jpg"
-                alt=""
-            >
-        </div>
+            :src="data.img"
+            width="100%"
+            height="57%"
+            radius="8px"
+        />
         <div :class="{'flex-row': !vertical}">
             <div :class="{'min-wrap': !vertical}">
                 <h3
                     class="font-bold fz22 lh22 text-ellipsis-2"
                     :class="{'mt16': vertical}"
                 >
-                    TA: Bitcoin Key Indicators Suggest A Strengthening Case For Move Below $40K Case For Move Below $40K Case For Move Below $40K
+                    {{ data.title }}
                 </h3>
                 <p class="info text-ellipsis-3">
-                    While Bitcoin critics claim this means that BTC is
-                    losing its first-mover competitive advantage, others
-                    are anticipating the “altcoin season” is just around the corner, or might even be already underway anticipating the
-                    “altcoin season” is just around the corner, or might even be already underway.
+                    {{ data.summary }}
                 </p>
             </div>
-            <div
+            <auto-img
                 v-if="!vertical"
-                class="img flex-self-flex-start"
-            >
-                <img
-                    src="https://s2.coinmarketcap.com/static/cloud/img/news/placeholder1.jpg"
-                    alt=""
-                >
-            </div>
+                class="flex-self-flex-start"
+                :src="data.img"
+                width="38%"
+                height="23%"
+                radius="8px"
+            />
         </div>
         <div class="flex-row flex-wrap flex-items-center fz16">
-            <span class="color-1 font-bold">NewsCoin</span>
+            <span class="color-1 font-bold">Bitcoinist</span>
             <i class="color-9 pl4 pr4">·</i>
-            <span class="color-3">5 hours ago</span>
-            <span class="tag font-bold color-1 lh22 flex-row flex-items-center ml8">
-                <img
-                    src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png"
-                    alt=""
-                    width="20"
-                    height="20"
+            <span
+                v-if="data.updated_at"
+                class="color-3"
+            >{{ dayjs(data.updated_at).fromNow() }}</span>
+            <span
+                v-if="name"
+                class="tag font-bold color-1 lh22 flex-row flex-items-center ml8"
+            >
+                <auto-img
+                    small
                     class="mr4"
-                >
-                coin
+                    width="20px"
+                    height="20px"
+                    :src="icon"
+                    :alt="name"
+                />
+                {{ name }}
             </span>
         </div>
 
@@ -59,11 +62,27 @@
 </template>
 <script setup>
 import { defineProps } from 'vue';
+import autoImg from '@/components/AutoImg';
+import dayjs from '@/utils/day';
 
 defineProps({
     vertical: {
         type: Boolean,
         default: true,
+    },
+    data: {
+        type: Object,
+        default() {
+            return {};
+        },
+    },
+    name: {
+        type: String,
+        default: '',
+    },
+    icon: {
+        type: String,
+        default: '',
     },
 });
 </script>
@@ -84,23 +103,6 @@ defineProps({
         color: var(--text-color-9);
     }
 
-    .img {
-        position: relative;
-        width: 38%;
-        padding-bottom: 23%;
-        border-radius: 8px;
-
-        img {
-            object-fit: cover;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            border-radius: 8px;
-        }
-    }
-
     h3 {
         color: var(--text-color-1);
         margin-bottom: 16px;
@@ -111,6 +113,7 @@ defineProps({
         font-size: 16px;
         line-height: 28px;
         margin-bottom: 20px;
+        height: 84px;
     }
 
     .tag {
@@ -127,11 +130,6 @@ defineProps({
     &.is-vertical {
         h3 {
             line-height: 36px;
-        }
-
-        .img {
-            width: 100%;
-            padding-bottom: 57%;
         }
     }
 }

@@ -87,7 +87,7 @@ const state = reactive({
                     <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
                         <autoImg
                             src={row.image}
-                            alt={`${row.name} (${row.symbol.toUpperCase()})`}
+                            alt={`${row.name} (${row.symbol?.toUpperCase()})`}
                             small
                             width="24px"
                             height="24px"

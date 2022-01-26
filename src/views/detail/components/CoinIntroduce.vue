@@ -2,25 +2,20 @@
 <template>
     <h2 class="flex-row flex-items-center font-bold fz22 lh22 mb16">
         <i class="title-mark mr6" />
-        {{ t('price_live_data', { coin: 'coin' }) }}
+        {{ t('coin_price_title', { fullname: detail.name }) }}
     </h2>
+    <p
+        class="lh22"
+        v-html="t('coin_price_desc', {...priceDesc})"
+    />
     <div
         ref="refDom"
         class="html fz16 mb16"
         :style="{'max-height': state.unfold ? 'initial' : '510px'}"
     >
-        The live <b>Bitcoin price today</b> is $42,717.87 USD with a 24-hour trading volume of $19,970,107,522
-
-        If you would like to know where to buy Bitcoin, the top
-
-        <h3>sdfsdfsdfsd</h3>
-        <p
-            v-for="item in 10"
-            :key="item"
-        >
-            24-hour trading volume of $19,970,107,522<br><br>
-
-            If you would like to know where to buy Bitcoin, the top
+        <h3>{{ t('what_is_coin', {fullname: detail.name}) }}</h3>
+        <p class="lh22">
+            --
         </p>
     </div>
     <button
@@ -38,13 +33,14 @@
 </template>
 <script setup>
 import {
-    ref, reactive, watch, defineProps, nextTick,
+    ref, reactive, watch, defineProps, nextTick, computed,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CaretBottom, CaretTop } from '@element-plus/icons-vue';
+import { toFormat, toFixed } from '@/utils/number';
 
 const props = defineProps({
-    content: {
+    detail: {
         type: String,
         default: '',
     },
@@ -55,6 +51,34 @@ const refDom = ref(null);
 const state = reactive({
     show_more: false,
     unfold: false,
+});
+
+const priceDesc = computed(() => {
+    const { detail } = props;
+    let exchange = '--';
+    const change = detail.simple_price?.usd_24h_change || 0;
+    const changeCls = change > 0 ? 'color-up' : change < 0 ? 'color-down' : ''; // eslint-disable-line
+
+    if (detail.tickers?.length) {
+        const exchangeData = detail.tickers[0];
+        exchange = `
+            <a
+                href="${exchangeData.trade_url ? exchangeData.trade_url : '/'}"
+                target="${exchangeData.trade_url ? '_black' : ''}"
+                rel="noreferrer nofollow noopener"
+            >${exchangeData?.market?.name || '--'}</a>
+        `;
+    }
+    return {
+        fullname: detail.name || '--',
+        currency: detail.simple_price?.usd ? `<span class="${changeCls} font-bold">$${toFormat(detail.simple_price.usd)}</span>` : '--',
+        symbol: detail.symbol || '--',
+        vol: detail.simple_price?.usd_24h_vol ? `$${toFormat(detail.simple_price.usd_24h_vol, 0)}` : '--',
+        change: change ? `<span class="${changeCls} font-bold">${toFixed(change, 2)}%</span>` : '--',
+        circulating: detail.market_data?.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
+        total: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
+        exchange,
+    };
 });
 
 const methods = {
@@ -72,7 +96,7 @@ const methods = {
 };
 
 watch(
-    () => props.content,
+    () => props.detail.description,
     () => {
         nextTick().then(() => {
             methods.setLine();
