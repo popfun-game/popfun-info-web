@@ -27,7 +27,7 @@ const props = defineProps({
 const emits = defineEmits(['update:modelValue', 'onChange']);
 
 const onClick = (id) => {
-    if (props.active === id) return;
+    if (props.modelValue === id) return;
     emits('update:modelValue', id);
     emits('onChange', id);
 };
@@ -50,6 +50,7 @@ ul {
         cursor: pointer;
 
         &:hover {
+            user-select: none;
             background-color: rgba(102, 102, 102, 0.08);
         }
 

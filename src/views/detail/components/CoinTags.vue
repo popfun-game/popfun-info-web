@@ -35,41 +35,35 @@
             {{ t('info') }}
         </div>
         <div class="tag-list tag-info flex-row flex-items-center flex-wrap">
-            <a
+            <tag-button
                 v-for="link in data.homepage"
                 :key="link"
                 :href="link"
-                rel="noreferrer nofollow noopener"
-                target="_blank"
-                class="tag font-bold lh22 flex-row flex-items-center"
             >
                 <i class="icon-link fz16 mr4" />
                 {{ matchHostname(link) }}
-            </a>
+            </tag-button>
 
-            <tag-tooltip
+            <tag-button
                 v-if="data.explorers?.length"
                 :list="data.explorers"
             >
                 <i class="icon-search fz16 mr4" />Explorers
-            </tag-tooltip>
+            </tag-button>
 
-            <tag-tooltip
+            <tag-button
                 v-if="data.community?.length"
                 :list="data.community"
             >
                 <i class="icon-people fz16 mr4" />Community
-            </tag-tooltip>
+            </tag-button>
 
-            <a
+            <tag-button
                 v-if="data.source_code"
                 :href="data.source_code"
-                target="_blank"
-                rel="noreferrer nofollow noopener"
-                class="tag font-bold lh22 flex-row flex-items-center"
             >
                 <i class="icon-code fz16 mr4" />Source code
-            </a>
+            </tag-button>
 
             <!-- <a
                 href=""
@@ -115,7 +109,7 @@
 <script setup>
 import { defineProps, ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import tagTooltip from '@/components/TagTooltip';
+import tagButton from '@/components/TagButton';
 import { ArrowRight } from '@element-plus/icons-vue';
 import { replacePath } from '@/lang/i18n';
 
@@ -131,31 +125,56 @@ const props = defineProps({
 const { t } = useI18n();
 const visible = ref(false);
 
+// 匹配域名
 const matchHostname = (href = '') => {
-    if (/https:\/\/(wwww\.)?([\w.]+)\//.test(href)) {
-        return RegExp.$2;
+    try {
+        const location = new URL(href);
+        return location.hostname.replace('www.', '');
+    } catch (error) {
+        return href;
     }
+};
 
-    return href;
+// 格式化url
+const formatLink = (list, needLabel) => {
+    // 过滤空链接
+    let cache = list.filter((item) => item);
+
+    if (needLabel) {
+        cache = cache.map((item) => ({
+            label: matchHostname(item),
+            href: item,
+        }));
+    }
+    return cache;
 };
 
 const data = computed(() => {
     const { links } = props;
     if (!Object.keys(links).length) return {};
 
+    // 社区
+    const community = [
+        { label: 'Reddit', href: links.subreddit_url },
+        {
+            icon: 'icon-twitter',
+            label: 'Twitter',
+            href: links.twitter_screen_name ? `https://twitter.com/${links.twitter_screen_name}` : '',
+        },
+        { label: 'Telegram', href: links.telegram_channel_identifier ? `https://t.me/${links.telegram_channel_identifier}` : '' },
+        { label: 'Discord', href: links.chat_url[0] },
+        {
+            icon: 'icon-facebook',
+            label: 'Facebook',
+            href: links.facebook_username ? `https://www.facebook.com/${links.facebook_username}` : '',
+        },
+        ...formatLink(links.official_forum_url, true),
+    ];
+
     return {
-        homepage: [...links.homepage, ...links.announcement_url].filter((item) => item),
-        explorers: links.blockchain_site.filter((item) => item).map((item) => ({
-            label: matchHostname(item),
-            href: item,
-        })),
-        community: [
-            { label: 'Reddit', href: links.subreddit_url },
-            { label: 'Twitter', href: links.twitter_screen_name ? `https://twitter.com/${links.twitter_screen_name}` : '' },
-            { label: 'Telegram', href: links.telegram_channel_identifier ? `https://t.me/${links.telegram_channel_identifier}` : '' },
-            { label: 'Discord', href: links.chat_url[0] },
-            { label: 'Facebook', href: links.facebook_username ? `https://www.facebook.com/${links.facebook_username}` : '' },
-        ].filter((item) => item.href),
+        homepage: formatLink([...links.homepage, ...links.announcement_url]),
+        explorers: formatLink(links.blockchain_site, true),
+        community: community.filter((item) => item.href),
         source_code: links.repos_url.github[0],
     };
 });
@@ -186,24 +205,11 @@ const data = computed(() => {
         color: var(--text-color-0);
     }
 
-    .color-1 {
-        color: var(--text-color-1);
-    }
-
     .tag-list {
         margin: -5px;
     }
 
     .tag-info {
-        .tag {
-            white-space: nowrap;
-            color: var(--text-color-1);
-
-            &:hover {
-                color: var(--main-color);
-            }
-        }
-
         :deep(.button) {
             margin: 5px;
             padding: 4px 12px;

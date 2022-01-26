@@ -1,16 +1,23 @@
 <!-- 标签提示 -->
 <!-- Gwei 算力介绍 -->
 <template>
+    <a
+        v-if="!list.length"
+        rel="noreferrer nofollow noopener"
+        target="_blank"
+        class="button flex-row flex-items-center cursor-pointer lh22 font-bold"
+        v-bind="$attrs"
+    >
+        <slot />
+    </a>
     <el-tooltip
+        v-else
         ref="tooltip"
         placement="bottom"
         effect="light"
         popper-class="reset-tooltip"
     >
-        <template
-            v-if="list"
-            #content
-        >
+        <template #content>
             <div class="list">
                 <a
                     v-for="(item, index) in list"
@@ -21,7 +28,10 @@
                     class="flex-row flex-items-center font-bold lh22 ts fz14"
                     @click="onClick(item)"
                 >
-                    <i class="icon-link fz16 mr4" />
+                    <i
+                        class="fz16 mr4"
+                        :class="[item.icon ? item.icon : 'icon-link']"
+                    />
                     {{ item.label }}
                 </a>
             </div>
@@ -68,6 +78,7 @@ const onClick = (val) => {
     padding: 2px 8px;
     border-radius: 4px;
     transition: all 0.3s ease-in-out;
+    color: var(--text-color-1);
 
     &:hover {
         color: var(--main-color);

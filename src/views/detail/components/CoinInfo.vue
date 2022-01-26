@@ -114,8 +114,8 @@ const data = computed(() => {
         low: detail.market_data?.low_24h?.usd ?? '--',
         high: detail.market_data?.high_24h?.usd ?? '--',
         percentage: 0,
-        convert_btc: detail.market_data?.price_change_24h_in_currency?.btc ?? '--',
-        convert_eth: detail.market_data?.price_change_24h_in_currency?.eth ?? '--',
+        convert_btc: detail.market_data?.current_price?.btc ?? '--',
+        convert_eth: detail.market_data?.current_price?.eth ?? '--',
         percentage_btc: detail.market_data?.price_change_percentage_24h_in_currency?.btc ?? '',
         percentage_eth: detail.market_data?.price_change_percentage_24h_in_currency?.eth ?? '',
     };
@@ -139,8 +139,8 @@ const data = computed(() => {
         map.price = map.price !== '--' ? `$${toFormat(map.price)}` : '--';
         map.low = map.low !== '--' ? `$${toFormat(map.low)}` : '--';
         map.high = map.high !== '--' ? `$${toFormat(map.high)}` : '--';
-        map.convert_btc = map.convert_btc !== '--' ? toFixed(Math.abs(map.convert_btc)) : '--';
-        map.convert_eth = map.convert_eth !== '--' ? toFixed(Math.abs(map.convert_eth)) : '--';
+        map.convert_btc = map.convert_btc !== '--' ? toFormat(Math.abs(map.convert_btc)) : '--';
+        map.convert_eth = map.convert_eth !== '--' ? toFormat(Math.abs(map.convert_eth)) : '--';
         map.percentage_btc = map.percentage_btc !== '' ? toFixed(map.percentage_btc, 2) : '';
         map.percentage_eth = map.percentage_eth !== '' ? toFixed(map.percentage_eth, 2) : '';
     }
