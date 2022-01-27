@@ -5,30 +5,31 @@
             :extensions="{AutoScroll}"
         >
             <SplideSlide
-                v-for="(item) in list"
-                :key="item.coin"
+                v-for="(item) in state.list"
+                :key="item._id"
             >
                 <router-link
                     class="flex-row flex-items-center"
-                    :to="replacePath(`/currency/${item.coin}`)"
+                    :to="replacePath(`/currency/${item.id}`)"
                 >
                     <img
                         class="flex-shrink-0 mr10"
-                        :src="item.icon"
-                        alt=""
+                        :src="item.image"
+                        :alt="item.symbol"
                         width="24"
                         height="24"
                     >
+
                     <div class="flex-1 flex-col">
                         <p class="coin">
-                            {{ item.coin }}
+                            {{ item.name || '--' }}
                         </p>
-                        <p class="currency">
-                            {{ item.currency }}
+                        <p class="currency text-uppercase">
+                            {{ item.symbol }}
                         </p>
                     </div>
                     <span class="price">
-                        {{ item.price }}
+                        {{ toFormat(item.current_price, getPrecision(item.current_price)) }}
                     </span>
                 </router-link>
             </SplideSlide>
@@ -36,21 +37,18 @@
     </div>
 </template>
 <script setup>
-import { defineProps, reactive } from 'vue';
+import { reactive } from 'vue';
 import { replacePath } from '@/lang/i18n';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import { api } from '@/config/api';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll/dist/js/splide-extension-auto-scroll.cjs';
 // eslint-disable-next-line
 import '@splidejs/splide/dist/css/splide.min.css';
-
-defineProps({
-    list: {
-        type: Array,
-        required: true,
-    },
-});
+import { getPrecision } from '@/utils/tool';
+import { toFormat } from '@/utils/number';
 
 const state = reactive({
+    list: [],
     options: {
         type: 'loop',
         autoWidth: true,
@@ -63,6 +61,23 @@ const state = reactive({
         },
     },
 });
+
+// 获取列表
+const getList = () => {
+    const params = {
+        page: 1,
+        limit: 20,
+        // cat: 'gaming',
+    };
+
+    api.getCoinRank(params).then((res) => {
+        if (res.success && res.data?.result) {
+            state.list = res.data.result;
+        }
+    });
+};
+
+getList();
 </script>
 <style lang="scss" scoped>
 .auto-scroll {

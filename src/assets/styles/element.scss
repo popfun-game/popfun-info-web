@@ -61,6 +61,7 @@
             white-space: nowrap;
             line-height: 22px;
             font-weight: bold;
+            display: inline-flex;
 
             .color-middle {
                 color: var(--text-color-6);
@@ -83,7 +84,6 @@
 
         .el-loading-spinner {
             circle {
-                stroke: var(--main-color);
                 stroke-width: 6;
             }
 
@@ -209,6 +209,27 @@
         padding: 0;
     }
 
+    // 全屏样式
+    &.reset-fullscreen {
+        border-radius: 0;
+        display: flex;
+        flex-flow: column;
+
+        .el-dialog__header {
+            padding-top: 0;
+        }
+
+        .el-dialog__headerbtn {
+            top: 11px;
+            right: 20px;
+        }
+
+        .el-dialog__body {
+            flex: 1;
+            overflow: hidden scroll;
+        }
+    }
+
     @media screen and (max-width: 700px) {
         width: 90% !important;
     }
@@ -230,5 +251,33 @@
 
     .el-message__icon {
         font-size: 21px;
+    }
+}
+
+.el-tabs {
+    .el-tabs__header {
+        margin-bottom: 0;
+    }
+
+    .el-tabs__item {
+        height: 48px;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 48px;
+        transition: color 0.3s ease-in-out;
+
+        &.is-active,
+        &:hover {
+            color: var(--main-color);
+        }
+    }
+
+    .el-tabs__active-bar {
+        background-color: var(--main-color);
+    }
+
+    .el-tabs__nav-wrap::after {
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.05);
     }
 }

@@ -53,6 +53,7 @@ import {
 } from '@/utils/number';
 import ChartLine from '@/components/ChartLine';
 import autoImg from '@/components/AutoImg';
+import { getPrecision } from '@/utils/tool';
 
 const props = defineProps({
     active: {
@@ -103,7 +104,7 @@ const state = reactive({
             align: 'right',
             label: t('th_price'),
             formatter(row) {
-                return `$${toFormat(row.current_price)}`;
+                return `$${toFormat(row.current_price, getPrecision(row.current_price))}`;
             },
         },
         {

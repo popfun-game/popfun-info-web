@@ -23,7 +23,7 @@
         :element-loading-text="t('list_loading')"
         :columns="state.columns"
         :data="list"
-        @onRetry="emits('retry')"
+        @onRetry="emits('onRetry')"
     />
 
     <div
@@ -40,7 +40,10 @@
 </template>
 <script setup>
 import {
-    defineProps, defineEmits, reactive, computed,
+    defineProps,
+    defineEmits,
+    reactive,
+    computed,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
@@ -50,6 +53,7 @@ import {
     toFormat, toFixed, div, times,
 } from '@/utils/number';
 import autoImg from '@/components/AutoImg';
+import { getPrecision } from '@/utils/tool';
 import confidenceTipDom from './ConfidenceTipDom';
 
 const props = defineProps({
@@ -86,7 +90,7 @@ const state = reactive({
         {
             prop: 'trade_url',
             label: t('th_exchange'),
-            'min-width': '200px',
+            'min-width': '190px',
             render(h, { row }) {
                 return (
                     <a
@@ -97,8 +101,8 @@ const state = reactive({
                         style="display: inline-flex;"
                     >
                         <autoImg
-                            src={row.image}
-                            alt={`${row.name}`}
+                            src={row.market?.logo}
+                            alt={`${row.market?.name}`}
                             small
                             width="24px"
                             height="24px"
@@ -127,40 +131,43 @@ const state = reactive({
             prop: 'converted_last',
             align: 'right',
             label: t('th_price'),
-            'min-width': '110px',
+            'min-width': '104px',
             formatter(row) {
-                return `$${toFormat(row.converted_last?.usd, 8)}`;
+                return `$${toFormat(row.converted_last?.usd, getPrecision(row.converted_last?.usd))}`;
             },
         },
         {
             prop: 'bid_ask_spread_percentage',
             align: 'right',
             label: t('th_spread'),
+            width: 70,
             formatter(row) {
                 return `${toFixed(row.bid_ask_spread_percentage, 2)}%`;
             },
         },
         {
-            prop: '1h',
+            prop: 'cost_to_move_up_usd',
             align: 'right',
             label: `+2% ${t('th_depth')}`,
-            formatter() {
-                return '--';
+            'min-width': 150,
+            formatter(row) {
+                return `$${toFormat(row.cost_to_move_up_usd, 0)}`;
             },
         },
         {
-            prop: '24h',
+            prop: 'cost_to_move_down_usd',
             align: 'right',
             label: `-2% ${t('th_depth')}`,
-            formatter() {
-                return '--';
+            'min-width': 150,
+            formatter(row) {
+                return `$${toFormat(row.cost_to_move_down_usd, 0)}`;
             },
         },
         {
             prop: 'converted_volume',
             align: 'right',
-            width: 150,
             label: t('th_vol'),
+            'min-width': 150,
             formatter(row) {
                 return `$${toFormat(row.converted_volume?.usd, 0)}`;
             },
@@ -169,6 +176,7 @@ const state = reactive({
             prop: 'vol',
             align: 'right',
             label: `${t('th_vol')}%`,
+            width: 70,
             formatter(row) {
                 const scale = times(div(row.converted_volume?.usd, props.detail.simple_price?.usd_24h_vol || 1), 100);
                 return `${toFixed(scale, 2)}%`;
@@ -177,6 +185,7 @@ const state = reactive({
         {
             prop: 'trust_score',
             align: 'right',
+            'min-width': 90,
             renderHeader() {
                 return (<confidenceTipDom />);
             },

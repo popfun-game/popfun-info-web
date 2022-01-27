@@ -79,6 +79,7 @@ import { useI18n } from 'vue-i18n';
 import {
     toFormat, toFixed, div, times,
 } from '@/utils/number';
+import { getPrecision } from '@/utils/tool';
 
 const props = defineProps({
     detail: {
@@ -117,7 +118,9 @@ const listMap = computed(() => {
                 },
                 {
                     label: t('price_change'),
-                    value: marketData.price_change_24h_in_currency?.usd ? `$${toFormat(marketData.price_change_24h_in_currency.usd)}` : '--',
+                    value: marketData.price_change_24h_in_currency?.usd
+                        ? `$${toFormat(marketData.price_change_24h_in_currency.usd, getPrecision(marketData.price_change_24h_in_currency.usd))}`
+                        : '--',
                     change: toFixed(detail.simple_price?.usd_24h_change, 2),
                     tag: true,
                 },
@@ -167,13 +170,13 @@ const listMap = computed(() => {
             children: [
                 {
                     label: t('yesterday_lh'),
-                    value: yesterdayLow ? `$${toFormat(yesterdayLow)}` : '--',
-                    value2: yesterdayHigh ? `$${toFormat(yesterdayHigh)}` : '--',
+                    value: yesterdayLow ? `$${toFormat(yesterdayLow, getPrecision(yesterdayLow))}` : '--',
+                    value2: yesterdayHigh ? `$${toFormat(yesterdayHigh, getPrecision(yesterdayHigh))}` : '--',
                 },
                 {
                     label: t('yesterday_oc'),
-                    value: yesterdayOpen ? `$${toFormat(yesterdayOpen)}` : '--',
-                    value2: yesterdayClose ? `$${toFormat(yesterdayClose)}` : '--',
+                    value: yesterdayOpen ? `$${toFormat(yesterdayOpen, getPrecision(yesterdayOpen))}` : '--',
+                    value2: yesterdayClose ? `$${toFormat(yesterdayClose, getPrecision(yesterdayClose))}` : '--',
                 },
                 {
                     label: t('yesterday_mc'),

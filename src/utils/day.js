@@ -11,9 +11,7 @@ dayjs.extend(relativeTime);
  * @param {string} format 格式化方式
  * @return {string} utc时间展示
  */
-export function formatUTCTime(time, format = 'YYYY-MM-DD HH:mm:ss') {
-    return `${dayjs.utc(Number(time)).format(format)}`;
-}
+export const formatUTCTime = (time, format = 'YYYY-MM-DD HH:mm:ss') => `${dayjs.utc(time).format(format)}`;
 
 /**
  *
@@ -23,8 +21,8 @@ export function formatUTCTime(time, format = 'YYYY-MM-DD HH:mm:ss') {
  * @param {string} format 格式化方式
  * @return {string} 本地时间展示
  */
-export function formatLocalTime(time, format = 'YYYY-MM-DD HH:mm:ss') {
-    return `${dayjs.utc(Number(time)).local().format(format)}`;
-}
+export const formatLocalTime = (time, format = 'YYYY-MM-DD HH:mm:ss') => `${dayjs.utc(time).local().format(format)}`;
+
+export const fromNow = (date) => dayjs(date).fromNow();
 
 export default dayjs;

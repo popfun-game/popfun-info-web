@@ -51,4 +51,8 @@
         --el-input-focus-border: var(--main-color);
         --el-input-text-color: var(--text-color-0);
     }
+
+    .el-loading-mask {
+        --el-color-primary: var(--main-color);
+    }
 }

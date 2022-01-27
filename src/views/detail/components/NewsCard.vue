@@ -36,12 +36,12 @@
             />
         </div>
         <div class="flex-row flex-wrap flex-items-center fz16">
-            <span class="color-1 font-bold">Bitcoinist</span>
+            <span class="color-1 font-bold">{{ data.source }}</span>
             <i class="color-9 pl4 pr4">·</i>
             <span
                 v-if="data.updated_at"
                 class="color-3"
-            >{{ dayjs(data.updated_at).fromNow() }}</span>
+            >{{ fromNow(data.updated_at) }}</span>
             <span
                 v-if="name"
                 class="tag font-bold color-1 lh22 flex-row flex-items-center ml8"
@@ -63,7 +63,7 @@
 <script setup>
 import { defineProps } from 'vue';
 import autoImg from '@/components/AutoImg';
-import dayjs from '@/utils/day';
+import { fromNow } from '@/utils/day';
 
 defineProps({
     vertical: {

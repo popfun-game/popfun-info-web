@@ -61,6 +61,7 @@
             </div>
 
             <div
+                v-if="state.tab !== 'market'"
                 class="wrapper"
                 style="margin-top: 56px;"
             >
@@ -119,6 +120,7 @@ const methods = {
     // 获取详情
     getDetail(init) {
         if (!id.value) return;
+        if (state.timer) clearTimeout(state.timer);
         if (init) state.loading = true;
 
         api.getCoinDetail({ coin: id.value }).then((res) => {
@@ -126,6 +128,7 @@ const methods = {
 
             if (res.success) {
                 state.detail = res.data;
+                methods.loop();
             } else {
                 ElMessage.error(res.message);
             }

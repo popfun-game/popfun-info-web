@@ -212,6 +212,15 @@
     cursor: pointer;
     transition: 0.3s all ease-in-out;
 
+    .el-loading-mask {
+        cursor: not-allowed;
+        background-color: rgba(255, 255, 255, 0.5);
+
+        circle {
+            stroke-width: 6;
+        }
+    }
+
     &.small {
         padding: 0 12px;
         height: 32px;
