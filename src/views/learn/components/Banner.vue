@@ -6,16 +6,31 @@
                 <h3 class="font-bold lh22 fz16">
                     {{ t('learn_sub_title') }}
                 </h3>
-                <div class="flex-row mt20">
+                <div
+                    v-if="!state.submited"
+                    class="flex-row mt20"
+                >
                     <el-input
                         v-model="state.input"
+                        maxlength="30"
                         :placeholder="t('learn_email_ph')"
                         clearable
                     />
-                    <button class="btn-primary ml10">
+                    <button
+                        v-loading="state.submiting"
+                        class="btn-primary ml10"
+                        :disabled="!disabled"
+                        @click="submit"
+                    >
                         {{ t('btn_subscribe') }}
                     </button>
                 </div>
+                <h3
+                    v-else
+                    class="mt20 font-bold"
+                >
+                    {{ t('submited_email_reault') }}
+                </h3>
             </div>
             <div class="flex-row-center flex-1 img-box">
                 <img
@@ -29,13 +44,36 @@
     </div>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { api } from '@/config/api';
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n();
 const state = reactive({
     input: '',
+    submiting: false,
+    submited: false,
 });
+
+const disabled = computed(() => /^[a-zA-Z0-9].{1,}@.+\.[a-zA-Z]{2,}$/.test(state.input));
+
+const submit = () => {
+    const formData = new FormData();
+    formData.append('email', state.input);
+    state.submiting = true;
+
+    api.subEmail(formData).then((res) => {
+        state.submiting = false;
+
+        if (res.success) {
+            state.input = '';
+            state.submited = true;
+        } else {
+            ElMessage.error(res.message);
+        }
+    });
+};
 </script>
 <style lang="scss" scoped>
 .wrap {
@@ -70,7 +108,6 @@ const state = reactive({
         :deep(.el-input__inner) {
             height: 46px;
             font-weight: bold;
-            color: var(--text-color-9);
         }
     }
 

@@ -31,6 +31,14 @@ export const api = {
     getCoinKline(params) {
         return axios.get('@api/coin/kline', { params });
     },
+    // 订阅邮箱推送
+    subEmail(data) {
+        return axios.post('@api/subscribe', data, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+    },
 };
 
 export default {};

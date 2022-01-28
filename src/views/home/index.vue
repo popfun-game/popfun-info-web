@@ -6,7 +6,7 @@
         >
             <a
                 :href="replacePath('/igo/')"
-                class="wrapper flex-row"
+                class="banner wrapper flex-row"
                 style="margin-bottom: 30px;"
             >
                 <auto-img
@@ -15,6 +15,10 @@
                     height="22.83%"
                     radius="8px"
                 />
+                <div class="banner-title">
+                    <h1>STARRYNIFT</h1>
+                    <p>Collect play earn</p>
+                </div>
             </a>
             <div class="wrapper">
                 <chart-line />
@@ -46,3 +50,44 @@ import workInfo from './components/WorkInfo';
 import iLearn from './components/Learn';
 import ContactUs from './components/ContactUs';
 </script>
+<style lang="scss" scoped>
+.banner {
+    position: relative;
+
+    .banner-title {
+        text-align: center;
+        color: #fff;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        z-index: 1;
+        transform: translateX(-50%);
+
+        h1 {
+            font-size: 48px;
+            font-weight: bold;
+            line-height: 58px;
+            margin-bottom: 4px;
+        }
+
+        p {
+            font-size: 18px;
+            padding-bottom: 25px;
+        }
+    }
+
+    @media screen and (max-width: 700px) {
+        .banner-title {
+            h1 {
+                font-size: 24px;
+                line-height: 30px;
+            }
+
+            p {
+                font-size: 12px;
+                padding-bottom: 10px;
+            }
+        }
+    }
+}
+</style>

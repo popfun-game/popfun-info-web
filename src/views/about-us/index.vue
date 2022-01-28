@@ -1,12 +1,15 @@
 <template>
     <layout-default>
         <section class="flex-1">
-            <div class="wrapper">
-                <auto-img
-                    height="19.75%"
-                    :src="imgBanner"
-                    radius="8px"
-                />
+            <div class="wrapper ">
+                <div class="banner">
+                    <auto-img
+                        height="19.75%"
+                        :src="imgBanner"
+                        radius="8px"
+                    />
+                    <h2>{{ t('about_us_title') }}</h2>
+                </div>
 
                 <div class="map-wrap flex-row flex-wrap">
                     <div class="map">
@@ -91,50 +94,75 @@ const state = reactive({
 /* eslint-enable global-require */
 </script>
 <style lang="scss" scoped>
-.map-wrap {
-    margin-top: 88px;
+section {
+    padding-top: 40px;
 
-    .map {
-        width: 55.24%;
-        margin-right: 62px;
+    .banner {
+        position: relative;
+
+        h2 {
+            position: absolute;
+            left: 16.66%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            font-size: 28px;
+            line-height: 36px;
+            color: #fff;
+        }
     }
 
-    h3 {
-        font-weight: bold;
-        font-size: 36px;
-        line-height: 47px;
-        color: var(--text-color-0);
-        margin-bottom: 14px;
+    .map-wrap {
+        margin-top: 88px;
+
+        .map {
+            width: 55.24%;
+            margin-right: 62px;
+        }
+
+        h3 {
+            font-weight: bold;
+            font-size: 36px;
+            line-height: 47px;
+            color: var(--text-color-0);
+            margin-bottom: 14px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 30px;
+            color: var(--text-color-6);
+        }
     }
 
-    p {
-        font-size: 16px;
-        line-height: 30px;
-        color: var(--text-color-6);
+    .footer {
+        background-color: #f9fbff;
+        min-height: 233px;
+        margin-top: 91px;
+        padding-top: 63px;
+
+        p {
+            font-weight: bold;
+            font-size: 18px;
+            line-height: 23px;
+            color: var(--text-colot-0);
+            margin-bottom: 38px;
+            padding: 0 20px;
+        }
     }
-}
 
-.footer {
-    background-color: #f9fbff;
-    min-height: 233px;
-    margin-top: 91px;
-    padding-top: 63px;
+    @media screen and (max-width: 700px) {
+        .map-wrap .map {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 30px;
+        }
 
-    p {
-        font-weight: bold;
-        font-size: 18px;
-        line-height: 23px;
-        color: var(--text-colot-0);
-        margin-bottom: 38px;
-        padding: 0 20px;
-    }
-}
-
-@media screen and (max-width: 700px) {
-    .map-wrap .map {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 30px;
+        .banner {
+            h2 {
+                font-size: 16px;
+            }
+        }
     }
 }
 </style>
