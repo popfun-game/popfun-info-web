@@ -12,6 +12,15 @@ module.exports = {
             errors: false,
         },
     },
+    css: {
+        loaderOptions: {
+            postcss: {
+                plugins: [
+                    require('postcss-sass-unicode'), // eslint-disable-line
+                ],
+            },
+        },
+    },
     chainWebpack: (config) => {
         // 移除 prefetch 插件
         config.plugins.delete('prefetch');

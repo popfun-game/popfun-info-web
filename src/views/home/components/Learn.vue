@@ -9,9 +9,8 @@
             >
                 <a
 
-                    :href="item.link ? item.link : 'javascript:;'"
+                    :href="item._key ? replacePath(`/detail/${item._key}?from=home`) : 'javascript:;'"
                     rel="noreferrer nofollow noopener"
-                    :target="item.link ? '_blank' : ''"
                 >
                     <auto-img
                         :src="item.img"

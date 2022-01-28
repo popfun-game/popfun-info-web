@@ -26,17 +26,17 @@
         </template>
         <template #default>
             <a
-                :href="data.type === 'news' ? data.link : 'javascript:;'"
+                :href="data._key ? replacePath(`/detail/${data._key}`) : 'javascript:;'"
                 rel="noreferrer nofollow noopener"
-                :target="data.type === 'news' ? '_blank' : ''"
-                @click="emits('click', item)"
             >
                 <auto-img
                     :src="data.img"
                     height="56.66%"
                     radius="12px"
                 />
-                <h3 class="fz18 lh22 font-bold mt22 text-ellipsis">{{ data.categories?.length ? data.categories[0].title : '' }}</h3>
+                <h3 class="fz18 lh22 font-bold mt22 text-ellipsis">
+                    {{ data.categories?.length ? data.categories[0].title : '' }}
+                </h3>
                 <h4 class="text-ellipsis-2 mt16"> {{ data.title }} </h4>
                 <p class="desc color-6 fz16 lh22 mt16 mb20 text-ellipsis-4"> {{ data.summary }} </p>
                 <p class="text text-ellipsis">{{ data.author?.name }}</p>
@@ -56,9 +56,10 @@
     </el-skeleton>
 </template>
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps } from 'vue';
 import autoImg from '@/components/AutoImg';
 import { fromNow } from '@/utils/day';
+import { replacePath } from '@/lang/i18n';
 
 defineProps({
     data: {
@@ -68,8 +69,6 @@ defineProps({
         },
     },
 });
-
-const emits = defineEmits(['click']);
 </script>
 <style lang="scss" scoped>
 h3 {

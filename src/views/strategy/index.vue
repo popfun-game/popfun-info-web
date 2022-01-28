@@ -8,10 +8,7 @@
                         v-for="(item,index) in state.list"
                         :key="index"
                     >
-                        <card
-                            :data="item"
-                            @click="methods.showHtml(item)"
-                        />
+                        <card :data="item" />
                     </li>
                 </ul>
 
@@ -28,13 +25,6 @@
             </div>
         </section>
     </layout-default>
-
-    <!-- html展示 -->
-    <dialog-html
-        :html="state.html"
-        :visible="state.visible"
-        @close="state.visible = false"
-    />
 </template>
 <script setup>
 import { reactive } from 'vue';
@@ -44,7 +34,6 @@ import card from '@/components/Card';
 import InforMenu from '@/components/InforMenu';
 import { ElMessage } from 'element-plus';
 import { api } from '@/config/api';
-import dialogHtml from '@/components/dialog/Html';
 
 const { t } = useI18n();
 const state = reactive({
@@ -52,8 +41,6 @@ const state = reactive({
     page: 0,
     show_more: false,
     loading: false,
-    visible: false,
-    html: '',
     list: [
         {
             link: '',

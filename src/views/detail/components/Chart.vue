@@ -6,7 +6,10 @@
             {{ t('chart_usd_title', { fullname: detail.name }) }}
         </h3>
 
-        <chart />
+        <chart
+            :list="state.list"
+            :loading="state.loading"
+        />
 
         <el-checkbox-group
             v-model="state.checked_list"
@@ -27,21 +30,49 @@
 import { defineProps, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Chart from '@/components/Chart';
+import { api } from '@/config/api';
+import dayjs from '@/utils/day';
 
-defineProps({
+const props = defineProps({
     detail: {
         type: Object,
         default() {
             return {};
         },
     },
+    coin: {
+        type: String,
+        default: '',
+    },
 });
 
 const { t } = useI18n();
 const state = reactive({
+    list: [],
+    loading: true,
     checked_list: ['USD'],
     coins: ['USD', 'BTC'],
 });
+
+const methods = {
+    // 获取kline
+    getCoinKline() {
+        state.loading = true;
+
+        api.getCoinKline({ coin: props.coin }).then((res) => {
+            state.loading = false;
+
+            if (res.success && res.data?.length) {
+                state.list = res.data.map((item) => ({
+                    time: dayjs(item.t).unix(),
+                    value: item.v?.length === 4 ? item.v.slice(-1)[0] : '',
+                }));
+            } else if (state.list.length) state.list = [];
+        });
+    },
+};
+
+methods.getCoinKline();
 </script>
 <style lang="scss" scoped>
 .coin-chart {

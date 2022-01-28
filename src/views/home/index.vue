@@ -5,8 +5,8 @@
             style="margin-bottom: 40px;"
         >
             <a
-                href="javascript:;"
-                class="wrapper flex-row cursor-default"
+                :href="replacePath('/igo/')"
+                class="wrapper flex-row"
                 style="margin-bottom: 30px;"
             >
                 <auto-img
@@ -39,6 +39,7 @@ import layoutDefault from '@/components/layouts/Default';
 import autoImg from '@/components/AutoImg';
 import bannerImg from '@/assets/images/index/banner.jpg';
 import ChartLine from '@/components/ChartLine';
+import { replacePath } from '@/lang/i18n';
 import iTable from './components/Table';
 import iNews from './components/News';
 import workInfo from './components/WorkInfo';

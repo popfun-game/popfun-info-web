@@ -14,10 +14,9 @@
         </template>
         <template #default>
             <a
-                :href="data.type === 'news' ? data.link : 'javascript:;'"
+                :href="data.type === 'news' ? data.link : replacePath(`/detail/${data._key}`)"
                 rel="noreferrer nofollow noopener"
                 :target="data.type === 'news' ? '_blank' : ''"
-                @click="emits('click', item)"
             >
                 <auto-img
                     :src="data.img"
@@ -42,8 +41,9 @@
     </el-skeleton>
 </template>
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps } from 'vue';
 import autoImg from '@/components/AutoImg';
+import { replacePath } from '@/lang/i18n';
 import { fromNow, formatLocalTime } from '@/utils/day';
 
 defineProps({
@@ -54,8 +54,6 @@ defineProps({
         },
     },
 });
-
-const emits = defineEmits(['click']);
 </script>
 <style lang="scss" scoped>
 .time {

@@ -18,10 +18,7 @@
                         v-for="(item,index) in state.list"
                         :key="index"
                     >
-                        <card
-                            :data="item"
-                            @click="methods.showHtml(item)"
-                        />
+                        <card :data="item" />
                     </li>
                 </ul>
 
@@ -38,41 +35,36 @@
 
                 <crypto-info />
 
-                <h3
-                    class="mb24"
-                    style="margin-top: 84px;"
-                >
-                    {{ t('learn_about_aamc') }}
-                </h3>
-
-                <tabs
-                    v-model="state.current_tab"
-                    :list="state.tabs"
-                    style="margin-bottom: 38px;"
-                />
-                <ul class="list flex-row flex-wrap">
-                    <li
-                        v-for="(item,index) in state.list.slice(0, 3)"
-                        :key="index"
+                <template v-if="false">
+                    <h3
+                        class="mb24"
+                        style="margin-top: 84px;"
                     >
-                        <card
-                            :data="item"
-                            @click="methods.showHtml(item)"
-                        />
-                    </li>
-                </ul>
+                        {{ t('learn_about_aamc') }}
+                    </h3>
+
+                    <tabs
+                        v-model="state.current_tab"
+                        :list="state.tabs"
+                        style="margin-bottom: 38px;"
+                    />
+                    <ul class="list flex-row flex-wrap">
+                        <li
+                            v-for="(item,index) in state.list.slice(0, 3)"
+                            :key="index"
+                        >
+                            <card
+                                :data="item"
+                                @click="methods.showHtml(item)"
+                            />
+                        </li>
+                    </ul>
+                </template>
 
                 <our-mission />
             </div>
         </section>
     </layout-default>
-
-    <!-- html展示 -->
-    <dialog-html
-        :html="state.html"
-        :visible="state.visible"
-        @close="state.visible = false"
-    />
 </template>
 <script setup>
 import { reactive } from 'vue';
@@ -80,7 +72,6 @@ import { useI18n } from 'vue-i18n';
 import layoutDefault from '@/components/layouts/Default';
 import Tabs from '@/components/Tabs';
 import InforMenu from '@/components/InforMenu';
-import dialogHtml from '@/components/dialog/Html';
 import { ElMessage } from 'element-plus';
 import { api } from '@/config/api';
 import coinScroll from './components/CoinScroll';
@@ -102,8 +93,6 @@ const state = reactive({
     page: 0,
     show_more: false,
     loading: false,
-    visible: false,
-    html: '',
     count: '',
     list: [
         {

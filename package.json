@@ -42,6 +42,7 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-vue": "^7.19.1",
     "lint-staged": "^9.5.0",
+    "postcss-sass-unicode": "^0.1.0",
     "sass": "^1.46.0",
     "sass-loader": "^8.0.2",
     "stylelint": "^13.13.1",

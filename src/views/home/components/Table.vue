@@ -194,7 +194,7 @@ const state = reactive({
     page: 1,
     pages: {
         current: 1,
-        size: 100,
+        size: 20,
         total: 1,
     },
     timer: null,

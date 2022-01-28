@@ -18,6 +18,11 @@ const routes = [
         path: '/learn/',
         component: () => import('@/views/learn/index'),
     },
+    // 资讯详情
+    {
+        path: '/detail/:key',
+        component: () => import('@/views/detail/detail'),
+    },
     {
         path: '/about-us/',
         component: () => import('@/views/about-us/index'),

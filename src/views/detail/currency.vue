@@ -28,7 +28,10 @@
                 class="wrapper flex-row flex-wrap pb24"
             >
                 <div class="col-l mr16 flex-1">
-                    <chart :detail="state.detail" />
+                    <chart
+                        :detail="state.detail"
+                        :coin="id"
+                    />
 
                     <!-- 折合 -->
                     <converter :detail="state.detail" />
