@@ -10,7 +10,7 @@
 import {
     defineProps, reactive, watch, nextTick,
 } from 'vue';
-import { createChart } from 'lightweight-charts';
+import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development';
 import { getPrecision } from '@/utils/tool';
 import { toFixed } from '@/utils/number';
 
@@ -25,12 +25,29 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    // 涨跌幅
+    change: {
+        type: [Number, String],
+        default: 0,
+    },
 });
 
 const state = reactive({
     id: Math.random().toString(32).slice(2),
     chart: null,
-    area_series: null,
+    series: null,
+    color: {
+        up: {
+            topColor: 'rgba(38, 196, 139, 0.35)',
+            bottomColor: 'rgba(38, 196, 139, 0)',
+            lineColor: 'rgba(38, 196, 139, 1)',
+        },
+        down: {
+            topColor: 'rgba(233, 53, 53, 0.35)',
+            bottomColor: 'rgba(233, 53, 53, 0)',
+            lineColor: 'rgba(233, 53, 53, 1)',
+        },
+    },
 });
 
 const methods = {
@@ -41,9 +58,6 @@ const methods = {
                 visible: true,
                 text: 'Popfun',
                 color: '#999',
-                horzAlign: 'left',
-                vertAlign: 'bottom',
-                fontSize: 24,
             },
             timeScale: {
                 fixLeftEdge: true,
@@ -64,28 +78,43 @@ nextTick(() => {
 });
 
 watch(
+    () => props.change,
+    (val) => {
+        if (state.series) {
+            state.series.applyOptions({
+                ...(val < 0 ? state.color.down : state.color.up),
+            });
+        }
+    },
+    { immediate: true },
+);
+
+watch(
     () => props.list.length && state.chart,
     (val) => {
         if (val) {
-            if (state.area_series) {
-                state.chart.removeSeries(state.area_series);
-                state.area_series = null;
+            if (state.series) {
+                state.chart.removeSeries(state.series);
+                state.series = null;
             }
 
             const prec = getPrecision(props.list.slice(-1)[0]?.value);
 
-            state.area_series = state.chart.addAreaSeries({
-                lastValueVisible: true,
+            state.series = state.chart.addAreaSeries({
+                ...(props.change < 0 ? state.color.down : state.color.up),
+                // lastValueVisible: true,
+                lastPriceAnimation: 1,
                 priceFormat: {
                     type: 'price',
                     minMove: `${toFixed(0, prec - 1)}1`,
                     precision: prec,
                 },
             });
-            state.area_series.setData(props.list);
-            // state.area_series.applyOptions({
+            state.series.setData(props.list);
+            // state.series.applyOptions({
             //     lastValueVisible: true,
             // });
+            console.log(state.series.seriesType());
         }
     },
     { immediate: true },

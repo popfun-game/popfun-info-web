@@ -8,6 +8,7 @@
 
         <chart
             :list="state.list"
+            :change="detail.simple_price?.usd_24h_change"
             :loading="state.loading"
         />
 
@@ -51,7 +52,7 @@ const state = reactive({
     list: [],
     loading: true,
     checked_list: ['USD'],
-    coins: ['USD', 'BTC'],
+    coins: ['USD'],
 });
 
 const methods = {
