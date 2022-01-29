@@ -10,9 +10,12 @@
 import {
     defineProps, reactive, watch, nextTick,
 } from 'vue';
-import { createChart } from 'lightweight-charts/dist/lightweight-charts.esm.development';
+import { createChart } from 'lightweight-charts';
 import { getPrecision } from '@/utils/tool';
 import { toFixed } from '@/utils/number';
+
+let chart = null;
+let areaSeries = null;
 
 const props = defineProps({
     list: {
@@ -34,8 +37,7 @@ const props = defineProps({
 
 const state = reactive({
     id: Math.random().toString(32).slice(2),
-    chart: null,
-    series: null,
+    chart_ready: false,
     color: {
         up: {
             topColor: 'rgba(38, 196, 139, 0.35)',
@@ -53,7 +55,7 @@ const state = reactive({
 const methods = {
     // 初始化
     init() {
-        state.chart = createChart(state.id, {
+        chart = createChart(state.id, {
             watermark: {
                 visible: true,
                 text: 'Popfun',
@@ -70,6 +72,29 @@ const methods = {
                 },
             },
         });
+
+        state.chart_ready = true;
+    },
+    // 画面积图
+    drawArea() {
+        const prec = getPrecision(props.list.slice(-1)[0]?.value);
+
+        if (areaSeries) {
+            chart.removeSeries(areaSeries);
+            areaSeries = null;
+        }
+
+        areaSeries = chart.addAreaSeries({
+            ...(props.change < 0 ? state.color.down : state.color.up),
+            lastPriceAnimation: 1,
+            priceFormat: {
+                type: 'price',
+                minMove: `${toFixed(0, prec - 1)}1`,
+                precision: prec,
+            },
+        });
+
+        areaSeries.setData(props.list);
     },
 };
 
@@ -80,8 +105,8 @@ nextTick(() => {
 watch(
     () => props.change,
     (val) => {
-        if (state.series) {
-            state.series.applyOptions({
+        if (areaSeries) {
+            areaSeries.applyOptions({
                 ...(val < 0 ? state.color.down : state.color.up),
             });
         }
@@ -90,32 +115,9 @@ watch(
 );
 
 watch(
-    () => props.list.length && state.chart,
+    () => props.list.length && state.chart_ready,
     (val) => {
-        if (val) {
-            if (state.series) {
-                state.chart.removeSeries(state.series);
-                state.series = null;
-            }
-
-            const prec = getPrecision(props.list.slice(-1)[0]?.value);
-
-            state.series = state.chart.addAreaSeries({
-                ...(props.change < 0 ? state.color.down : state.color.up),
-                // lastValueVisible: true,
-                lastPriceAnimation: 1,
-                priceFormat: {
-                    type: 'price',
-                    minMove: `${toFixed(0, prec - 1)}1`,
-                    precision: prec,
-                },
-            });
-            state.series.setData(props.list);
-            // state.series.applyOptions({
-            //     lastValueVisible: true,
-            // });
-            console.log(state.series.seriesType());
-        }
+        if (val) methods.drawArea();
     },
     { immediate: true },
 );
