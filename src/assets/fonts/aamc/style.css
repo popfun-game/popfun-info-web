@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'aamc';
   src:
-    url('fonts/aamc.ttf?osg8p7') format('truetype'),
-    url('fonts/aamc.woff?osg8p7') format('woff'),
-    url('fonts/aamc.svg?osg8p7#aamc') format('svg');
+    url('fonts/aamc.ttf?gn0tqq') format('truetype'),
+    url('fonts/aamc.woff?gn0tqq') format('woff'),
+    url('fonts/aamc.svg?gn0tqq#aamc') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-telegram:before {
+  content: "\e90f";
+}
 .icon-facebook:before {
   content: "\e90b";
 }

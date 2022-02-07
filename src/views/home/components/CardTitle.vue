@@ -3,10 +3,10 @@
         class="font-bold flex-row-space-between flex-items-center"
         :style="{'margin-top': top, 'margin-bottom': bottom}"
     >
-        {{ t('nav_learn') }}
-        <router-link
+        <span>{{ title ? t(title) : '' }}</span>
+        <a
             v-if="url"
-            :to="url"
+            :href="url"
             class="flex-row flex-items-center font-bold"
         >
             {{ t('btn_text_more') }}
@@ -17,7 +17,7 @@
             >
                 <arrow-right />
             </el-icon>
-        </router-link>
+        </a>
     </h3>
 </template>
 <script setup>
@@ -26,6 +26,10 @@ import { useI18n } from 'vue-i18n';
 import { ArrowRight } from '@element-plus/icons-vue';
 
 defineProps({
+    title: {
+        type: String,
+        default: '',
+    },
     url: {
         type: String,
         default: '',

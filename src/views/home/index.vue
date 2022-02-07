@@ -30,6 +30,10 @@
             <div class="wrapper">
                 <!-- 工作内容介绍 -->
                 <work-info />
+                <!-- igo -->
+                <i-igo />
+                <!--nft -->
+                <i-nft />
                 <!-- 学习 -->
                 <i-learn />
                 <!-- 联系我们 -->
@@ -48,6 +52,8 @@ import iTable from './components/Table';
 import iNews from './components/News';
 import workInfo from './components/WorkInfo';
 import iLearn from './components/Learn';
+import iIgo from './components/Igo';
+import iNft from './components/Nft';
 import ContactUs from './components/ContactUs';
 </script>
 <style lang="scss" scoped>

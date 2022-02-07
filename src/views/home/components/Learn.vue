@@ -1,5 +1,8 @@
 <template>
-    <card-title :url="replacePath('/learn/')" />
+    <card-title
+        :url="replacePath('/learn/')"
+        title="nav_learn"
+    />
     <div class="list-wrap">
         <ul class="flex-row">
             <li
