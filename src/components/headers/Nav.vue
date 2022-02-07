@@ -72,6 +72,8 @@ const { t } = useI18n();
 const state = reactive({
     route_list: [
         { path: replacePath('/'), name: t('nav_home') },
+        { path: replacePath('/igo/'), name: t('nav_igo') },
+        { path: replacePath('/nft/'), name: t('nav_nft') },
         {
             name: t('nav_infor'),
             children: [

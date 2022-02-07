@@ -11,7 +11,7 @@
 
         <c-table
             v-loading="state.loading"
-            :columns="state.columns"
+            :columns="column"
             :data="state.data"
             :element-loading-text="t('list_loading')"
             @onRetry="methods.getList()"
@@ -38,22 +38,18 @@
     </section>
 </template>
 <script setup>
-import { reactive, defineProps, onBeforeUnmount } from 'vue';
+import {
+    defineProps,
+    reactive,
+    computed,
+    onBeforeUnmount,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
-import { replacePath } from '@/lang/i18n';
 import cTable from '@/components/Table';
 import tabs from '@/components/Tabs';
 import { api } from '@/config/api';
 import { ElMessage } from 'element-plus';
-import {
-    toFormat,
-    toFixed,
-    div,
-    lt,
-} from '@/utils/number';
-import ChartLine from '@/components/ChartLine';
-import autoImg from '@/components/AutoImg';
-import { getPrecision } from '@/utils/tool';
+import useColumn from './columns';
 
 const props = defineProps({
     active: {
@@ -63,132 +59,15 @@ const props = defineProps({
 });
 
 const { t } = useI18n();
+const columns = useColumn();
 const state = reactive({
     tab: props.active,
     loading: false,
     menu_list: [
         { id: 'gaming', label: t('menu_game') },
+        { id: 'guild', label: t('menu_guild') },
+        { id: 'chain', label: t('menu_chain') },
         { id: 'token', label: t('menu_token') },
-    ],
-    columns: [
-        {
-            prop: '',
-            label: '#',
-            width: 50,
-            render(h, { $index }) {
-                return state.pages.size * (state.pages.current - 1) + $index + 1;
-            },
-        },
-        {
-            prop: 'name',
-            label: t('th_coin'),
-            'min-width': '200px',
-            render(h, { row }) {
-                return (
-                    <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
-                        <autoImg
-                            src={row.image}
-                            alt={`${row.name} (${row.symbol?.toUpperCase()})`}
-                            small
-                            width="24px"
-                            height="24px"
-                        />
-                        <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.name }</span>
-                        <span class="text-uppercase color-light">{ row.symbol }</span>
-                    </router-link>
-                );
-            },
-        },
-        {
-            prop: 'current_price',
-            align: 'right',
-            label: t('th_price'),
-            formatter(row) {
-                return `$${toFormat(row.current_price, getPrecision(row.current_price))}`;
-            },
-        },
-        {
-            prop: 'price_change_percentage_1h_in_currency',
-            align: 'right',
-            width: 80,
-            label: t('th_1h'),
-            render(h, { row }) {
-                const scale = toFixed(row.price_change_percentage_1h_in_currency, 2);
-                return (
-                    <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                        { scale > 0 ? `+${scale}` : scale }%
-                    </span>
-                );
-            },
-        },
-        {
-            prop: 'price_change_percentage_24h_in_currency',
-            align: 'right',
-            width: 80,
-            label: t('th_24h'),
-            render(h, { row }) {
-                const scale = toFixed(row.price_change_percentage_24h_in_currency, 2);
-                return (
-                    <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                        { scale > 0 ? `+${scale}` : scale }%
-                    </span>
-                );
-            },
-        },
-        {
-            prop: 'price_change_percentage_7d_in_currency',
-            align: 'right',
-            width: 80,
-            label: t('th_7d'),
-            render(h, { row }) {
-                const scale = toFixed(row.price_change_percentage_7d_in_currency, 2);
-                return (
-                    <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                        { scale > 0 ? `+${scale}` : scale }%
-                    </span>
-                );
-            },
-        },
-        {
-            prop: 'market_cap',
-            align: 'right',
-            width: 150,
-            label: t('th_mkt_cap'),
-            formatter(row) {
-                return `$${toFormat(row.market_cap)}`;
-            },
-        },
-        {
-            prop: 'total_volume',
-            align: 'right',
-            width: 190,
-            label: t('th_vol24'),
-            render(h, { row }) {
-                return (
-                    <div>
-                        <p class="text-ellipsis">${ toFormat(row.total_volume) }</p>
-                        <p class="color-middle text-ellipsis fz12 text-uppercase">
-                            { toFormat(div(row.total_volume, row.current_price), 2) } {row.symbol}
-                        </p>
-                    </div>
-                );
-            },
-        },
-        {
-            prop: 'sparkline_in_7d',
-            align: 'right',
-            width: 140,
-            label: t('th_last_7d'),
-            render(h, { row }) {
-                const color = lt(row.current_price, row.sparkline_in_7d?.price?.[0]) ? 'var(--color-down)' : 'var(--color-up)';
-
-                return (<ChartLine
-                    gradientColor={color}
-                    lineColor={color}
-                    list={row.sparkline_in_7d?.price}
-                />);
-            },
-        },
     ],
     data: [],
     page: 1,
@@ -199,6 +78,9 @@ const state = reactive({
     },
     timer: null,
 });
+
+// 当前 table 列
+const column = computed(() => columns(state.pages.size * (state.pages.current - 1), state.tab));
 
 const methods = {
     // 获取列表
@@ -233,8 +115,11 @@ const methods = {
     },
     // 切换tab
     changeTab() {
+        state.data = [];
         state.pages.current = 1;
+        state.pages.total = 1;
         state.page = 1;
+
         methods.getList();
     },
     // 每页显示条目个数修改
