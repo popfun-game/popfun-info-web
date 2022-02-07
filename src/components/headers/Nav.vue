@@ -21,14 +21,20 @@
                         v-for="(item,index) in state.route_list"
                         :key="item.path"
                     >
-                        <el-menu-item
-                            v-if="!item.children"
-                            :index="item.path"
+                        <li
+                            v-if="item.out"
+                            style="margin-left: 36px;"
                         >
-                            {{ item.name }}
-                        </el-menu-item>
+                            <a
+                                class="el-menu-item"
+                                style="margin-left: 0;"
+                                :href="item.path"
+                            >
+                                {{ item.name }}
+                            </a>
+                        </li>
                         <el-sub-menu
-                            v-else
+                            v-else-if="item.children?.length"
                             popper-class="reset-tooltip"
                             :index="index"
                         >
@@ -43,6 +49,12 @@
                                 {{ child.name }}
                             </el-menu-item>
                         </el-sub-menu>
+                        <el-menu-item
+                            v-else
+                            :index="item.path"
+                        >
+                            {{ item.name }}
+                        </el-menu-item>
                     </template>
                 </el-menu>
                 <div class="flex-row flex-items-center">
@@ -72,8 +84,8 @@ const { t } = useI18n();
 const state = reactive({
     route_list: [
         { path: replacePath('/'), name: t('nav_home') },
-        { path: replacePath('/igo/'), name: t('nav_igo') },
-        { path: replacePath('/nft/'), name: t('nav_nft') },
+        { path: replacePath('/igo/'), name: t('nav_igo'), out: true },
+        { path: replacePath('/nft/'), name: t('nav_nft'), out: true },
         {
             name: t('nav_infor'),
             children: [
