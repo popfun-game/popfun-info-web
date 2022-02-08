@@ -11,13 +11,10 @@
     <div
         ref="refDom"
         class="html fz16 mb16"
-        :style="{'max-height': state.unfold ? 'initial' : '400px'}"
+        :class="{'is-open': state.unfold || !state.show_more}"
     >
         <h3>{{ t('what_is_coin', {fullname: detail.name}) }}</h3>
-        <div
-            class="html-parse lh22"
-            v-html="detail.description_more || detail.description?.en || '--'"
-        />
+        <html-parse :content="detail.description_more || detail.description?.en || '--'" />
     </div>
     <button
         v-if="state.show_more"
@@ -39,6 +36,7 @@ import {
 import { useI18n } from 'vue-i18n';
 import { CaretBottom, CaretTop } from '@element-plus/icons-vue';
 import { toFormat, toFixed } from '@/utils/number';
+import htmlParse from '@/components/HtmlParse';
 
 const props = defineProps({
     detail: {
@@ -87,7 +85,7 @@ const methods = {
     setLine() {
         if (refDom.value) {
             const height = refDom.value.scrollHeight;
-            state.show_more = height > 400;
+            state.show_more = height > 300;
         }
     },
     onFold() {
@@ -112,11 +110,22 @@ h2 {
 }
 
 .html {
+    position: relative;
     line-height: 28px;
     color: var(--text-color-6);
-    max-height: 400px;
+    max-height: 300px;
     overflow: hidden;
     word-break: break-word;
+
+    &:not(.is-open)::after {
+        content: "";
+        height: 50px;
+        width: 100%;
+        bottom: 0;
+        position: absolute;
+        z-index: 1;
+        background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0.1));
+    }
 
     :deep(b) {
         color: var(--text-color-1);
@@ -130,73 +139,8 @@ h2 {
         padding: 32px 0 16px;
     }
 
-    .html-parse {
-        font-family: 'IBM', sans-serif !important;
-
-        :deep {
-            h1,
-            h2 {
-                color: var(--color-text-0);
-                font-weight: bold;
-                margin-bottom: 32px;
-                font-size: 32px;
-            }
-
-            h3 {
-                color: var(--color-text-1);
-                font-weight: bold;
-                margin-bottom: 24px;
-                font-size: 24px;
-            }
-
-            p,
-            div {
-                line-height: 22px;
-                color: var(--text-color-3);
-                margin-bottom: 10px;
-            }
-
-            img {
-                width: 100%;
-            }
-
-            ul {
-                list-style: revert;
-                padding-left: revert;
-                margin-bottom: 20px;
-
-                li {
-                    list-style: revert;
-                    line-height: 22px;
-                    color: var(--text-color-3);
-                }
-            }
-
-            table {
-                width: 100%;
-                border: 1px solid #c7cbd0;
-                border-top: 0;
-                border-left: 0;
-                margin-bottom: 10px;
-
-                th,
-                td {
-                    font-size: 14px;
-                    line-height: 1.5;
-                    text-align: center;
-                    padding: 10px;
-                    color: #111;
-                    border: 1px solid #c7cbd0;
-                    border-right: 0;
-                    border-bottom: 0;
-                    font-weight: bold;
-                }
-
-                th {
-                    background-color: #f3f3f3;
-                }
-            }
-        }
+    &.is-open {
+        max-height: initial;
     }
 }
 

@@ -89,6 +89,7 @@
  "total_supply": "Total Supply",
  "overview": "Overview",
  "market": "Market",
+ "creator": "Creator",
  "chart_usd_title": "{fullname} to USD Chart",
  "price_statistics": "{coin} Price Statistics",
  "price_today": "{fullname} Price Today",
