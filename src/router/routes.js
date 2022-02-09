@@ -18,7 +18,7 @@ const routes = [
         path: '/learn/',
         component: () => import('@/views/learn/index'),
     },
-    // 资讯详情
+    // 战略/学习 详情
     {
         path: '/detail/:key',
         component: () => import('@/views/detail/detail'),
@@ -27,9 +27,21 @@ const routes = [
         path: '/about-us/',
         component: () => import('@/views/about-us/index'),
     },
+    // 币种详情
     {
         path: '/currency/:coin',
         component: () => import('@/views/detail/currency'),
+    },
+    // 游戏详情
+    {
+        path: '/game/:coin',
+        alias: '/guild/:coin', // 工会详情
+        component: () => import('@/views/detail/game'),
+    },
+    // 链详情
+    {
+        path: '/chain/:coin',
+        component: () => import('@/views/detail/chain'),
     },
     {
         path: '/:404*',

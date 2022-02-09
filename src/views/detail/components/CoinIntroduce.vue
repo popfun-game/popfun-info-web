@@ -13,7 +13,9 @@
         class="html fz16 mb16"
         :class="{'is-open': state.unfold || !state.show_more}"
     >
-        <h3>{{ t('what_is_coin', {fullname: detail.name}) }}</h3>
+        <h3 v-if="!detail.description_more">
+            {{ t('what_is_coin', {fullname: detail.name}) }}
+        </h3>
         <html-parse :content="detail.description_more || detail.description?.en || '--'" />
     </div>
     <button
@@ -124,7 +126,7 @@ h2 {
         bottom: 0;
         position: absolute;
         z-index: 1;
-        background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0.1));
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
     }
 
     :deep(b) {

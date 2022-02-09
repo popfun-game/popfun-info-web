@@ -41,7 +41,9 @@
                 <p class="desc color-6 fz16 lh22 mt16 mb20 text-ellipsis-4"> {{ data.summary }} </p>
                 <p class="text text-ellipsis">{{ data.author?.name }}</p>
                 <div class="text flex-row flex-items-center flex-wrap">
-                    {{ data.updated_at ? fromNow(data.updated_at) : '' }}
+                    <span class="text-capitalize">
+                        {{ data.updated_at ? fromNow(data.updated_at) : '' }}
+                    </span>
                     <i class="icon-time ml16 mr4" />
                     {{ data.reading_time ? parseInt(data.reading_time / 60000, 10)+'m' : '' }}
                 </div>

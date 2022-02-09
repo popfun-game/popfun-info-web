@@ -31,7 +31,7 @@
                     />
                     <i
                         v-if="data.is_down"
-                        class="icon-down"
+                        class="icon-down mr4 fz12"
                     />{{ data.change }}
                 </span>
             </div>

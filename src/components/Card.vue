@@ -10,7 +10,10 @@
                 radius="12px"
             />
             <el-skeleton-item class="time" />
-            <el-skeleton-item class="title" />
+            <el-skeleton-item
+                class="title"
+                :style="{height: titleLine * 28 + 'px'}"
+            />
         </template>
         <template #default>
             <a
@@ -25,7 +28,7 @@
                 />
                 <p
                     v-if="data.type === 'news'"
-                    class="time"
+                    class="time text-capitalize"
                 >
                     {{ data.updated_at ? fromNow(data.updated_at) : '' }}
                 </p>
@@ -35,7 +38,11 @@
                 >
                     {{ data.updated_at ? formatLocalTime(data.updated_at) : '' }}
                 </p>
-                <h3 class="text-ellipsis-3 title"> {{ data.title }} </h3>
+                <h3
+                    class="title"
+                    :class="[`text-ellipsis-${titleLine}`]"
+                >
+                    {{ data.title }} </h3>
             </a>
         </template>
     </el-skeleton>
@@ -52,6 +59,10 @@ defineProps({
         default() {
             return {};
         },
+    },
+    titleLine: {
+        type: String,
+        default: '3',
     },
 });
 </script>
@@ -71,7 +82,6 @@ defineProps({
     font-size: 22px;
     line-height: 28px;
     color: var(--text-color-1);
-    height: 84px;
 }
 
 a {

@@ -48,14 +48,14 @@
                 v-if="data.explorers?.length"
                 :list="data.explorers"
             >
-                <i class="icon-search fz16 mr4" />Explorers
+                <i class="icon-search fz16 mr4" />{{ t('explorers') }}
             </tag-button>
 
             <tag-button
                 v-if="data.community?.length"
                 :list="data.community"
             >
-                <i class="icon-people fz16 mr4" />Community
+                <i class="icon-people fz16 mr4" />{{ t('community') }}
             </tag-button>
 
             <tag-button
@@ -71,7 +71,7 @@
                 rel="noreferrer nofollow noopener"
                 class="tag font-bold lh22 flex-row flex-items-center"
             >
-                <i class="icon-book fz16 mr4" />Whitepaper
+                <i class="icon-book fz16 mr4" />{{ t('whitepaper') }}
             </a> -->
         </div>
     </div>

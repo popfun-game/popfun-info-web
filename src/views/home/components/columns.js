@@ -36,7 +36,7 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/game/${row.id}/`)}>
                                 <autoImg
                                     src={row.image}
                                     alt={row.name}
@@ -201,7 +201,7 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/guild/${row.id}/`)}>
                                 <autoImg
                                     src={row.image}
                                     alt={row.name}
@@ -343,7 +343,7 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/currency/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/chain/${row.id}/`)}>
                                 <autoImg
                                     src={row.image}
                                     alt={row.chain}

@@ -80,6 +80,7 @@ const methods = {
 
             if (res.success) {
                 state.data = res.data;
+
                 if (!route.query.from && state.go_back_map[res.data.type]) {
                     state.breadcrumb[0] = state.go_back_map[res.data.type];
                 }
