@@ -106,7 +106,7 @@ const data = computed(() => {
         mkp: marketCap ? `$${toFormat(marketCap, getPrecision(marketCap))}` : '--',
         mkp_change: mkpChange ? toFixed(mkpChange, 2) : '',
         total_supply: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
-        circulating_supply: detail.market_data.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
+        circulating_supply: detail.market_data?.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
         kline: [1, 2, 3, 4, 5, 10, 1, 2, 6, 20],
     };
 
