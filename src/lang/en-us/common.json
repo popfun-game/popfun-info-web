@@ -171,5 +171,11 @@
   "information": "Information",
   "contract_address": "Contract Address",
   "tip_copy_success": "Copy successfully",
-  "tip_copy_error": "Replication failed"
+  "tip_copy_error": "Replication failed",
+  "latest_price": "Latest Price",
+  "24h_Turnover": "24H Turnover",
+  "token_holders": "Token Holders",
+  "24h_low": "24H Low",
+  "24h_high": "24H high",
+  "24h_fluctuation": "24H Fluctuation"
 }

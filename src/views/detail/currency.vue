@@ -39,7 +39,7 @@
                     <!-- coin 介绍 -->
                     <coin-introduce :detail="state.detail" />
                 </div>
-                <div class="col-r flex-1">
+                <div class="col-r">
                     <!-- 价格列表 -->
                     <price-statistics
                         class="mb16"
@@ -174,8 +174,13 @@ onBeforeUnmount(() => {
         }
     }
 
+    .col-l {
+        min-width: 624px;
+        overflow: hidden;
+    }
+
     .col-r {
-        max-width: 360px;
+        width: 360px;
     }
 
     .coin-chart {
@@ -183,10 +188,13 @@ onBeforeUnmount(() => {
     }
 
     @media screen and (max-width: 1000px) {
-        .col-r,
+        .col-r {
+            width: 100%;
+            margin-top: 30px;
+        }
+
         .col-l {
             min-width: 100%;
-            max-width: max-content;
         }
     }
 }

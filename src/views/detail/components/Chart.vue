@@ -1,6 +1,6 @@
 <!-- 图表 -->
 <template>
-    <div class="coin-chart flex-1 pt20">
+    <div class="coin-chart pt20">
         <h3 class="font-bold fz22 lh22 flex-row flex-items-center">
             <i class="title-mark mr6" />
             {{ t('chart_usd_title', { fullname: detail.name }) }}

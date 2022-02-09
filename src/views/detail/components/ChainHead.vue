@@ -43,7 +43,7 @@
                         {{ t('total_supply') }}
                     </p>
                     <p class="mt8 fz14 lh22 color-1 font-bold">
-                        --
+                        {{ info.total_supply }}
                     </p>
                 </li>
                 <li>
@@ -69,7 +69,7 @@
                                 v-if="info.change < 0"
                                 class="icon-down mr4 fz12"
                             />
-                            {{ info.change }}%
+                            --
                         </span>
                     </p>
                 </li>
@@ -78,7 +78,7 @@
                         {{ t('circulating_supply') }}
                     </p>
                     <p class="mt8 fz14 lh22 color-1 font-bold">
-                        --
+                        {{ info.circulating_supply }}
                     </p>
                 </li>
                 <li>
@@ -92,19 +92,19 @@
                         <span
                             class="flex-row flex-items-center fz14 font-bold"
                             :class="{
-                                'color-up': info.change > 0,
-                                'color-down': info.change < 0,
+                                'color-up': info.mkp_change > 0,
+                                'color-down': info.mkp_change < 0,
                             }"
                         >
                             <i
-                                v-if="info.change > 0"
+                                v-if="info.mkp_change > 0"
                                 class="icon-up mr4 fz12"
                             />
                             <i
-                                v-if="info.change < 0"
+                                v-if="info.mkp_change < 0"
                                 class="icon-down mr4 fz12"
                             />
-                            {{ info.change }}%
+                            {{ info.mkp_change !== '' ? `${info.mkp_change}%` : '--' }}
                         </span>
                     </p>
                 </li>
@@ -196,11 +196,11 @@ const info = computed(() => {
 
     const map = {
         symbol: detail.symbol ?? '--',
-        total_supply: '--',
+        total_supply: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
+        circulating_supply: detail.market_data?.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
         price: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
         change: change ? toFixed(detail.simple_price.usd_24h_change, 2) : '',
         fdv: fdv ? `$${toFormat(fdv, getPrecision(fdv))}` : '--',
-        circulating_supply: '--',
         mkp: marketCap ? `$${toFormat(marketCap, getPrecision(marketCap))}` : '--',
         mkp_change: mkpChange ? toFixed(mkpChange, 2) : '',
         kline: [1, 2, 3, 4, 5, 10, 1, 2, 6, 20],
@@ -249,7 +249,7 @@ const onCopy = (message) => {
 <style lang="scss" scoped>
 .game-head {
     color: var(--text-color-0);
-    padding-bottom: 49px;
+    padding-bottom: 48px;
 
     .color-1 {
         color: var(--text-color-1);

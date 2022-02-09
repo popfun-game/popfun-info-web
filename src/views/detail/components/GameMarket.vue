@@ -100,13 +100,13 @@ const data = computed(() => {
 
     const map = {
         symbol: detail.symbol ?? '--',
-        total_supply: '--',
         price: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
         change: change ? toFixed(detail.simple_price.usd_24h_change, 2) : '',
         fdv: fdv ? `$${toFormat(fdv, getPrecision(fdv))}` : '--',
-        circulating_supply: '--',
         mkp: marketCap ? `$${toFormat(marketCap, getPrecision(marketCap))}` : '--',
         mkp_change: mkpChange ? toFixed(mkpChange, 2) : '',
+        total_supply: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
+        circulating_supply: detail.market_data.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
         kline: [1, 2, 3, 4, 5, 10, 1, 2, 6, 20],
     };
 

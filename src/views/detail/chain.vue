@@ -11,6 +11,19 @@
                     :detail="state.detail"
                     :loading="state.loading"
                 />
+
+                <chain-market
+                    :detail="state.detail"
+                    :loading="state.loading"
+                />
+
+                <chart
+                    style="margin-bottom: 48px;"
+                    :detail="state.detail"
+                    :coin="id"
+                />
+
+                <chain-news :detail="state.detail" />
             </div>
         </section>
     </layout-default>
@@ -25,6 +38,9 @@ import { replacePath } from '@/lang/i18n';
 import { api } from '@/config/api';
 import { ElMessage } from 'element-plus';
 import chainHead from './components/ChainHead';
+import chainMarket from './components/ChainMarket';
+import chart from './components/Chart';
+import chainNews from './components/ChainNews';
 
 const route = useRoute();
 const { t } = useI18n();

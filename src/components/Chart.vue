@@ -2,13 +2,14 @@
 <template>
     <div
         :id="state.id"
+        ref="refDom"
         v-loading="loading"
         class="chart"
     />
 </template>
 <script setup>
 import {
-    defineProps, reactive, watch, nextTick,
+    defineProps, ref, reactive, watch, nextTick, onBeforeUnmount,
 } from 'vue';
 import { createChart } from 'lightweight-charts';
 import { getPrecision } from '@/utils/tool';
@@ -35,9 +36,11 @@ const props = defineProps({
     },
 });
 
+const refDom = ref(null);
 const state = reactive({
     id: Math.random().toString(32).slice(2),
     chart_ready: false,
+    observer: null,
     color: {
         up: {
             topColor: 'rgba(38, 196, 139, 0.35)',
@@ -96,10 +99,25 @@ const methods = {
 
         areaSeries.setData(props.list);
     },
+    onObserve() {
+        state.observer = new ResizeObserver(() => {
+            if (chart) {
+                const { width, height } = refDom.value.getBoundingClientRect() || {};
+                const { width: tvWidth, height: tvHeight } = refDom.value.children?.[0]?.getBoundingClientRect() || {};
+
+                if (width && height && tvWidth && tvHeight && (width !== tvWidth || height !== tvHeight)) {
+                    chart.resize(width, height);
+                }
+            }
+        });
+
+        state.observer.observe(document.querySelector('body'));
+    },
 };
 
 nextTick(() => {
     methods.init();
+    methods.onObserve();
 });
 
 watch(
@@ -121,6 +139,12 @@ watch(
     },
     { immediate: true },
 );
+
+onBeforeUnmount(() => {
+    if (state.observer) {
+        state.observer.disconnect();
+    }
+});
 
 </script>
 <style lang="scss" scoped>
