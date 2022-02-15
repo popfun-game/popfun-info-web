@@ -11,6 +11,7 @@
 
         <c-table
             v-loading="state.loading"
+            :class="{'is-loading': state.loading}"
             :columns="column"
             :data="state.data"
             :element-loading-text="t('list_loading')"
@@ -64,12 +65,13 @@ const state = reactive({
     tab: props.active,
     loading: false,
     menu_list: [
-        { id: 'gaming', label: t('menu_game') },
-        { id: 'guild', label: t('menu_guild') },
+        { id: 'game', label: t('menu_game') },
+        { id: 'gameGuild', label: t('menu_guild') },
         { id: 'chain', label: t('menu_chain') },
         { id: 'token', label: t('menu_token') },
     ],
     data: [],
+    price_map: {},
     page: 1,
     pages: {
         current: 1,
@@ -80,7 +82,7 @@ const state = reactive({
 });
 
 // 当前 table 列
-const column = computed(() => columns(state.pages.size * (state.pages.current - 1), state.tab));
+const column = computed(() => columns(state.pages.size * (state.pages.current - 1), state.tab, state.price_map));
 
 const methods = {
     // 获取列表
@@ -91,11 +93,14 @@ const methods = {
         const params = {
             page: state.page,
             limit: state.pages.size,
-            cat: state.tab === 'token' ? '' : state.tab,
         };
 
-        api.getCoinRank(params).then((res) => {
-            if (params.cat === state.tab || (params.cat === '' && state.tab === 'token')) {
+        if (state.tab !== 'token') params.type = state.tab;
+
+        const req = state.tab === 'token' ? api.getCoinRank(params) : api.getProjectList(params);
+
+        req.then((res) => {
+            if (params.type === state.tab || (!params.type && state.tab === 'token')) {
                 state.loading = false;
 
                 if (res.success) {
@@ -103,13 +108,41 @@ const methods = {
                     state.data = res.data?.result;
                     state.pages.total = res.data?.extra?.stats?.fullCount ?? res.data?.result.length;
 
-                    if (res.data?.result.length) methods.loop();
+                    if (res.data?.result.length) {
+                        if (state.tab === 'token') {
+                            methods.loop();
+                        } else {
+                            // 如果不是token获取价格信息
+                            methods.getPrice();
+                        }
+                    }
                 } else {
                     if (state.pages.current === 1 && !state.data.length) {
                         state.data = [];
                     }
                     ElMessage.error(res.message);
                 }
+            }
+        });
+    },
+    // 获取项目价格信息
+    getPrice() {
+        const tokens = [];
+        state.data.forEach((item) => {
+            if (item.tokens.length) {
+                tokens.push(...item.tokens.map((token) => token.code));
+            }
+        });
+        api.getProjectPrice({ codes: tokens.join(',') }).then((res) => {
+            if (res.success && res.data?.result?.length) {
+                const map = {};
+
+                res.data.result.forEach((item) => {
+                    map[item.token] = item;
+                });
+
+                state.price_map = map;
+                methods.loop(true);
             }
         });
     },
@@ -136,10 +169,14 @@ const methods = {
         methods.getList();
     },
     // 轮训
-    loop() {
+    loop(isProject) {
         state.timer = setTimeout(() => {
-            methods.getList(true);
-        }, 30000);
+            if (isProject) {
+                methods.getPrice();
+            } else {
+                methods.getList(true);
+            }
+        }, 40000);
     },
 };
 

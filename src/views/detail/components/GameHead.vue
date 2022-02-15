@@ -4,7 +4,7 @@
             <div class="flex-row">
                 <div class="flex-shrink-0">
                     <auto-img
-                        :src="detail.image?.small ? detail.image.small : loading ? '' : '--'"
+                        :src="detail?.icon ? detail.icon : loading ? '' : '--'"
                         width="100px"
                         height="100px"
                         radius="8px"
@@ -12,27 +12,33 @@
                 </div>
                 <div class="flex-col ml16">
                     <h1 class="fz24 lh24 font-bold color-1">
-                        {{ detail.name || '--' }}
+                        {{ detail?.name || '--' }}
                     </h1>
-                    <p class="mt8 fz16 lh24 color-6 text-ellipsis-3">
-                        --
-                    </p>
+                    <p
+                        class="mt8 fz16 lh24 color-6 text-ellipsis-3"
+                        v-html="detail?.introduction || '--'"
+                    />
                 </div>
             </div>
             <div class="flex-row mt24 lh24 fz16">
                 <span class="label">{{ t('addresses') }}</span>
                 <span class="flex-row">
-                    16,232
-                    <span class="color-up ml8">(+0.11%)</span>
+                    {{ detail?.holders ? toFormat(detail.holders, 0) : '--' }}
+                    <span
+                        v-if="detail.holders"
+                        class="color-up ml8"
+                    >
+                        --
+                    </span>
                 </span>
             </div>
             <div class="flex-row mt20 lh24 fz16">
                 <span class="label">{{ t('popularity') }}</span>
                 <span class="flex-row">
                     <span class="flex-row flex-items-center ml8">
-                        16,232K
+                        {{ !detail?.snsHeat ? '--' : detail.snsHeat > 1000 ? `${toFixed(detail.snsHeat / 1000, 1) }K` : detail.snsHeat }}
                         <i
-                            v-for="item in 5"
+                            v-for="item in getActiveLevel(detail.snsHeat)"
                             :key="item"
                             class="icon-flame"
                             style="color: #f0502d;"
@@ -97,6 +103,8 @@ import { defineProps, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import autoImg from '@/components/AutoImg';
 import tagButton from '@/components/TagButton';
+import { toFormat, toFixed } from '@/utils/number';
+import { getActiveLevel } from '@/utils/tool';
 
 const props = defineProps({
     detail: {
@@ -113,36 +121,31 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const infoList = computed(() => {
-    const links = props.detail?.links || {};
-
-    return [
-        { label: t('website'), link: true, href: 'https://www.pop.fun/' },
-        { label: t('whitepaper'), link: true, href: 'https://www.pop.fun/' },
-        {
-            label: t('community'),
-            links: [
-                { label: 'Reddit', href: links.subreddit_url },
-                {
-                    icon: 'icon-twitter',
-                    label: 'Twitter',
-                    href: links.twitter_screen_name ? `https://twitter.com/${links.twitter_screen_name}` : '',
-                },
-                { label: 'Telegram', href: links.telegram_channel_identifier ? `https://t.me/${links.telegram_channel_identifier}` : '' },
-                { label: 'Discord', href: links.chat_url?.[0] },
-                {
-                    icon: 'icon-facebook',
-                    label: 'Facebook',
-                    href: links.facebook_username ? `https://www.facebook.com/${links.facebook_username}` : '',
-                },
-            ].filter((item) => item.href),
-        },
-        { label: t('chain'), text: 'BSC' },
-        { label: t('genre'), text: 'Idle Game' },
-        { label: t('download_link'), link: true, href: 'https://www.pop.fun/' },
-        { label: t('language'), text: 'EN' },
-    ];
-});
+const infoList = computed(() => [
+    { label: t('website'), link: true, href: props.detail?.mainPage },
+    { label: t('whitepaper'), link: true, href: props.detail?.whitePaperUrl },
+    {
+        label: t('community'),
+        links: [
+            {
+                icon: 'icon-twitter',
+                label: 'Twitter',
+                href: props.detail?.twitterUrl,
+            },
+            { label: 'Telegram', href: props.detail?.telegramUrl },
+            { label: 'Discord', href: props.detail?.discordUrl },
+            {
+                icon: 'icon-facebook',
+                label: 'Facebook',
+                href: props.detail?.facebookUrl,
+            },
+        ].filter((item) => item.href),
+    },
+    { label: t('chain'), text: props.detail?.chains?.length ? props.detail.chains[0]?.name : '--' },
+    { label: t('genre'), text: props.detail?.gameType || '--' },
+    { label: t('download_link'), link: true, href: props.detail?.windows_download_url || '' },
+    { label: t('language'), text: props.detail?.gameLanguages || '--' },
+]);
 </script>
 <style lang="scss" scoped>
 .game-head {

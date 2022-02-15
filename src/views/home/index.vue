@@ -26,7 +26,7 @@
                 <i-news />
             </div>
             <!-- 类型table -->
-            <i-table active="gaming" />
+            <i-table active="game" />
             <div class="wrapper">
                 <!-- 工作内容介绍 -->
                 <work-info />

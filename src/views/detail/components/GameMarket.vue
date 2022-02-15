@@ -1,5 +1,9 @@
 <template>
-    <ul class="market flex-row flex-wrap">
+    <ul
+        v-for="data in list"
+        :key="data.token"
+        class="market flex-row flex-wrap"
+    >
         <li class="pl18 pr18 flex-col flex-1">
             <div class="flex-col">
                 <span class="label fz12 lh22 font-bold">{{ t('token') }}</span>
@@ -91,26 +95,52 @@ const props = defineProps({
 
 const { t } = useI18n();
 
-const data = computed(() => {
-    const { detail } = props;
-    const change = detail.simple_price?.usd_24h_change;
-    const marketCap = detail.simple_price?.usd_market_cap;
-    const fdv = detail?.market_data?.fully_diluted_valuation?.usd;
-    const mkpChange = detail?.market_data?.market_cap_change_percentage_24h_in_currency?.usd;
-
+const list = computed(() => {
     const map = {
-        symbol: detail.symbol ?? '--',
-        price: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
-        change: change ? toFixed(detail.simple_price.usd_24h_change, 2) : '',
-        fdv: fdv ? `$${toFormat(fdv, getPrecision(fdv))}` : '--',
-        mkp: marketCap ? `$${toFormat(marketCap, getPrecision(marketCap))}` : '--',
-        mkp_change: mkpChange ? toFixed(mkpChange, 2) : '',
-        total_supply: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
-        circulating_supply: detail.market_data?.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
-        kline: [1, 2, 3, 4, 5, 10, 1, 2, 6, 20],
+        symbol: '--',
+        price: '--',
+        change: '',
+        fdv: '--',
+        mkp: '--',
+        mkp_change: '',
+        total_supply: '--',
+        circulating_supply: '--',
+        kline: [],
     };
+    let cache = [];
 
-    return map;
+    if (!props.detail?.tokens?.length) {
+        // eslint-disable-next-line
+        cache = [map];
+    } else {
+        cache = props.detail.tokens.map((item) => {
+            const {
+                price,
+                priceChange24h,
+                fullyDilutedValuation,
+                marketCap,
+                marketCapChange24h,
+                totalSupply,
+                circulatingSupply,
+            } = props.detail.price_info?.[item.code] || {};
+
+            const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : '';
+
+            return {
+                symbol: item.code,
+                price: price ? `$${toFormat(price, getPrecision(price))}` : '--',
+                change,
+                fdv: fullyDilutedValuation ? `$${toFormat(fullyDilutedValuation, 0)}` : '--',
+                mkp: marketCap ? `${toFormat(marketCap, 0)}` : '--',
+                mkp_change: marketCap && marketCapChange24h ? toFixed((marketCapChange24h / marketCap) * 100, 2) : '',
+                total_supply: totalSupply ? toFormat(totalSupply, 0) : '--',
+                circulating_supply: circulatingSupply ? toFormat(circulatingSupply, 0) : '--',
+                kline: [1, 2],
+            };
+        });
+    }
+
+    return cache;
 });
 </script>
 <style lang="scss" scoped>

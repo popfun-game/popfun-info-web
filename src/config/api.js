@@ -23,9 +23,21 @@ export const api = {
     getCoinRank(params) {
         return axios.get('@api/coin/rank', { params });
     },
+    // 获取工会/游戏/链 列表
+    getProjectList(params) {
+        return axios.get('@api/project/list', { params });
+    },
+    // 获取项目价格信息
+    getProjectPrice(params) {
+        return axios.get('@api/project/price', { params });
+    },
     // 获取币种详情列表
     getCoinDetail(params) {
         return axios.get('@api/coin/info', { params });
+    },
+    // 获取工会/游戏/链 详情
+    getProjectDetail(params) {
+        return axios.get('@api/project/info', { params });
     },
     // 获取币种kline
     getCoinKline(params) {

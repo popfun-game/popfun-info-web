@@ -17,10 +17,9 @@
                     :loading="state.loading"
                 />
 
-                <chart
+                <chain-chart
                     style="margin-bottom: 48px;"
                     :detail="state.detail"
-                    :coin="id"
                 />
 
                 <chain-news :detail="state.detail" />
@@ -39,7 +38,7 @@ import { api } from '@/config/api';
 import { ElMessage } from 'element-plus';
 import chainHead from './components/ChainHead';
 import chainMarket from './components/ChainMarket';
-import chart from './components/Chart';
+import ChainChart from './components/ChainChart';
 import chainNews from './components/ChainNews';
 
 const route = useRoute();
@@ -58,26 +57,38 @@ const id = computed(() => route.params.coin);
 
 const methods = {
     // 获取详情
-    getDetail(init) {
+    getDetail() {
         if (!id.value) return;
         if (state.timer) clearTimeout(state.timer);
-        if (init) state.loading = true;
+        state.loading = true;
 
-        api.getCoinDetail({ coin: id.value }).then((res) => {
+        api.getProjectDetail({ code: id.value }).then((res) => {
             state.loading = false;
 
             if (res.success) {
                 state.detail = res.data;
-                methods.loop();
+                methods.getPrice();
             } else {
                 ElMessage.error(res.message);
+            }
+        });
+    },
+    // 获取项目价格信息
+    getPrice() {
+        const token = state.detail.tokens?.[0]?.code;
+        if (!token) return;
+
+        api.getProjectPrice({ codes: token }).then((res) => {
+            if (res.success && res.data?.result?.length) {
+                [state.detail.price_info] = res.data.result;
+                methods.loop();
             }
         });
     },
     // 轮训
     loop() {
         state.timer = setTimeout(() => {
-            methods.getDetail(true);
+            methods.getPrice();
         }, 30000);
     },
 };

@@ -4,7 +4,7 @@
             <div class="flex-row flex-items-center">
                 <div class="flex-shrink-0">
                     <auto-img
-                        :src="detail.image?.small ? detail.image.small : loading ? '' : '--'"
+                        :src="detail?.icon ? detail.icon : loading ? '' : '--'"
                         width="100px"
                         height="100px"
                         radius="8px"
@@ -12,7 +12,7 @@
                 </div>
                 <div class="flex-col ml16">
                     <h2 class="fz24 lh24 font-bold color-1">
-                        {{ detail.chain || '--' }}
+                        {{ detail.name || '--' }}
                     </h2>
                     <p class="mt16 price font-bold color-1 flex-row flex-items-center">
                         <span>{{ info.price }}</span>
@@ -52,25 +52,6 @@
                     </p>
                     <p class="mt8 fz14 lh22 color-1 font-bold">
                         {{ info.fdv }}
-                    </p>
-                    <p class="mt8 lh22 font-bold">
-                        <span
-                            class="flex-row flex-items-center fz14 font-bold"
-                            :class="{
-                                'color-up': info.change > 0,
-                                'color-down': info.change < 0,
-                            }"
-                        >
-                            <i
-                                v-if="info.change > 0"
-                                class="icon-up mr4 fz12"
-                            />
-                            <i
-                                v-if="info.change < 0"
-                                class="icon-down mr4 fz12"
-                            />
-                            --
-                        </span>
                     </p>
                 </li>
                 <li>
@@ -144,8 +125,8 @@
                     {{ item.href }}
                 </a>
                 <span
-                    v-else-if="item.chain"
-                    class="chain flex-row flex-items-center cursor-pointer"
+                    v-else-if="item.copy"
+                    class="copy flex-row flex-items-center cursor-pointer"
                     @click="onCopy(item.text)"
                 >
                     {{ item.text }}
@@ -188,53 +169,53 @@ const props = defineProps({
 const { t } = useI18n();
 
 const info = computed(() => {
-    const { detail } = props;
-    const change = detail.simple_price?.usd_24h_change;
-    const marketCap = detail.simple_price?.usd_market_cap;
-    const fdv = detail?.market_data?.fully_diluted_valuation?.usd;
-    const mkpChange = detail?.market_data?.market_cap_change_percentage_24h_in_currency?.usd;
+    const {
+        token,
+        price,
+        priceChange24h,
+        fullyDilutedValuation,
+        marketCap,
+        marketCapChange24h,
+        totalSupply,
+        circulatingSupply,
+    } = props.detail.price_info || {};
 
-    const map = {
-        symbol: detail.symbol ?? '--',
-        total_supply: detail.market_data?.total_supply ? `$${toFormat(detail.market_data.total_supply, 0)}` : '--',
-        circulating_supply: detail.market_data?.circulating_supply ? `$${toFormat(detail.market_data.circulating_supply, 0)}` : '--',
-        price: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
-        change: change ? toFixed(detail.simple_price.usd_24h_change, 2) : '',
-        fdv: fdv ? `$${toFormat(fdv, getPrecision(fdv))}` : '--',
-        mkp: marketCap ? `$${toFormat(marketCap, getPrecision(marketCap))}` : '--',
-        mkp_change: mkpChange ? toFixed(mkpChange, 2) : '',
-        kline: [1, 2, 3, 4, 5, 10, 1, 2, 6, 20],
+    const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : '';
+
+    return {
+        symbol: token || '--',
+        price: price ? `$${toFormat(price, getPrecision(price))}` : '--',
+        change,
+        fdv: fullyDilutedValuation ? `$${toFormat(fullyDilutedValuation, 0)}` : '--',
+        mkp: marketCap ? `${toFormat(marketCap, 0)}` : '--',
+        mkp_change: marketCap && marketCapChange24h ? toFixed((marketCapChange24h / marketCap) * 100, 2) : '',
+        total_supply: totalSupply ? toFormat(totalSupply, 0) : '--',
+        circulating_supply: circulatingSupply ? toFormat(circulatingSupply, 0) : '--',
+        kline: [1, 2],
     };
-
-    return map;
 });
-const infoList = computed(() => {
-    const links = props.detail?.links || {};
-
-    return [
-        { label: t('contract_address'), chain: true, text: 'abcdefghighk' },
-        { label: t('website'), link: true, href: 'https://www.pop.fun/' },
-        { label: t('whitepaper'), link: true, href: 'https://www.pop.fun/' },
-        {
-            label: t('community'),
-            links: [
-                { label: 'Reddit', href: links.subreddit_url },
-                {
-                    icon: 'icon-twitter',
-                    label: 'Twitter',
-                    href: links.twitter_screen_name ? `https://twitter.com/${links.twitter_screen_name}` : '',
-                },
-                { label: 'Telegram', href: links.telegram_channel_identifier ? `https://t.me/${links.telegram_channel_identifier}` : '' },
-                { label: 'Discord', href: links.chat_url?.[0] },
-                {
-                    icon: 'icon-facebook',
-                    label: 'Facebook',
-                    href: links.facebook_username ? `https://www.facebook.com/${links.facebook_username}` : '',
-                },
-            ].filter((item) => item.href),
-        },
-    ];
-});
+const infoList = computed(() => [
+    { label: t('contract_address'), link: true, href: props.detail.chains?.[0]?.url },
+    { label: t('website'), link: true, href: props.detail?.mainPage },
+    { label: t('whitepaper'), link: true, href: props.detail?.whitePaperUrl },
+    {
+        label: t('community'),
+        links: [
+            {
+                icon: 'icon-twitter',
+                label: 'Twitter',
+                href: props.detail?.twitterUrl,
+            },
+            { label: 'Telegram', href: props.detail?.telegramUrl },
+            { label: 'Discord', href: props.detail?.discordUrl },
+            {
+                icon: 'icon-facebook',
+                label: 'Facebook',
+                href: props.detail?.facebookUrl,
+            },
+        ].filter((item) => item.href),
+    },
+]);
 
 const onCopy = (message) => {
     copyText(message, undefined, (error) => {
@@ -295,7 +276,7 @@ const onCopy = (message) => {
             }
         }
 
-        .chain {
+        .copy {
             border-bottom: 1px dashed var(--text-color-9);
             user-select: none;
         }

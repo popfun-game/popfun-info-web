@@ -1,7 +1,7 @@
 <template>
     <section class="game-body flex-row flex-wrap">
         <html-parse
-            :content="detail.description_more || detail.description?.en || '--'"
+            :content="detail.economicModel || '--'"
             class="flex-1"
         />
         <div class="list">

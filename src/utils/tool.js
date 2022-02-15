@@ -21,6 +21,37 @@ export const getPrecision = (val) => {
 };
 
 /**
+ * 获取项目活跃等级 🔥个数
+ * @param {String|number} val 数值
+ * @returns {number} 火苗个数
+ */
+export const getActiveLevel = (val) => {
+    if (!val) return 0;
+
+    if (!val) {
+        return 0;
+    }
+
+    if (val > 500000) {
+        return 5;
+    }
+
+    if (val > 100000) {
+        return 4;
+    }
+
+    if (val > 10000) {
+        return 3;
+    }
+
+    if (val > 1000) {
+        return 2;
+    }
+
+    return 1;
+};
+
+/**
  * 延时执行
  *
  * @param {number} time 延时 时长

@@ -46,26 +46,44 @@ const id = computed(() => route.params.coin);
 
 const methods = {
     // 获取详情
-    getDetail(init) {
+    getDetail() {
         if (!id.value) return;
         if (state.timer) clearTimeout(state.timer);
-        if (init) state.loading = true;
+        state.loading = true;
 
-        api.getCoinDetail({ coin: id.value }).then((res) => {
+        api.getProjectDetail({ code: id.value }).then((res) => {
             state.loading = false;
 
             if (res.success) {
                 state.detail = res.data;
-                methods.loop();
+                methods.getPrice();
             } else {
                 ElMessage.error(res.message);
+            }
+        });
+    },
+    // 获取项目价格信息
+    getPrice() {
+        const tokens = state.detail.tokens || [];
+        const tokenString = tokens.map((item) => item.code).join(',');
+
+        api.getProjectPrice({ codes: tokenString }).then((res) => {
+            if (res.success && res.data?.result?.length) {
+                const map = {};
+
+                res.data.result.forEach((item) => {
+                    map[item.token] = item;
+                });
+
+                state.detail.price_info = map;
+                methods.loop();
             }
         });
     },
     // 轮训
     loop() {
         state.timer = setTimeout(() => {
-            methods.getDetail(true);
+            methods.getPrice();
         }, 30000);
     },
 };

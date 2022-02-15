@@ -8,7 +8,7 @@ import {
 } from '@/utils/number';
 import ChartLine from '@/components/ChartLine';
 import autoImg from '@/components/AutoImg';
-import { getPrecision } from '@/utils/tool';
+import { getPrecision, getActiveLevel } from '@/utils/tool';
 
 export default () => {
     const { t } = useI18n();
@@ -18,7 +18,7 @@ export default () => {
         },
     };
 
-    return (size, tab) => {
+    return (size, tab, priceMap) => {
         const serial = {
             prop: '',
             label: '#',
@@ -28,7 +28,7 @@ export default () => {
             },
         };
         const columns = new Proxy({
-            gaming: [
+            game: [
                 serial,
                 {
                     prop: 'name',
@@ -36,155 +36,189 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/game/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/game/${row.code}/`)}>
                                 <autoImg
-                                    src={row.image}
+                                    src={row.icon}
                                     alt={row.name}
                                     small
                                     width="24px"
                                     height="24px"
                                 />
                                 <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.name }</span>
-                                <span class="text-uppercase color-light">chain</span>
+                                <span class="text-uppercase color-light">{ row.chains?.[0]?.name || '' }</span>
                             </router-link>
                         );
                     },
                 },
                 {
-                    prop: 'address',
+                    prop: 'game_address',
                     align: 'right',
                     width: 160,
                     label: t('th_address'),
-                    render() {
+                    render(h, { row }) {
                         return (
                             <div class="flex-col">
-                                <p class="flex-row-flex-end">
-                                    { toFormat(123456, 0) }
-                                    <span class={1 > 0 ? 'color-up ml4' : 'color-down ml4'}> (+1.02%) </span>
-                                </p>
-                                <p class="flex-row-flex-end">
-                                    --
-                                </p>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const holders = priceMap[item.code]?.holders;
+                                        const holders24hDiff = priceMap[item.code]?.holders24hDiff;
+                                        const change = holders && holders24hDiff ? toFixed((holders24hDiff / holders) * 100, 2) : false;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { holders ? toFormat(holders, 0) : '--' }
+                                                <span
+                                                    v-show={change}
+                                                    class={change > 0 ? 'color-up ml4' : 'color-down ml4'}
+                                                >
+                                                    ({ change })%
+                                                </span>
+                                            </p>
+                                        );
+                                    })
+                                }
                             </div>
                         );
                     },
                 },
                 {
-                    prop: 'symbol',
+                    prop: 'game_token',
                     label: t('th_token'),
                     width: '80',
                     render(h, { row }) {
                         return (
                             <div class="flex-col">
-                                <span class="text-uppercase">
-                                    { row.symbol }
-                                </span>
-                                <span class="text-uppercase">
-                                    DEMO
-                                </span>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => (
+                                        <span class="text-uppercase">
+                                            { item.code || '--' }
+                                        </span>
+                                    ))
+                                }
                             </div>
                         );
                     },
                 },
                 {
-                    prop: 'current_price',
+                    prop: 'game_price',
                     align: 'right',
                     label: t('th_price'),
                     render(h, { row }) {
                         return (
                             <div class="flex-col">
-                                <span class="text-uppercase">
-                                    { row?.current_price ? `$${toFormat(row.current_price, getPrecision(row.current_price))}` : '--' }
-                                </span>
-                                <span class="text-uppercase">
-                                    --
-                                </span>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+
+                                        return (
+                                            <span class="text-uppercase">
+                                                { price ? `$${toFormat(price, getPrecision(price))}` : '--' }
+                                            </span>
+                                        );
+                                    })
+                                }
                             </div>
                         );
                     },
                 },
                 {
-                    prop: 'price_change_percentage_24h',
+                    prop: 'game_price_change',
                     align: 'right',
                     width: 80,
                     label: t('th_24h'),
                     render(h, { row }) {
-                        const scale = toFixed(row.price_change_percentage_24h, 2);
                         return (
                             <div class="flex-col">
-                                <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                                    { scale > 0 ? `+${scale}` : scale }%
-                                </span>
-                                <span>
-                                    --
-                                </span>
-                            </div>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+                                        const priceChange24h = priceMap[item.code]?.priceChange24h;
+                                        const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : false;
 
+                                        return !change ? <span>--</span> : (
+                                            <span class = {change > 0 ? 'color-up' : 'color-down'}>
+                                                { change > 0 ? `+${change}` : change }%
+                                            </span>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'market_cap',
+                    prop: 'game_market_cap',
                     align: 'right',
                     width: 200,
                     label: t('th_mkt_cap'),
                     render(h, { row }) {
-                        const scale = toFixed(row.market_cap_change_percentage_24h, 2);
-
                         return (
                             <div class="flex-col">
-                                <p class="flex-row-flex-end">
-                                    { row?.market_cap ? `${toFormat(row.market_cap)}` : '--' }
-                                    <span
-                                        class={scale > 0 ? 'color-up ml4' : 'color-down ml4'}
-                                        v-show={row?.market_cap}
-                                    >
-                                        { row?.market_cap_change_percentage_24h ? `(${scale > 0 ? `+${scale}` : scale}%)` : '--' }
-                                    </span>
-                                </p>
-                                <p class="flex-row-flex-end">
-                                    --
-                                </p>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const marketCap = priceMap[item.code]?.marketCap;
+                                        const marketCapChange24h = priceMap[item.code]?.marketCapChange24h;
+                                        const change = marketCap && marketCapChange24h ? toFixed((marketCapChange24h / marketCap) * 100, 2) : false;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { marketCap ? `${toFormat(marketCap, 0)}` : '--' }
+                                                <span
+                                                    v-show={change}
+                                                    class={change > 0 ? 'color-up ml4' : 'color-down ml4'}
+                                                >
+                                                    { change ? `(${change > 0 ? `+${change}` : change}%)` : '--' }
+                                                </span>
+                                            </p>
+                                        );
+                                    })
+                                }
                             </div>
                         );
                     },
                 },
                 {
-                    prop: 'fully_diluted_valuation',
+                    prop: 'game_fdv',
                     align: 'right',
                     width: 150,
                     label: t('th_fdv'),
                     render(h, { row }) {
                         return (
                             <div class="flex-col">
-                                <p class="flex-row-flex-end">
-                                    { row?.fully_diluted_valuation ? `$${toFormat(row.fully_diluted_valuation)}` : '--' }
-                                </p>
-                                <p class="flex-row-flex-end">
-                                    { row?.fully_diluted_valuation1 ? `$${toFormat(row.fully_diluted_valuation)}` : '--' }
-                                </p>
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const fullyDilutedValuation = priceMap[item.code]?.fullyDilutedValuation;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { fullyDilutedValuation ? `$${toFormat(fullyDilutedValuation, 0)}` : '--' }
+                                            </p>
+                                        );
+                                    })
+                                }
                             </div>
                         );
                     },
                 },
                 {
-                    prop: 'popularity',
+                    prop: 'snsHeat',
                     align: 'right',
                     label: t('th_popularity'),
                     render(h, { row }) {
                         let num = '--';
-                        const flame = 5;
+                        const flame = getActiveLevel(row.snsHeat);
 
-                        row.popularity = 10000;
-
-                        if (row?.popularity) {
-                            num = row.popularity > 1000 ? `${toFixed(row.popularity / 1000, 1) }K` : row.popularity;
+                        if (row?.snsHeat) {
+                            num = row.snsHeat > 1000 ? `${toFixed(row.snsHeat / 1000, 1) }K` : row.snsHeat;
                         }
 
                         return (
                             <div class="flex-col">
                                 <p>{ num }</p>
-                                <div class="flex-row-flex-end flex-items-center" style="height: 22px;" v-show={row?.popularity}>
+                                <div class = "flex-row-flex-end flex-items-center"
+                                    style = "height: 22px;"
+                                    v-show={row?.snsHeat}
+                                >
                                     { /* eslint-disable-next-line */ }
                                     { Array.apply(null, { length: flame }).map(() => <i class="icon-flame" style="color: #f0502d;" />) }
                                 </div>
@@ -193,7 +227,7 @@ export default () => {
                     },
                 },
             ],
-            guild: [
+            gameGuild: [
                 serial,
                 {
                     prop: 'name',
@@ -201,9 +235,9 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/guild/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/guild/${row.code}/`)}>
                                 <autoImg
-                                    src={row.image}
+                                    src={row.icon}
                                     alt={row.name}
                                     small
                                     width="24px"
@@ -215,118 +249,165 @@ export default () => {
                     },
                 },
                 {
-                    prop: 'member',
+                    prop: 'guildMembers',
                     label: t('th_members'),
                     width: 100,
                     formatter(row) {
-                        return row?.member ? toFormat(row.member, 0) : '--';
+                        return row?.guildMembers ? toFormat(row.guildMembers, 0) : '--';
                     },
                 },
                 {
-                    prop: 'symbol',
+                    prop: 'guild_token',
                     label: t('th_token'),
                     width: '80',
                     render(h, { row }) {
                         return (
-                            <span class="text-uppercase">
-                                { row.symbol }
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => (
+                                        <span class="text-uppercase">
+                                            { item.code || '--' }
+                                        </span>
+                                    ))
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'current_price',
+                    prop: 'guild_price',
                     align: 'right',
                     label: t('th_price'),
                     width: 110,
                     render(h, { row }) {
                         return (
-                            <span class="text-uppercase">
-                                { row?.current_price ? `$${toFormat(row.current_price, getPrecision(row.current_price))}` : '--' }
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+
+                                        return (
+                                            <span class="text-uppercase">
+                                                { price ? `$${toFormat(price, getPrecision(price))}` : '--' }
+                                            </span>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'price_change_percentage_24h',
+                    prop: 'guild_price_change',
                     align: 'right',
                     width: 80,
                     label: t('th_24h'),
                     render(h, { row }) {
-                        const scale = toFixed(row.price_change_percentage_24h, 2);
                         return (
-                            <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                                { scale > 0 ? `+${scale}` : scale }%
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+                                        const priceChange24h = priceMap[item.code]?.priceChange24h;
+                                        const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : false;
 
+                                        return !change ? <span>--</span> : (
+                                            <span class = {change > 0 ? 'color-up' : 'color-down'}>
+                                                { change > 0 ? `+${change}` : change }%
+                                            </span>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'market_cap',
+                    prop: 'guild_market_cap',
                     align: 'right',
                     width: 200,
                     label: t('th_mkt_cap'),
                     render(h, { row }) {
-                        const scale = toFixed(row.market_cap_change_percentage_24h, 2);
-
                         return (
-                            <p class="flex-row-flex-end">
-                                { row?.market_cap ? `${toFormat(row.market_cap)}` : '--' }
-                                <span
-                                    class={scale > 0 ? 'color-up ml4' : 'color-down ml4'}
-                                    v-show={row?.market_cap}
-                                >
-                                    { row?.market_cap_change_percentage_24h ? `(${scale > 0 ? `+${scale}` : scale}%)` : '--' }
-                                </span>
-                            </p>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const marketCap = priceMap[item.code]?.marketCap;
+                                        const marketCapChange24h = priceMap[item.code]?.marketCapChange24h;
+                                        const change = marketCap && marketCapChange24h ? toFixed((marketCapChange24h / marketCap) * 100, 2) : false;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { marketCap ? `${toFormat(marketCap, 0)}` : '--' }
+                                                <span
+                                                    v-show={change}
+                                                    class={change > 0 ? 'color-up ml4' : 'color-down ml4'}
+                                                >
+                                                    { change ? `(${change > 0 ? `+${change}` : change}%)` : '--' }
+                                                </span>
+                                            </p>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'fully_diluted_valuation',
+                    prop: 'guild_fdv',
                     align: 'right',
                     width: 150,
                     label: t('th_fdv'),
                     render(h, { row }) {
                         return (
-                            <p class="flex-row-flex-end">
-                                { row?.fully_diluted_valuation ? `$${toFormat(row.fully_diluted_valuation)}` : '--' }
-                            </p>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const fullyDilutedValuation = priceMap[item.code]?.fullyDilutedValuation;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { fullyDilutedValuation ? `$${toFormat(fullyDilutedValuation, 0)}` : '--' }
+                                            </p>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'assets',
+                    prop: 'guildAssets',
                     align: 'right',
                     width: 150,
                     label: t('th_assets'),
                     render(h, { row }) {
                         return (
                             <p class="flex-row-flex-end">
-                                { row?.assets ? `$${toFormat(row.assets)}` : '--' }
+                                { row?.guildAssets ? `$${toFormat(row.guildAssets)}` : '--' }
                             </p>
                         );
                     },
                 },
                 {
-                    prop: 'popularity',
+                    prop: 'snsHeat',
                     align: 'right',
                     label: t('th_popularity'),
                     render(h, { row }) {
                         let num = '--';
-                        const flame = 5;
+                        const flame = getActiveLevel(row.snsHeat);
 
-                        row.popularity = 10000;
-
-                        if (row?.popularity) {
-                            num = row.popularity > 1000 ? `${toFixed(row.popularity / 1000, 1) }K` : row.popularity;
+                        if (row?.snsHeat) {
+                            num = row.snsHeat > 1000 ? `${toFixed(row.snsHeat / 1000, 1) }K` : row.snsHeat;
                         }
 
                         return (
                             <div class="flex-col">
                                 <p>{ num }</p>
-                                <div class="flex-row-flex-end flex-items-center" style="height: 22px;" v-show={row?.popularity}>
+                                <div class = "flex-row-flex-end flex-items-center"
+                                    style = "height: 22px;"
+                                    v-show={row?.snsHeat}
+                                >
                                     { /* eslint-disable-next-line */ }
                                     { Array.apply(null, { length: flame }).map(() => <i class="icon-flame" style="color: #f0502d;" />) }
                                 </div>
@@ -343,111 +424,158 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/chain/${row.id}/`)}>
+                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/chain/${row.code}/`)}>
                                 <autoImg
-                                    src={row.image}
-                                    alt={row.chain}
+                                    src={row.icon}
+                                    alt={row.name}
                                     small
                                     width="24px"
                                     height="24px"
                                 />
-                                <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.chain }</span>
+                                <span class="mr8 ml4" style="color: var(--text-color-1)">{ row.name }</span>
                             </router-link>
                         );
                     },
                 },
                 {
-                    prop: 'symbol',
+                    prop: 'chain_token',
                     label: t('th_token'),
                     width: '80',
                     render(h, { row }) {
                         return (
-                            <span class="text-uppercase">
-                                { row.symbol }
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => (
+                                        <span class="text-uppercase">
+                                            { item.code || '--' }
+                                        </span>
+                                    ))
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'current_price',
+                    prop: 'chain_price',
                     align: 'right',
                     label: t('th_price'),
                     width: 110,
                     render(h, { row }) {
                         return (
-                            <span class="text-uppercase">
-                                { row?.current_price ? `$${toFormat(row.current_price, getPrecision(row.current_price))}` : '--' }
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+
+                                        return (
+                                            <span class="text-uppercase">
+                                                { price ? `$${toFormat(price, getPrecision(price))}` : '--' }
+                                            </span>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'price_change_percentage_24h',
+                    prop: 'chain_price_change',
                     align: 'right',
                     width: 80,
                     label: t('th_24h'),
                     render(h, { row }) {
-                        const scale = toFixed(row.price_change_percentage_24h, 2);
                         return (
-                            <span class={scale > 0 ? 'color-up' : 'color-down'}>
-                                { scale > 0 ? `+${scale}` : scale }%
-                            </span>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const price = priceMap[item.code]?.price;
+                                        const priceChange24h = priceMap[item.code]?.priceChange24h;
+                                        const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : false;
 
+                                        return !change ? <span>--</span> : (
+                                            <span class = {change > 0 ? 'color-up' : 'color-down'}>
+                                                { change > 0 ? `+${change}` : change }%
+                                            </span>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'market_cap',
+                    prop: 'chain_market_cap',
                     align: 'right',
                     width: 200,
                     label: t('th_mkt_cap'),
                     render(h, { row }) {
-                        const scale = toFixed(row.market_cap_change_percentage_24h, 2);
-
                         return (
-                            <p class="flex-row-flex-end">
-                                { row?.market_cap ? `${toFormat(row.market_cap)}` : '--' }
-                                <span
-                                    class={scale > 0 ? 'color-up ml4' : 'color-down ml4'}
-                                    v-show={row?.market_cap}
-                                >
-                                    { row?.market_cap_change_percentage_24h ? `(${scale > 0 ? `+${scale}` : scale}%)` : '--' }
-                                </span>
-                            </p>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const marketCap = priceMap[item.code]?.marketCap;
+                                        const marketCapChange24h = priceMap[item.code]?.marketCapChange24h;
+                                        const change = marketCap && marketCapChange24h ? toFixed((marketCapChange24h / marketCap) * 100, 2) : false;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { marketCap ? `${toFormat(marketCap, 0)}` : '--' }
+                                                <span
+                                                    v-show={change}
+                                                    class={change > 0 ? 'color-up ml4' : 'color-down ml4'}
+                                                >
+                                                    { change ? `(${change > 0 ? `+${change}` : change}%)` : '--' }
+                                                </span>
+                                            </p>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'fully_diluted_valuation',
+                    prop: 'chain_fdv',
                     align: 'right',
                     width: 150,
                     label: t('th_fdv'),
                     render(h, { row }) {
                         return (
-                            <p class="flex-row-flex-end">
-                                { row?.fully_diluted_valuation ? `$${toFormat(row.fully_diluted_valuation)}` : '--' }
-                            </p>
+                            <div class="flex-col">
+                                {
+                                    !row.tokens.length ? '--' : row.tokens.map((item) => {
+                                        const fullyDilutedValuation = priceMap[item.code]?.fullyDilutedValuation;
+
+                                        return (
+                                            <p class="flex-row-flex-end">
+                                                { fullyDilutedValuation ? `$${toFormat(fullyDilutedValuation, 0)}` : '--' }
+                                            </p>
+                                        );
+                                    })
+                                }
+                            </div>
                         );
                     },
                 },
                 {
-                    prop: 'popularity',
+                    prop: 'snsHeat',
                     align: 'right',
                     label: t('th_popularity'),
                     render(h, { row }) {
                         let num = '--';
-                        const flame = 5;
+                        const flame = getActiveLevel(row.snsHeat);
 
-                        row.popularity = 10000;
-
-                        if (row?.popularity) {
-                            num = row.popularity > 1000 ? `${toFixed(row.popularity / 1000, 1) }K` : row.popularity;
+                        if (row?.snsHeat) {
+                            num = row.snsHeat > 1000 ? `${toFixed(row.snsHeat / 1000, 1) }K` : row.snsHeat;
                         }
 
                         return (
                             <div class="flex-col">
                                 <p>{ num }</p>
-                                <div class="flex-row-flex-end flex-items-center" style="height: 22px;" v-show={row?.popularity}>
+                                <div class = "flex-row-flex-end flex-items-center"
+                                    style = "height: 22px;"
+                                    v-show={row?.snsHeat}
+                                >
                                     { /* eslint-disable-next-line */ }
                                     { Array.apply(null, { length: flame }).map(() => <i class="icon-flame" style="color: #f0502d;" />) }
                                 </div>
@@ -456,7 +584,7 @@ export default () => {
                     },
                 },
             ],
-            coin: [
+            token: [
                 serial,
                 {
                     prop: 'name',

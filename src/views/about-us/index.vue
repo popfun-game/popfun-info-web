@@ -12,12 +12,12 @@
                 </div>
 
                 <div class="map-wrap flex-row flex-wrap">
-                    <div class="map">
+                    <!-- <div class="map">
                         <auto-img
                             height="50.73%"
                             :src="imgMap"
                         />
-                    </div>
+                    </div> -->
                     <div class="flex-1">
                         <h3>{{ t('nav_about_us') }}</h3>
                         <p v-html="t('about_us_desc')" />
@@ -55,7 +55,7 @@ import { useI18n } from 'vue-i18n';
 import layoutDefault from '@/components/layouts/Default';
 import autoImg from '@/components/AutoImg';
 import imgBanner from '@/assets/images/aboutUs/banner.png';
-import imgMap from '@/assets/images/aboutUs/map.png';
+// import imgMap from '@/assets/images/aboutUs/map.png';
 import productsServices from './components/ProductsServices';
 import Media from './components/Media';
 

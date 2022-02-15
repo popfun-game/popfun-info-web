@@ -7,22 +7,22 @@
             </div>
             <div class="flex-row flex-items-center mt8">
                 <span class="label">{{ t('24h_Turnover') }}</span>
-                <span class="value ml24">--</span>
+                <span class="value ml24">{{ data.vol24h }}</span>
             </div>
             <div class="flex-row flex-items-center mt8">
                 <span class="label">{{ t('token_holders') }}</span>
-                <span class="value ml24">--</span>
+                <span class="value ml24">{{ data.holders }}</span>
             </div>
         </li>
 
         <li class="pl18 pr18 flex-col flex-1">
             <div class="flex-row flex-items-center">
                 <span class="label">{{ t('24h_low') }}</span>
-                <span class="value ml24">{{ data.low_24h }}</span>
+                <span class="value ml24">{{ data.low24 }}</span>
             </div>
             <div class="flex-row flex-items-center mt8">
                 <span class="label">{{ t('24h_high') }}</span>
-                <span class="value ml24">{{ data.high_24h }}</span>
+                <span class="value ml24">{{ data.high24 }}</span>
             </div>
         </li>
 
@@ -56,7 +56,7 @@
                 <span class="label">{{ t('all_time_high') }}</span>
             </div>
             <div class="flex-row flex-items-center value mt8">
-                {{ data.high_all_time }}
+                {{ data.allTimeHigh }}
                 <span
                     class="flex-row flex-items-center"
                     :class="{
@@ -76,7 +76,7 @@
                 </span>
             </div>
             <div class="flex-row flex-items-center mt8">
-                <span class="label">{{ data.high_all_time_date !== '--' ? formatLocalTime(data.high_all_time_date) : '--' }}</span>
+                <span class="label">{{ data.allTimeHighTime }}</span>
             </div>
         </li>
 
@@ -85,7 +85,7 @@
                 <span class="label">{{ t('all_time_low') }}</span>
             </div>
             <div class="flex-row flex-items-center value mt8">
-                {{ data.low_all_time }}
+                {{ data.allTimeLow }}
                 <span
                     class="flex-row flex-items-center"
                     :class="{
@@ -105,7 +105,7 @@
                 </span>
             </div>
             <div class="flex-row flex-items-center mt8">
-                <span class="label">{{ data.low_all_time_date !== '--' ? formatLocalTime(data.low_all_time_date) : '--' }}</span>
+                <span class="label">{{ data.allTimeLowTime }}</span>
             </div>
         </li>
     </ul>
@@ -113,8 +113,11 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { toFixed, toFormat } from '@/utils/number';
+import {
+    toFixed, toFormat, div, minus,
+} from '@/utils/number';
 import { formatLocalTime } from '@/utils/day';
+import { getPrecision } from '@/utils/tool';
 
 const props = defineProps({
     detail: {
@@ -128,21 +131,34 @@ const props = defineProps({
 const { t } = useI18n();
 
 const data = computed(() => {
-    const { detail } = props;
-    const marketData = detail.market_data || {};
-    const change = detail.simple_price?.usd_24h_change;
+    const {
+        price,
+        priceChange24h,
+        vol24h,
+        holders,
+        low24,
+        high24,
+        allTimeHigh,
+        allTimeHighTime,
+        allTimeLow,
+        allTimeLowTime,
+    } = props.detail.price_info || {};
+
+    const change = price && priceChange24h ? toFixed((priceChange24h / price) * 100, 2) : '';
 
     const map = {
-        price: detail.simple_price?.usd ? `$${toFormat(detail.simple_price.usd)}` : '--',
-        change: change ? toFixed(detail.simple_price.usd_24h_change, 2) : '',
-        low_24h: marketData.low_24h?.usd ? `$${toFormat(marketData.low_24h.usd)}` : '--',
-        high_24h: marketData.high_24h?.usd ? `$${toFormat(marketData.high_24h.usd)}` : '--',
-        high_all_time: marketData.ath?.usd ? `$${toFormat(marketData.ath.usd)}` : '--',
-        high_all_time_change: toFixed(marketData.ath_change_percentage?.usd, 2),
-        high_all_time_date: marketData.ath_date?.usd || '--',
-        low_all_time: marketData.atl?.usd ? `$${toFormat(marketData.atl.usd)}` : '--',
-        low_all_time_change: toFixed(marketData.atl_change_percentage?.usd, 2),
-        low_all_time_date: marketData.atl_date?.usd || '--',
+        price: price ? `$${toFormat(price, getPrecision(price))}` : '--',
+        change,
+        vol24h: vol24h ? toFormat(vol24h, 0) : '--',
+        holders: holders ? toFormat(holders, 0) : '--',
+        low24: low24 ? `$${toFormat(low24, getPrecision(low24))}` : '--',
+        high24: high24 ? `$${toFormat(high24, getPrecision(high24))}` : '--',
+        allTimeHigh: allTimeHigh ? `$${toFormat(allTimeHigh)}` : '--',
+        high_all_time_change: toFixed(div(minus(price, allTimeHigh), allTimeHigh), 2),
+        allTimeHighTime: allTimeHighTime ? formatLocalTime(allTimeHighTime) : '--',
+        allTimeLow: allTimeLow ? `$${toFormat(allTimeLow)}` : '--',
+        low_all_time_change: toFixed(div(minus(price, allTimeLow), allTimeLow), 2),
+        allTimeLowTime: allTimeLowTime ? formatLocalTime(allTimeLowTime) : '--',
     };
 
     return map;

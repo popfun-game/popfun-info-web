@@ -177,5 +177,6 @@
   "token_holders": "Token Holders",
   "24h_low": "24H Low",
   "24h_high": "24H high",
-  "24h_fluctuation": "24H Fluctuation"
+  "24h_fluctuation": "24H Fluctuation",
+  "price_chart": "Price Chart"
 }
