@@ -52,6 +52,7 @@
                 style="height: 49px; object-fit: cover;"
             >
                 <img
+                    v-if="data.symbol !== '--'"
                     :src="`https://api.pop.fun/api/project/7day?token=${data.symbol}`"
                     style="width: 100%; height: 100%;"
                 >
