@@ -424,7 +424,11 @@ export default () => {
                     'min-width': '180px',
                     render(h, { row }) {
                         return (
-                            <router-link class="flex-row flex-items-center" style="display: inline-flex;" to={replacePath(`/chain/${row.code}/`)}>
+                            <router-link
+                                class="flex-row flex-items-center"
+                                style="display: inline-flex;"
+                                to={replacePath(`/chain/${row.tokens?.[0]?.code}/`)}
+                            >
                                 <autoImg
                                     src={row.icon}
                                     alt={row.name}

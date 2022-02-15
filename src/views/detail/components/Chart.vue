@@ -57,8 +57,8 @@ const state = reactive({
 
 const methods = {
     // 获取kline
-    getCoinKline() {
-        state.loading = true;
+    getCoinKline(init) {
+        if (init)state.loading = true;
 
         api.getCoinKline({ coin: props.coin }).then((res) => {
             state.loading = false;
@@ -71,9 +71,15 @@ const methods = {
             } else if (state.list.length) state.list = [];
         });
     },
+    // 轮训
+    loop() {
+        state.timer = setTimeout(() => {
+            methods.getCoinKline();
+        }, 30000);
+    },
 };
 
-methods.getCoinKline();
+methods.getCoinKline(true);
 </script>
 <style lang="scss" scoped>
 .coin-chart {

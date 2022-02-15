@@ -35,9 +35,13 @@ export const api = {
     getCoinDetail(params) {
         return axios.get('@api/coin/info', { params });
     },
-    // 获取工会/游戏/链 详情
+    // 获取工会/游戏 详情
     getProjectDetail(params) {
         return axios.get('@api/project/info', { params });
+    },
+    // 获取币种 详情
+    getTokenDetail(params) {
+        return axios.get('@api/project/token', { params });
     },
     // 获取币种kline
     getCoinKline(params) {

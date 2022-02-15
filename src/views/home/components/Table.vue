@@ -127,6 +127,7 @@ const methods = {
     },
     // 获取项目价格信息
     getPrice() {
+        state.price_map = {};
         const tokens = [];
         state.data.forEach((item) => {
             if (item.tokens.length) {

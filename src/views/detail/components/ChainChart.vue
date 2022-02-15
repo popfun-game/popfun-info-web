@@ -8,14 +8,14 @@
 
         <chart
             :list="state.list"
-            :change="change"
+            :change="detail.simple_price?.usd_24h_change"
             :loading="state.loading"
         />
     </div>
 </template>
 <script setup>
 import {
-    defineProps, reactive, computed, watch,
+    defineProps, reactive, watch,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
 import Chart from '@/components/Chart';
@@ -37,21 +37,12 @@ const state = reactive({
     loading: true,
 });
 
-const change = computed(() => {
-    const {
-        price,
-        priceChange24h,
-    } = props.detail.price_info || {};
-
-    return price && priceChange24h ? (priceChange24h / price) * 100 : 0;
-});
-
 const methods = {
     // 获取kline
-    getCoinKline() {
-        state.loading = true;
+    getCoinKline(init) {
+        if (init)state.loading = true;
 
-        api.getCoinKline({ coin: props.detail.tokens?.[0]?.code }).then((res) => {
+        api.getCoinKline({ coin: props.detail.id }).then((res) => {
             state.loading = false;
 
             if (res.success && res.data?.length) {
@@ -59,17 +50,25 @@ const methods = {
                     time: dayjs(item.t).unix(),
                     value: item.v?.length === 4 ? item.v.slice(-1)[0] : '',
                 }));
+
+                methods.loop();
             } else if (state.list.length) state.list = [];
         });
+    },
+    // 轮训
+    loop() {
+        state.timer = setTimeout(() => {
+            methods.getCoinKline();
+        }, 30000);
     },
 };
 
 watch(
-    () => props.detail,
+    () => props.detail.id,
     (val) => {
-        if (val.tokens?.length) {
-            methods.getCoinKline();
-        } else if (val.code) {
+        if (val) {
+            methods.getCoinKline(true);
+        } else if (props.detail.name) {
             state.loading = false;
         }
     },

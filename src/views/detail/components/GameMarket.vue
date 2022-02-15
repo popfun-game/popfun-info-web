@@ -1,7 +1,7 @@
 <template>
     <ul
         v-for="data in list"
-        :key="data.token"
+        :key="data.symbol"
         class="market flex-row flex-wrap"
     >
         <li class="pl18 pr18 flex-col flex-1">
@@ -49,14 +49,12 @@
         <li class="pl18 pr18 flex-col flex-1">
             <div
                 class="flex-col"
-                style="height: 49px;"
+                style="height: 49px; object-fit: cover;"
             >
-                <ChartLine
-                    :gradient-color="data.change < 0 ? 'var(--color-down)' : 'var(--color-up)'"
-                    :line-color="data.change < 0 ? 'var(--color-down)' : 'var(--color-up)'"
-                    :list="data.kline"
-                    auto-size
-                />
+                <img
+                    :src="`https://api.pop.fun/api/project/7day?token=${data.symbol}`"
+                    style="width: 100%; height: 100%;"
+                >
             </div>
             <div class="flex-col mt24">
                 <span class="label fz12 lh22 font-bold">{{ t('market_cap') }}</span>
@@ -82,7 +80,6 @@ import { defineProps, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { toFixed, toFormat } from '@/utils/number';
 import { getPrecision } from '@/utils/tool';
-import ChartLine from '@/components/ChartLine';
 
 const props = defineProps({
     detail: {
