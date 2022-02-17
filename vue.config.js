@@ -36,7 +36,7 @@ module.exports = {
             new LogMessage(),
             new StylelintPlugin({
                 files: ['**/*.(s(c|a)ss|css|vue)'],
-                fix: false, // 打开自动修复（谨慎使用！注意上面的配置不要加入js或html文件，会发生问题，js文件请手动修复）
+                fix: true, // 打开自动修复（谨慎使用！注意上面的配置不要加入js或html文件，会发生问题，js文件请手动修复）
             }),
         ],
         optimization: {

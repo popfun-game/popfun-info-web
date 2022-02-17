@@ -23,12 +23,16 @@
             <div class="flex-row mt24 lh24 fz16">
                 <span class="label">{{ t('addresses') }}</span>
                 <span class="flex-row">
-                    {{ detail?.holders ? toFormat(detail.holders, 0) : '--' }}
+                    {{ detail.marketData?.holders ? toFormat(detail.marketData.holders, 0) : '--' }}
                     <span
-                        v-if="detail.holders"
+                        v-if="holderChange"
                         class="color-up ml8"
+                        :class="{
+                            'color-up': holderChange > 0,
+                            'color-down': holderChange < 0
+                        }"
                     >
-                        --
+                        ({{ holderChange }}%)
                     </span>
                 </span>
             </div>
@@ -121,6 +125,13 @@ const props = defineProps({
 
 const { t } = useI18n();
 
+const holderChange = computed(() => {
+    if (props.detail.marketData?.holders && props.detail.marketData?.holders24hDiff) {
+        return toFixed((props.detail.marketData.holders24hDiff / props.detail.marketData.holders) * 100, 2);
+    }
+
+    return '';
+});
 const infoList = computed(() => [
     { label: t('website'), link: true, href: props.detail?.mainPage },
     { label: t('whitepaper'), link: true, href: props.detail?.whitePaperUrl },

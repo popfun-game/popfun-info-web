@@ -6,10 +6,12 @@
                     :to="replacePath('/')"
                     clsss="flex-shrink-0"
                 >
-                    <svg-icon
-                        name="logo"
-                        color="#2a64fb"
-                    />
+                    <img
+                        src="~@/assets/images/logo.png"
+                        alt="popfun"
+                        width="146"
+                        height="34"
+                    >
                 </router-link>
                 <el-menu
                     class="flex-1"
@@ -59,9 +61,22 @@
                 </el-menu>
                 <div class="flex-row flex-items-center">
                     <lang />
+                    <div
+                        v-if="state.wallet"
+                        class="wallet-btn flex-row flex-items-center"
+                    >
+                        <img
+                            src="@/assets/images/wallet-icon.png"
+                            width="16"
+                            height="16"
+                            alt=""
+                            class="mr4"
+                        >
+                        {{ state.wallet }}
+                    </div>
                     <button
+                        v-else
                         class="btn-primary"
-                        disabled
                     >
                         {{ t('btn_link_wallet') }}
                     </button>
@@ -75,13 +90,14 @@ import { reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
-import svgIcon from '@/components/SvgIcon';
 import Lang from './Lang';
 
 const route = useRoute();
 const { t } = useI18n();
+const account = localStorage.getItem('account') || '';
 
 const state = reactive({
+    wallet: account.replace(/\s/g, '').length ? account.replace(/(.{6}).+(.{4})/, '$1...$2') : '',
     route_list: [
         { path: replacePath('/'), name: t('nav_home') },
         { path: replacePath('/igo/'), name: t('nav_igo'), out: true },
@@ -106,7 +122,7 @@ nav {
 
     .el-menu {
         border-bottom: 0;
-        padding: 20px 0;
+        padding: 21px 0;
 
         .el-menu-item,
         .el-sub-menu {
@@ -163,7 +179,21 @@ nav {
     .btn-primary {
         padding: 6px 16px;
         height: 34px;
-        margin-left: 20px;
+        margin-left: 28px;
+        min-width: 130px;
+    }
+
+    .wallet-btn {
+        background: #fff;
+        border: 1px solid #2a64fb;
+        box-sizing: border-box;
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px;
+        color: #111;
+        padding: 8px 14px;
+        margin-left: 28px;
     }
 }
 </style>
