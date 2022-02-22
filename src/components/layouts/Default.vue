@@ -12,10 +12,13 @@
         >
             <div class="wrapper">
                 <div class="scroller flex-row-space-between flex-items-center">
-                    <svg-icon
-                        name="logo"
+                    <img
+                        src="~@/assets/images/logo.png"
+                        alt="popfun"
+                        width="153"
+                        height="44"
                         class="flex-shrink-0"
-                    />
+                    >
                     <div class="links flex-row">
                         <a
                             href="javascript:;"
@@ -54,7 +57,6 @@
 import { defineProps } from 'vue';
 import headerMarket from '@/components/headers/Market';
 import headerNav from '@/components/headers/Nav';
-import svgIcon from '@/components/SvgIcon';
 
 defineProps({
     showFooter: {

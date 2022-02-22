@@ -9,8 +9,8 @@
                     <img
                         src="~@/assets/images/logo.png"
                         alt="popfun"
-                        width="146"
-                        height="34"
+                        width="153"
+                        height="44"
                     >
                 </router-link>
                 <el-menu
