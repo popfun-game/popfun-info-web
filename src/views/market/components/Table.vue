@@ -1,6 +1,6 @@
 <!-- 分类table -->
 <template>
-    <section class="wrapper">
+    <section class="table-wrapper">
         <div class="menu flex-row flex-items-center">
             <tabs
                 v-model="state.tab"
@@ -45,12 +45,14 @@ import {
     computed,
     onBeforeUnmount,
 } from 'vue';
+import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import cTable from '@/components/Table';
 import tabs from '@/components/Tabs';
 import { api } from '@/config/api';
 import { ElMessage } from 'element-plus';
 import useColumn from './columns';
+import router from '../../../router';
 
 const props = defineProps({
     active: {
@@ -59,6 +61,7 @@ const props = defineProps({
     },
 });
 
+const route = useRoute();
 const { t } = useI18n();
 const columns = useColumn();
 const state = reactive({
@@ -81,10 +84,29 @@ const state = reactive({
     timer: null,
 });
 
+const tab = computed(() => {
+    const map = state.menu_list.map((item) => item.id);
+
+    return map.includes(route.query.tab) ? route.query.tab : props.active;
+});
 // 当前 table 列
 const column = computed(() => columns(state.pages.size * (state.pages.current - 1), state.tab, state.price_map));
 
 const methods = {
+    init() {
+        state.tab = tab.value;
+
+        if (props.tab !== tab.value) {
+            router.replace({
+                path: route.path,
+                query: {
+                    tab: state.tab,
+                },
+            });
+        }
+
+        methods.getList();
+    },
     // 获取列表
     getList(isLoop) {
         if (!isLoop) state.loading = true;
@@ -154,6 +176,13 @@ const methods = {
         state.pages.total = 1;
         state.page = 1;
 
+        router.replace({
+            path: route.path,
+            query: {
+                tab: state.tab,
+            },
+        });
+
         methods.getList();
     },
     // 每页显示条目个数修改
@@ -181,7 +210,7 @@ const methods = {
     },
 };
 
-methods.getList();
+methods.init();
 
 onBeforeUnmount(() => {
     clearTimeout(state.timer);
@@ -189,7 +218,7 @@ onBeforeUnmount(() => {
 </script>
 <style lang="scss" scoped>
 
-.wrapper {
+.table-wrapper {
     overflow: initial;
 
     :deep(.el-table) {

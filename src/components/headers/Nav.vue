@@ -104,6 +104,7 @@ const state = reactive({
         {
             name: t('nav_infor'),
             children: [
+                { path: replacePath('/market/'), name: t('nav_market') },
                 { path: replacePath('/information/'), name: t('nav_information') },
                 { path: replacePath('/strategy/'), name: t('nav_strategy') },
                 { path: replacePath('/learn/'), name: t('nav_learn') },

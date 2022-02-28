@@ -18,6 +18,16 @@ const routes = [
         path: '/learn/',
         component: () => import('@/views/learn/index'),
     },
+    // 学习
+    {
+        path: '/learn/',
+        component: () => import('@/views/learn/index'),
+    },
+    // 行情
+    {
+        path: '/market/',
+        component: () => import('@/views/market/index'),
+    },
     // 战略/学习 详情
     {
         path: '/detail/:key',

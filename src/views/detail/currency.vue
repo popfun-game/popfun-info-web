@@ -107,7 +107,7 @@ const state = reactive({
     loading: true,
     detail: {},
     breadcrumb: [
-        { path: replacePath('/'), label: t('nav_home') },
+        { path: replacePath('/market/?tab=token'), label: t('nav_home') },
         { path: '', label: route.params.coin, class: 'text-capitalize' },
     ],
     menu_list: [

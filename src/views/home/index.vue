@@ -16,13 +16,9 @@
                 />
             </div>
             <div class="wrapper">
-                <chart-line />
                 <!-- 新闻 -->
                 <i-news />
-            </div>
-            <!-- 类型table -->
-            <i-table active="game" />
-            <div class="wrapper">
+
                 <!-- 工作内容介绍 -->
                 <work-info />
 
@@ -53,9 +49,7 @@
 import layoutDefault from '@/components/layouts/Default';
 import autoImg from '@/components/AutoImg';
 import bannerImg from '@/assets/images/index/banner.jpg';
-import ChartLine from '@/components/ChartLine';
 import nftComingSoonImg from '@/assets/images/index/nft-coming-soon.png';
-import iTable from './components/Table';
 import iNews from './components/News';
 import workInfo from './components/WorkInfo';
 import iLearn from './components/Learn';
