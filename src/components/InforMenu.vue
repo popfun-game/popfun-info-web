@@ -23,7 +23,7 @@ const { t } = useI18n();
 
 const state = reactive({
     menu_list: [
-        { path: replacePath('/market/'), name: t('nav_market') },
+        { path: replacePath('/markets/'), name: t('nav_market') },
         { path: replacePath('/information/'), name: t('nav_information') },
         { path: replacePath('/strategy/'), name: t('nav_strategy') },
         { path: replacePath('/learn/'), name: t('nav_learn') },

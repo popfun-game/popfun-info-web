@@ -28,11 +28,11 @@
             <products-services />
 
             <div class="wrapper">
-                <media
+                <!-- <media
                     :title="t('au_investors')"
                     :list="state.investors"
                     style="margin-top: 104px;"
-                />
+                /> -->
                 <media
                     :title="t('au_partner')"
                     :list="state.partner"

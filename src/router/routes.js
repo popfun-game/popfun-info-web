@@ -25,8 +25,8 @@ const routes = [
     },
     // 行情
     {
-        path: '/market/',
-        component: () => import('@/views/market/index'),
+        path: '/markets/',
+        component: () => import('@/views/markets/index'),
     },
     // 战略/学习 详情
     {

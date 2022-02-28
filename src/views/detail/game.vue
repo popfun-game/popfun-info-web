@@ -37,7 +37,7 @@ const state = reactive({
     detail: {},
     timer: null,
     breadcrumb: [
-        { path: replacePath('/market/?tab=game'), label: t('nav_market') },
+        { path: replacePath('/markets/?tab=game'), label: t('nav_market') },
         { path: '', label: route.params.coin, class: 'text-capitalize' },
     ],
 });
