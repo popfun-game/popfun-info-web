@@ -48,6 +48,8 @@ import { reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import autoImg from '@/components/AutoImg';
+import idleImg from '@/assets/images/index/idle.jpg';
+import tapImg from '@/assets/images/index/tap.jpg';
 import cardTitle from './CardTitle';
 
 const { t } = useI18n();
@@ -55,7 +57,7 @@ const state = reactive({
     list: [
         {
             id: '1',
-            img: 'https://image.pop.fun/WqTUjVdy6lyXMv3La-rrsklfG4JTipCX8tmcQ-kitLy1L0uaglKHkYS7hCqjKfC4G3GXce5RgNkMTtDULuIvjQ__',
+            img: idleImg,
             tag: 'abcd',
             title: 'HIMO WORLD',
             raise: '3000K',
@@ -77,7 +79,7 @@ const state = reactive({
         },
         {
             id: '1',
-            img: 'https://image.pop.fun/WqTUjVdy6lyXMv3La-rrsklfG4JTipCX8tmcQ-kitLy1L0uaglKHkYS7hCqjKfC4G3GXce5RgNkMTtDULuIvjQ__',
+            img: tapImg,
             tag: 'abcd',
             title: 'BitHotel',
             raise: '3000K',
@@ -87,46 +89,6 @@ const state = reactive({
                     icon: 'instagram',
                     href: 'http://www.baidu.com',
                 },
-                {
-                    icon: 'linkedin',
-                    href: 'http://www.baidu.com',
-                },
-                {
-                    icon: 'twitter',
-                    href: 'http://www.baidu.com',
-                },
-            ],
-        },
-        {
-            id: '1',
-            img: 'https://image.pop.fun/WqTUjVdy6lyXMv3La-rrsklfG4JTipCX8tmcQ-kitLy1L0uaglKHkYS7hCqjKfC4G3GXce5RgNkMTtDULuIvjQ__',
-            tag: 'abcd',
-            title: 'BitHotel',
-            raise: '3000K',
-            time: 'January',
-            links: [
-                {
-                    icon: 'instagram',
-                    href: 'http://www.baidu.com',
-                },
-                {
-                    icon: 'linkedin',
-                    href: 'http://www.baidu.com',
-                },
-                {
-                    icon: 'twitter',
-                    href: 'http://www.baidu.com',
-                },
-            ],
-        },
-        {
-            id: '1',
-            img: 'https://image.pop.fun/WqTUjVdy6lyXMv3La-rrsklfG4JTipCX8tmcQ-kitLy1L0uaglKHkYS7hCqjKfC4G3GXce5RgNkMTtDULuIvjQ__',
-            tag: 'abcd',
-            title: 'BitHotel',
-            raise: '3000K',
-            time: 'January',
-            links: [
                 {
                     icon: 'linkedin',
                     href: 'http://www.baidu.com',

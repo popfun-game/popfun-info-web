@@ -32,36 +32,6 @@
                         {{ t('btn_load_more') }}
                     </button>
                 </div>
-
-                <crypto-info />
-
-                <template v-if="false">
-                    <h3
-                        class="mb24"
-                        style="margin-top: 84px;"
-                    >
-                        {{ t('learn_about_aamc') }}
-                    </h3>
-
-                    <tabs
-                        v-model="state.current_tab"
-                        :list="state.tabs"
-                        style="margin-bottom: 38px;"
-                    />
-                    <ul class="list flex-row flex-wrap">
-                        <li
-                            v-for="(item,index) in state.list.slice(0, 3)"
-                            :key="index"
-                        >
-                            <card
-                                :data="item"
-                                @click="methods.showHtml(item)"
-                            />
-                        </li>
-                    </ul>
-                </template>
-
-                <our-mission />
             </div>
         </section>
     </layout-default>
@@ -70,25 +40,15 @@
 import { reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import layoutDefault from '@/components/layouts/Default';
-import Tabs from '@/components/Tabs';
 import InforMenu from '@/components/InforMenu';
 import { ElMessage } from 'element-plus';
 import { api } from '@/config/api';
 import coinScroll from './components/CoinScroll';
 import Banner from './components/Banner';
-import cryptoInfo from './components/CryptoInfo';
-import ourMission from './components/OurMission';
 import Card from './components/Card';
 
 const { t } = useI18n();
 const state = reactive({
-    current_tab: 'all',
-    tabs: [
-        { id: 'all', label: t('learn_tab_all') },
-        { id: 'announcements', label: t('learn_tab_announcements') },
-        { id: 'explorer', label: t('learn_tab_explorer') },
-        { id: 'marketing', label: t('learn_tab_marketing') },
-    ],
     limit: 6,
     page: 0,
     show_more: false,
@@ -154,10 +114,6 @@ const methods = {
             item.img = '--';
             return item;
         });
-    },
-    showHtml(val) {
-        state.html = val.html;
-        state.visible = true;
     },
 };
 

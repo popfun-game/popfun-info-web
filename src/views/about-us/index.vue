@@ -4,7 +4,7 @@
             <div class="wrapper ">
                 <div class="banner">
                     <auto-img
-                        height="19.75%"
+                        height="24%"
                         :src="imgBanner"
                         radius="8px"
                     />
@@ -42,9 +42,13 @@
 
             <div class="footer flex-col flex-items-center">
                 <p>{{ t('au_footer_desc') }}</p>
-                <button class="btn-primary">
+                <a
+                    href="https://docs.google.com/forms/d/1rzYf5RjFoWR8Z9Yc75igdCAFoQJssVxL_k-XvXyd44E/edit"
+                    target="blank"
+                    class="btn-primary flex-row-center flex-items-center"
+                >
                     {{ t('btn_contact_us') }}
-                </button>
+                </a>
             </div>
         </section>
     </layout-default>
@@ -54,7 +58,7 @@ import { reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import layoutDefault from '@/components/layouts/Default';
 import autoImg from '@/components/AutoImg';
-import imgBanner from '@/assets/images/aboutUs/banner.png';
+import imgBanner from '@/assets/images/aboutUs/banner.jpg';
 // import imgMap from '@/assets/images/aboutUs/map.png';
 import productsServices from './components/ProductsServices';
 import Media from './components/Media';
@@ -148,6 +152,10 @@ section {
             color: var(--text-colot-0);
             margin-bottom: 38px;
             padding: 0 20px;
+        }
+
+        .btn-primary:hover {
+            color: #fff;
         }
     }
 

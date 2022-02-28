@@ -5,7 +5,7 @@
             <h3>{{ t('contact_us_t') }}</h3>
             <p>{{ t('contact_us_desc') }}</p>
             <a
-                href="https://www.baidu.com"
+                href="https://docs.google.com/forms/d/1rzYf5RjFoWR8Z9Yc75igdCAFoQJssVxL_k-XvXyd44E/edit"
                 target="_blank"
                 class="btn-primary flex-row-center flex-items-center"
             >

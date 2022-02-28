@@ -6,12 +6,10 @@
                     :to="replacePath('/')"
                     clsss="flex-shrink-0"
                 >
-                    <img
-                        src="~@/assets/images/logo.png"
-                        alt="popfun"
-                        width="153"
-                        height="44"
-                    >
+                    <svg-icon
+                        name="logo"
+                        color="#2A64FB"
+                    />
                 </router-link>
                 <el-menu
                     class="flex-1"
@@ -90,6 +88,7 @@ import { reactive, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
+import svgIcon from '@/components/SvgIcon';
 import Lang from './Lang';
 
 const route = useRoute();

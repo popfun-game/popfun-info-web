@@ -12,38 +12,40 @@
         >
             <div class="wrapper">
                 <div class="scroller flex-row-space-between flex-items-center">
-                    <img
-                        src="~@/assets/images/logo.png"
-                        alt="popfun"
-                        width="153"
-                        height="44"
+                    <svg-icon
                         class="flex-shrink-0"
-                    >
+                        name="logo"
+                        color="#fff"
+                    />
                     <div class="links flex-row">
                         <a
-                            href="javascript:;"
+                            href="https://twitter.com/PopFunGameFi"
+                            target="_blank"
                             rel="noreferrer nofollow noopener"
                         >
                             <i class="icon-twitter" />
                         </a>
                         <a
-                            href="javascript:;"
+                            href="https://www.instagram.com/accounts/login/?next=/popfungamef"
+                            target="_blank"
                             rel="noreferrer nofollow noopener"
                         >
                             <i class="icon-instagram" />
                         </a>
                         <a
-                            href="javascript:;"
+                            href="https://www.facebook.com/PopFun-GameFi-108403608443442"
+                            target="_blank"
                             rel="noreferrer nofollow noopener"
                         >
                             <i class="icon-facebook" />
                         </a>
-                        <a
+                        <!-- <a
                             href="javascript:;"
+                            target="_blank"
                             rel="noreferrer nofollow noopener"
                         >
                             <i class="icon-linkedin" />
-                        </a>
+                        </a> -->
                     </div>
                     <div class="copyright fz16 font-bold">
                         ©{{ new Date().getFullYear() }} Popfun
@@ -57,6 +59,7 @@
 import { defineProps } from 'vue';
 import headerMarket from '@/components/headers/Market';
 import headerNav from '@/components/headers/Nav';
+import svgIcon from '@/components/SvgIcon';
 
 defineProps({
     showFooter: {
