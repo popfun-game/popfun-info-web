@@ -13,7 +13,6 @@ if (langs.length > 1) {
                 ...item,
                 path: `/${lang}/${item.path.replace(/^\/+/, '')}`,
                 meta: {
-                    layout: 'Default',
                     ...item.meta,
                 },
             });
@@ -25,7 +24,6 @@ if (langs.length > 1) {
             ...item,
             path: `/${item.path.replace(/^\/+/, '')}`,
             meta: {
-                layout: 'Default',
                 ...item.meta,
             },
         });
