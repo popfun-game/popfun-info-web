@@ -11,6 +11,10 @@
 import axios from '@/utils/axios';
 
 export const api = {
+    // 获取首页新闻
+    getHomeNews() {
+        return axios.get('@api//article/home');
+    },
     // 获取资讯列表
     getArticleList(params) {
         return axios.get('@api/article/list', { params });

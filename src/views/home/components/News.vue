@@ -16,6 +16,7 @@
                     width="100%"
                     height="61.51%"
                     radius="8px"
+                    :title="item.title"
                 />
                 <p class="title fz12 lh22 text-ellipsis">{{ item.title }}</p>
                 <p class="info fz14 lh22 font-bold text-ellipsis">{{ item.summary }}</p>
@@ -61,7 +62,7 @@ const state = reactive({
 const methods = {
     // 获取资讯列表
     getNewList() {
-        api.getArticleList({ limit: 4, type: 'news' }).then((res) => {
+        api.getHomeNews().then((res) => {
             if (res.success) {
                 if (res.data && res.data.result.length) {
                     state.list = res.data.result.slice(0, 4).map((item) => {
