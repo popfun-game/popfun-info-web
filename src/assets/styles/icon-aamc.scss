@@ -22,7 +22,15 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-qiu::before {
+    content: "\e910";
+}
+
 .icon-telegram::before {
+    content: "\e911";
+}
+
+.icon-discord::before {
     content: "\e90f";
 }
 

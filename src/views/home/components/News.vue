@@ -5,11 +5,8 @@
             :key="index"
             class="card"
         >
-            <a
-
-                :href="item.link ? item.link : 'javascript:;'"
-                rel="noreferrer nofollow noopener"
-                :target="item.link ? '_blank' : ''"
+            <router-link
+                :to="replacePath(`/detail/${item._key}/?from=home`)"
             >
                 <auto-img
                     :src="item.img"
@@ -18,9 +15,13 @@
                     radius="8px"
                     :title="item.title"
                 />
-                <p class="title fz12 lh22 text-ellipsis">{{ item.title }}</p>
-                <p class="info fz14 lh22 font-bold text-ellipsis">{{ item.summary }}</p>
-            </a>
+                <p class="title fz12 lh22 text-ellipsis">
+                    {{ item.title }}
+                </p>
+                <p class="info fz14 lh22 font-bold text-ellipsis">
+                    {{ item.summary }}
+                </p>
+            </router-link>
         </li>
     </ul>
 </template>
@@ -29,6 +30,7 @@ import { reactive } from 'vue';
 import { api } from '@/config/api';
 import autoImg from '@/components/AutoImg';
 import { ElMessage } from 'element-plus';
+import { replacePath } from '@/lang/i18n';
 
 const state = reactive({
     list: [

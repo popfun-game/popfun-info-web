@@ -19,7 +19,6 @@
                         height="100%"
                         radius="8px"
                     />
-                    <p class="text-align-center  lh18 mt18">{{ item.tag }}</p>
                     <h3 class="text-align-center text-ellipsis mt8">{{ item.title }}</h3>
                     <p class="p-1 flex-row-center mt8">{{ t('total_raise') }}：<b>{{ item.raise }}</b></p>
                     <div
@@ -58,45 +57,44 @@ const state = reactive({
         {
             id: '1',
             img: idleImg,
-            tag: 'abcd',
-            title: 'HIMO WORLD',
-            raise: '3000K',
-            time: 'January',
+            title: 'Idle Stoneage',
+            raise: '100K',
+            time: 'March',
             links: [
                 {
                     icon: 'telegram',
-                    href: 'http://www.baidu.com',
+                    href: 'https://t.me/IdleStoneage',
                 },
                 {
-                    icon: 'facebook',
-                    href: 'http://www.baidu.com',
+                    icon: 'twitter',
+                    href: 'https://twitter.com/IdleStoneage',
                 },
                 {
-                    icon: 'instagram',
-                    href: 'http://www.baidu.com',
+                    icon: 'discord',
+                    href: 'https://discord.com/invite/WNdjYRP45T',
                 },
             ],
         },
         {
             id: '1',
             img: tapImg,
-            tag: 'abcd',
-            title: 'BitHotel',
-            raise: '3000K',
-            time: 'January',
+            title: 'Tap Fantasy ',
+            raise: '200K',
+            time: 'February',
             links: [
                 {
-                    icon: 'instagram',
-                    href: 'http://www.baidu.com',
-                },
-                {
-                    icon: 'linkedin',
-                    href: 'http://www.baidu.com',
+                    icon: 'telegram',
+                    href: 'https://t.me/tap_fantasy',
                 },
                 {
                     icon: 'twitter',
-                    href: 'http://www.baidu.com',
+                    href: 'https://twitter.com/tapfantasy2021',
                 },
+                {
+                    icon: 'discord',
+                    href: 'https://discord.com/invite/tapfantasy',
+                },
+
             ],
         },
     ],

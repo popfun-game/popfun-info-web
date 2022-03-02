@@ -28,11 +28,11 @@
             <products-services />
 
             <div class="wrapper">
-                <!-- <media
+                <media
                     :title="t('au_investors')"
                     :list="state.investors"
                     style="margin-top: 104px;"
-                /> -->
+                />
                 <media
                     :title="t('au_partner')"
                     :list="state.partner"
@@ -67,32 +67,32 @@ import Media from './components/Media';
 const { t } = useI18n();
 const state = reactive({
     investors: [
-        { img: require('@/assets/images/aboutUs/icon-01.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-02.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-03.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-04.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-05.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-06.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-07.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-08.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-09.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-10.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-11.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-12.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-01.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-02.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-03.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-04.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-05.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-06.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-07.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-08.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-09.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-10.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-11.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-12.png'), href: '' },
     ],
     partner: [
-        { img: require('@/assets/images/aboutUs/icon-01.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-02.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-03.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-04.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-05.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-06.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-07.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-08.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-09.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-10.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-11.png'), href: '' },
-        { img: require('@/assets/images/aboutUs/icon-12.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-01.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-02.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-03.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-04.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-05.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-06.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-07.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-08.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-09.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-10.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-11.png'), href: '' },
+        // { img: require('@/assets/images/aboutUs/icon-12.png'), href: '' },
     ],
 });
 /* eslint-enable global-require */
