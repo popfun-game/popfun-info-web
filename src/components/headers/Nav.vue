@@ -60,7 +60,7 @@
                 <div class="flex-row flex-items-center">
                     <lang />
                     <div
-                        v-if="state.wallet"
+                        v-if="currentAccount"
                         class="wallet-btn flex-row flex-items-center"
                     >
                         <img
@@ -70,11 +70,12 @@
                             alt=""
                             class="mr4"
                         >
-                        {{ state.wallet }}
+                        {{ currentAccount }}
                     </div>
                     <button
                         v-else
                         class="btn-primary"
+                        @click="state.visible_wallet = true"
                     >
                         {{ t('btn_link_wallet') }}
                     </button>
@@ -82,21 +83,25 @@
             </div>
         </div>
     </nav>
+
+    <link-wallet v-model="state.visible_wallet" />
 </template>
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { replacePath } from '@/lang/i18n';
 import svgIcon from '@/components/SvgIcon';
+import useWallet from '@/hooks/wallet';
+import LinkWallet from '@/components/LinkWallet';
 import Lang from './Lang';
 
 const route = useRoute();
 const { t } = useI18n();
-const account = localStorage.getItem('account') || '';
 
+const { account } = useWallet();
 const state = reactive({
-    wallet: account.replace(/\s/g, '').length ? account.replace(/(.{6}).+(.{4})/, '$1...$2') : '',
+    visible_wallet: false,
     route_list: [
         { path: replacePath('/'), name: t('nav_home') },
         { path: replacePath('/igo/'), name: t('nav_igo'), out: true },
@@ -115,6 +120,15 @@ const state = reactive({
 });
 
 const path = computed(() => (route.path.endsWith('/') ? route.path : `${route.path}/`));
+// 当前链接账号
+const currentAccount = computed(() => (account.value.replace(/\s/g, '').length ? account.value.replace(/(.{6}).+(.{4})/, '$1...$2') : ''));
+
+watch(
+    () => currentAccount.value,
+    (val) => {
+        if (val) state.visible_wallet = false;
+    },
+);
 </script>
 <style lang="scss" scoped>
 nav {

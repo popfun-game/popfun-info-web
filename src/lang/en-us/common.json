@@ -170,5 +170,11 @@
   "24h_low": "24H Low",
   "24h_high": "24H high",
   "24h_fluctuation": "24H Fluctuation",
-  "price_chart": "Price Chart"
+  "price_chart": "Price Chart",
+  "connect_wallet": "CONNECT WALLET",
+  "meta_mask": "MetaMask",
+  "install_meta_mask": "Install MetaMask",
+  "wallet_connect": "WalletConnect",
+  "torus": "Torus",
+  "binance": "Binance"
 }
