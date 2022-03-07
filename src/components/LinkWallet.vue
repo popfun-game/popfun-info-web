@@ -22,7 +22,7 @@
                 <a
                     href="javascript:;"
                     class="flex-row flex-items-center"
-                    @click="methods.tip"
+                    @click="connectWallet(false)"
                 >
                     <img
                         src="@/assets/images/wallet-connect.png"
@@ -72,7 +72,7 @@ defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const { t } = useI18n();
-const { supportMetaMask, connectMetaMask } = useWallet();
+const { supportMetaMask, connectMetaMask, connectWallet } = useWallet();
 
 const methods = {
     // 关闭

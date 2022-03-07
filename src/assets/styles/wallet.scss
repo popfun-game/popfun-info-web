@@ -1,0 +1,10 @@
+// walletConnect样式覆盖
+#walletconnect-wrapper {
+    // stylelint-disable-next-line
+    .walletconnect-modal__mobile__toggle {
+        a {
+            line-height: 21px;
+            color: inherit;
+        }
+    }
+}
