@@ -2,12 +2,15 @@ import { ElMessage } from 'element-plus';
 import { reactive, toRefs } from 'vue';
 import WalletConnect from '@walletconnect/client';
 import QRCodeModal from '@walletconnect/qrcode-modal';
+import Torus from '@toruslabs/torus-embed';
 
 const state = reactive({
     supportMetaMask: false, // 是否支持MetaMask钱包
     ethereum: null, // ethereum实例
     connector: null, // wallet连接后的实例
+    torus: null,
     account: '',
+    loading: false,
 });
 
 export default () => {
@@ -31,6 +34,7 @@ export default () => {
 
                 ethereum.on('accountsChanged', (accounts) => {
                     state.account = accounts?.[0] || '';
+                    state.loading = false;
                 });
 
                 ethereum.on('chainChanged', () => {
@@ -41,10 +45,13 @@ export default () => {
         // 链接metaMask
         async connectMetaMask() {
             if (!ethereum) return;
+            state.loading = true;
 
             try {
                 await ethereum.request({ method: 'eth_requestAccounts' });
             } catch (err) {
+                state.loading = false;
+
                 if (err.code === -32002) {
                     ElMessage.error('Please manually open the MetaMask wallet connection');
                 } else {
@@ -56,6 +63,8 @@ export default () => {
         connectWallet(init) {
             const bridge = 'https://bridge.walletconnect.org';
 
+            if (!init) state.loading = true;
+
             // Create a connector
             state.connector = new WalletConnect({
                 bridge, // Required
@@ -65,8 +74,10 @@ export default () => {
             if (state.connector?.connected) {
                 state.connector.updateSession({ accounts: state.connector.accounts, chainId: state.connector.chainId });
                 state.account = state.connector.accounts?.[0];
+                state.loading = false;
             } else if (!init) {
                 state.connector.createSession();
+                state.loading = false;
             }
 
             // Subscribe to connection events
@@ -97,6 +108,35 @@ export default () => {
 
                 state.account = '';
             });
+        },
+        // 链接Torus
+        async connectTorus() {
+            if (!state.torus) {
+                state.torus = new Torus({
+                    buttonPosition: 'bottom-right',
+                    buildEnv: 'production',
+                });
+
+                try {
+                    await state.torus.init();
+                } catch (error) {
+                    ElMessage.error(error.message || error);
+                }
+            }
+
+            state.torus.showTorusButton();
+            state.loading = true;
+
+            try {
+                await state.torus.login();
+
+                state.account = state.torus?.ethereum?.selectedAddress || '';
+            } catch (error) {
+                state.torus.hideTorusButton();
+                ElMessage.error(error.message || error);
+            }
+
+            state.loading = false;
         },
     };
 

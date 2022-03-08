@@ -7,9 +7,13 @@
             :close-on-click-modal="false"
             :before-close="methods.beforeClose"
         >
-            <div class="flex-col wallet-list">
+            <div
+                v-loading="loading"
+                class="flex-col wallet-list"
+            >
                 <a
                     :href="supportMetaMask ? 'javascript:;' : 'https://metamask.io/'"
+                    :target="supportMetaMask ? '_self' : '_blank'"
                     class="flex-row flex-items-center"
                     @click="connectMetaMask"
                 >
@@ -33,7 +37,7 @@
                 <a
                     href="javascript:;"
                     class="flex-row flex-items-center"
-                    @click="methods.tip"
+                    @click="connectTorus"
                 >
                     <img
                         src="@/assets/images/torus.svg"
@@ -72,7 +76,13 @@ defineProps({
 const emit = defineEmits(['update:modelValue']);
 
 const { t } = useI18n();
-const { supportMetaMask, connectMetaMask, connectWallet } = useWallet();
+const {
+    loading,
+    supportMetaMask,
+    connectMetaMask,
+    connectWallet,
+    connectTorus,
+} = useWallet();
 
 const methods = {
     // 关闭
