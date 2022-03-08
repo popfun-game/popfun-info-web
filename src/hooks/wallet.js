@@ -111,6 +111,8 @@ export default () => {
         },
         // 链接Torus
         async connectTorus() {
+            state.loading = true;
+
             if (!state.torus) {
                 state.torus = new Torus({
                     buttonPosition: 'bottom-right',
@@ -125,7 +127,6 @@ export default () => {
             }
 
             state.torus.showTorusButton();
-            state.loading = true;
 
             try {
                 await state.torus.login();
