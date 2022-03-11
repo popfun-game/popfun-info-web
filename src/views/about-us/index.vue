@@ -29,11 +29,13 @@
 
             <div class="wrapper">
                 <media
+                    v-if="state.investors.length"
                     :title="t('au_investors')"
                     :list="state.investors"
                     style="margin-top: 104px;"
                 />
                 <media
+                    v-if="state.partner.length"
                     :title="t('au_partner')"
                     :list="state.partner"
                     style="margin-top: 104px;"

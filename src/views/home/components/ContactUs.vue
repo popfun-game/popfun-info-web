@@ -3,7 +3,7 @@
     <article class="flex-row flex-items-center">
         <div class="info">
             <h3>{{ t('contact_us_t') }}</h3>
-            <p>{{ t('contact_us_desc') }}</p>
+            <p v-html="t('contact_us_desc')" />
             <a
                 href="https://docs.google.com/forms/d/1rzYf5RjFoWR8Z9Yc75igdCAFoQJssVxL_k-XvXyd44E/edit"
                 target="_blank"
@@ -52,6 +52,12 @@ article {
             line-height: 28px;
             color: var(--text-color-6);
             margin-bottom: 25px;
+
+            &:deep(b) {
+                color: var(--text-color-0);
+                font-weight: bold;
+                font-size: 18px;
+            }
         }
 
         .btn-primary {

@@ -55,7 +55,7 @@ const { t } = useI18n();
 const state = reactive({
     list: [
         {
-            id: '1',
+            id: '',
             img: idleImg,
             title: 'Idle Stoneage',
             raise: '100K',
@@ -76,7 +76,7 @@ const state = reactive({
             ],
         },
         {
-            id: '1',
+            id: '2',
             img: tapImg,
             title: 'Tap Fantasy ',
             raise: '200K',

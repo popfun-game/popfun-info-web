@@ -58,7 +58,7 @@
                     </template>
                 </el-menu>
                 <div class="flex-row flex-items-center">
-                    <lang />
+                    <lang v-if="false" />
                     <div
                         v-if="currentAccount"
                         class="wallet-btn flex-row flex-items-center"
