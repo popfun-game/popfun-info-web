@@ -52,12 +52,6 @@ article {
             line-height: 28px;
             color: var(--text-color-6);
             margin-bottom: 25px;
-
-            &:deep(b) {
-                color: var(--text-color-0);
-                font-weight: bold;
-                font-size: 18px;
-            }
         }
 
         .btn-primary {
